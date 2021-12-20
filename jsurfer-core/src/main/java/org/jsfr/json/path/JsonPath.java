@@ -94,7 +94,7 @@ public class JsonPath implements Iterable<PathOperator> {
 
         public static Builder start(SyntaxMode mode) {
             if (mode == SyntaxMode.STRICT) {
-                throw new UnsupportedStateException("STRICT json path mode is not supported");
+                throw new UnsupportedStateException("Strict JsonPath mode not yet supported");
             }
             Builder builder = new Builder();
             builder.jsonPath = new JsonPath();
@@ -186,24 +186,13 @@ public class JsonPath implements Iterable<PathOperator> {
     }
 
     public boolean match(JsonPath jsonPath) {
-        int pointer1 = this.size - 1;
-        int pointer2 = jsonPath.size - 1;
-        if (!get(pointer1).match(jsonPath.get(pointer2))) {
-            return false;
-        }
-        pointer1--;
-        pointer2--;
-        while (pointer1 >= 0) {
-            if (!(pointer2 >= 0)) {
-                return false;
-            }
-            PathOperator o1 = this.get(pointer1--);
-            PathOperator o2 = jsonPath.get(pointer2--);
-            if (!o1.match(o2)) {
+        int p1, p2;
+        for (p1 = this.size - 1, p2 = jsonPath.size - 1; p1 >= 0 && p2 >= 0; p1--, p2--) {
+            if (!get(p1).match(jsonPath.get(p2))) {
                 return false;
             }
         }
-        return !(pointer2 >= 0);
+        return p1 == -1 && p2 == -1;
     }
 
     public boolean matchWithDeepScan(JsonPath jsonPath) {

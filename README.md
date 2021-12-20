@@ -44,7 +44,8 @@ This repo was copied from https://github.com/jsurfer/JsonSurfer
 
 * JsonSurfer is available in central maven repository.
 
-JsonSurfer has drivers for most popular json libraries including: Gson, Jackson, FastJson and JsonSimple. Choose one and add to your POM.
+JsonSurfer has drivers for most popular json libraries including: Gson,
+Jackson, FastJson and JsonSimple. Choose one and add to your POM.
 
 ```xml
 
@@ -78,7 +79,9 @@ JsonSurfer has drivers for most popular json libraries including: Gson, Jackson,
 
 #### Create your JsonSurfer:
 
-* JsonSurfer has flexible constructor. You can create yourself or pick a prebuilt one according the json library you used:
+* JsonSurfer has flexible constructor. You can create yourself or pick a
+prebuilt one according the json library you used:
+
 1. Gson
 ```java
         // use gson parser and use gson provider use to deserialize json into gson model i.e.com.google.gson.JsonElement

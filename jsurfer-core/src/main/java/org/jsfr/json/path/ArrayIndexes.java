@@ -62,12 +62,12 @@ public class ArrayIndexes extends ChildNode {
     @Override
     public Type getType() {
         return Type.ARRAY;
-
     }
 
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
+        res.append(super.toString());
         res.append('[');
 
         for (Integer index : indexes) {
