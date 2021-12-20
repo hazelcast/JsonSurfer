@@ -30,6 +30,13 @@
         "title": "The Lord of the Rings",
         "isbn": "0-395-19395-8",
         "price": 22.99
+      },
+      {
+        "category": "fake",
+        "author": "John Smith",
+        "title": "Book with \"quoted\" word in name",
+        "isbn": "0-123-45678-9",
+        "price": 42.42
       }
     ],
     "car": [

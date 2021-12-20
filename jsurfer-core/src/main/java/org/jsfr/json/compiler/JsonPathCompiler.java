@@ -37,6 +37,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.jsfr.json.compiler.JsonPathParser.RelativePathContext;
 import org.jsfr.json.exception.JsonPathCompilerException;
 import org.jsfr.json.filter.EqualityBoolPredicate;
 import org.jsfr.json.filter.EqualityNumPredicate;
@@ -87,7 +88,7 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
 
     @Override
     public Void visitSearchChild(JsonPathParser.SearchChildContext ctx) {
-        String key = ctx.KEY().getText();
+        String key = getKeyOrQuotedString(ctx);
         currentPathBuilder().scan();
         JsonPathParser.ArrayContext array = ctx.array();
         if (array != null) {
@@ -117,11 +118,11 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitArray(JsonPathParser.ArrayContext ctx) {
-        if (ctx.getParent().getRuleIndex() == 2) {
-            array(null, ctx);
+    public Void visitRelativePath(RelativePathContext ctx) {
+        if (ctx.array() != null) {
+            array(null, ctx.array());
         }
-        return super.visitArray(ctx);
+        return super.visitRelativePath(ctx);
     }
 
     @Override
@@ -298,10 +299,24 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
     }
 
     private static String removeQuote(String quotedString) {
-        return quotedString.substring(1, quotedString.length() - 1);
+        StringBuilder res = new StringBuilder(quotedString.length() - 2);
+        for (int i = 1; i < quotedString.length() - 1; i++) {
+            char ch = quotedString.charAt(i);
+            if (ch == '\\') {
+                ch = quotedString.charAt(++i);
+            }
+            res.append(ch);
+        }
+        return res.toString();
     }
 
     private static String getKeyOrQuotedString(JsonPathParser.ChildNodeContext ctx) {
+        return ctx.KEY() != null
+            ? ctx.KEY().getText()
+            : removeQuote(ctx.QUOTED_STRING().getText());
+    }
+
+    private static String getKeyOrQuotedString(JsonPathParser.SearchChildContext ctx) {
         return ctx.KEY() != null
             ? ctx.KEY().getText()
             : removeQuote(ctx.QUOTED_STRING().getText());

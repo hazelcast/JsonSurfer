@@ -32,7 +32,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import org.jsfr.json.Book;
 import org.jsfr.json.exception.JsonPathCompilerException;
-import org.jsfr.json.exception.UnsupportedStateException;
+import org.jsfr.json.exception.JsonSurfingException;
 import org.jsfr.json.provider.JavaCollectionProvider;
 import org.jsfr.json.resolver.PoJoResolver;
 import org.junit.Test;
@@ -87,10 +87,10 @@ public class JsonPathTest {
 
     @Test
     public void shallMatch() {
-        JsonPath path1 = compile("$..store..book..book[?(@.category=='fiction')]..title");
-        JsonPath path2 = compile("$..store..book.store.book[?(@.category=='fiction')]..title");
-        JsonPath path3 = compile("$..store..book.store[?(@.category=='fiction')]..title");
-        JsonPath path4 = compile("$..book..book..book..store.book[?(@.category=='fiction')]..title");
+        JsonPath path1 = compile("$..store..book..book[?(@.category==\"fiction\")]..title");
+        JsonPath path2 = compile("$..store..book.store.book[?(@.category==\"fiction\")]..title");
+        JsonPath path3 = compile("$..store..book.store[?(@.category==\"fiction\")]..title");
+        JsonPath path4 = compile("$..book..book..book..store.book[?(@.category==\"fiction\")]..title");
         JsonPath position = compile("$.book.store.book.store.book[1].volumes[1].title");
         assertTrue(path1.matchWithDeepScan(position));
         assertTrue(path2.matchWithDeepScan(position));
@@ -144,13 +144,10 @@ public class JsonPathTest {
 
         //when
         JsonPath path1 = compile("lax $.book[*].store.title");
-        JsonPath path2 = compile("LAX $.book[*].store.title");
         boolean matched1 = path1.match(position);
-        boolean matched2 = path2.match(position);
 
         //then
         assertTrue(matched1);
-        assertTrue(matched2);
     }
 
     @Test
@@ -159,10 +156,9 @@ public class JsonPathTest {
         String path = "strict $.book[*].store.title";
 
         //when
-        UnsupportedStateException exception = assertThrows(
-            UnsupportedStateException.class,
-            () -> compile(path)
-        );
+        JsonSurfingException exception = assertThrows(
+            JsonSurfingException.class,
+            () -> compile(path));
 
         //then
         assertEquals("Strict JsonPath mode not yet supported", exception.getMessage());

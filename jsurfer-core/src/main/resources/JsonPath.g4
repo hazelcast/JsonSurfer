@@ -5,9 +5,9 @@ package org.jsfr.json.compiler;
 }
 
 path: syntaxMode? '$' relativePath* EOF;
-syntaxMode: 'lax' | 'LAX' | 'strict' | 'STRICT';
+syntaxMode: 'lax' | 'strict';
 relativePath: searchChild|search|childNode|array|childrenNode|anyChild|any;
-searchChild: '..' KEY array?;
+searchChild: '..' (KEY | QUOTED_STRING) array?;
 search: '..' ;
 anyChild: '.*' ;
 any: '*' ;
@@ -61,7 +61,7 @@ NUM
     |   '-'? INT EXP             // 1e10 -3e4
     |   '-'? INT                 // -3, 45
     ;
-QUOTED_STRING : ('\'' ( ~('\''|'\\') | ('\\' .) )* '\'') | ('"' ( ~('"'|'\\') | ('\\' .) )* '"');
+QUOTED_STRING : ('"' ( ~('"'|'\\') | ('\\' .) )* '"');
 REGEX : '/' ( ~('/'|'\\') | ('\\' .) )* '/' [idmsuxU]*;
 BOOL: 'true'|'false';
 NE: '<>'|'!=';
