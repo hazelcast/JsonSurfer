@@ -165,11 +165,11 @@ public class JsonPathTest {
         );
 
         //then
-        assertEquals("STRICT json path mode is not supported", exception.getMessage());
+        assertEquals("Strict JsonPath mode not yet supported", exception.getMessage());
     }
 
     @Test
-    public void compilerErrorsShouldBeHandler() {
+    public void compilerErrorsShouldBeHandled() {
         //given
         String path1 = "$((@@$#229))";
         String path2 = "";
