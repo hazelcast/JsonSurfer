@@ -187,7 +187,8 @@ public class JsonPath implements Iterable<PathOperator> {
     }
 
     public boolean match(JsonPath jsonPath) {
-        int p1, p2;
+        int p1;
+        int p2;
         for (p1 = this.size - 1, p2 = jsonPath.size - 1; p1 >= 0 && p2 >= 0; p1--, p2--) {
             if (!get(p1).match(jsonPath.get(p2))) {
                 return false;
