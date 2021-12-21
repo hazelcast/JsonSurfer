@@ -505,10 +505,4 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         compiler.visit(tree);
         return compiler.pathBuilder.build();
     }
-
-    //    public static void main(String[] s) {
-    //        JsonPath path = compile("$..abc.c.d[1].e[2,3,6]");
-    //        System.out.println(path);
-    //    }
-
 }

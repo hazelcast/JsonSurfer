@@ -170,7 +170,7 @@ public class JsonPathTest {
         String path1 = "$((@@$#229))";
         String path2 = "";
         String path3 = "[1,2,3]";
-        String path4 = "$.store.book[?(@.author=~ /abc)]";
+        String path4 = "$.store.book\n[?(@.author=~ /abc)]";
 
         //when
         JsonPathCompilerException exception1 = assertThrows(
@@ -191,10 +191,10 @@ public class JsonPathTest {
         );
 
         //then
-        assertEquals("Unexpected token at line 1 start: 1 end: 1", exception1.getMessage());
-        assertEquals("Unexpected token at line 1 start: 0 end: -1", exception2.getMessage());
-        assertEquals("Unexpected token at line 1 start: 0 end: 0", exception3.getMessage());
-        assertEquals("Unexpected token at line 1 start: 26 end: 29", exception4.getMessage());
+        assertEquals("Unexpected token at line 1, columns 1 to 2", exception1.getMessage());
+        assertEquals("Unexpected token at line 1, columns 0 to 0", exception2.getMessage());
+        assertEquals("Unexpected token at line 1, columns 0 to 1", exception3.getMessage());
+        assertEquals("Unexpected token at line 2, columns 14 to 18", exception4.getMessage());
     }
 
     @Test

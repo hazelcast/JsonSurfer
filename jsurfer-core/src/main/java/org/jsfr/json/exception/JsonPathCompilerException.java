@@ -27,10 +27,10 @@ public class JsonPathCompilerException extends JsonSurfingException {
 
     private static JsonPathCompilerException fromInputMismatchException(InputMismatchException mismatchException) {
         Token token = mismatchException.getOffendingToken();
-        return new JsonPathCompilerException(String.format("Unexpected token at line %d start: %d end: %d",
+        return new JsonPathCompilerException(String.format("Unexpected token at line %d, columns %d to %d",
             token.getLine(),
-            token.getStartIndex(),
-            token.getStopIndex()),
+            token.getCharPositionInLine(),
+            token.getCharPositionInLine() + token.getStopIndex() - token.getStartIndex() + 1),
             mismatchException);
     }
 
