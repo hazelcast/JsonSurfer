@@ -24,14 +24,6 @@
 
 package org.jsfr.json.compiler;
 
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
-
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -39,7 +31,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jsfr.json.compiler.JsonPathParser.RelativePathContext;
 import org.jsfr.json.exception.JsonPathCompilerException;
-import org.jsfr.json.exception.JsonSurfingException;
 import org.jsfr.json.filter.EqualityBoolPredicate;
 import org.jsfr.json.filter.EqualityNumPredicate;
 import org.jsfr.json.filter.EqualityStrPredicate;
@@ -55,6 +46,14 @@ import org.jsfr.json.filter.NotEqualityNumPredicate;
 import org.jsfr.json.filter.NotEqualityStrPredicate;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.path.SyntaxMode;
+
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 /**
  * Created by Leo on 2015/4/1.
@@ -337,7 +336,7 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
 
                     case 'u':
                         if (i + 4 >= end) {
-                            throw new JsonSurfingException("Invalid escape");
+                            throw new JsonPathCompilerException("Invalid escape");
                         }
                         ch = (char) Integer.parseInt(""
                                 + quotedString.charAt(++i)
@@ -347,7 +346,7 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
                         break;
 
                     default:
-                        throw new JsonSurfingException("Invalid escape");
+                        throw new JsonPathCompilerException("Invalid escape");
                 }
             }
             res.append(ch);

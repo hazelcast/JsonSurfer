@@ -5,6 +5,10 @@ import org.antlr.v4.runtime.Token;
 
 public class JsonPathCompilerException extends JsonSurfingException {
 
+    public JsonPathCompilerException(String message) {
+        super(message);
+    }
+
     public JsonPathCompilerException(Throwable cause) {
         super(cause);
     }
