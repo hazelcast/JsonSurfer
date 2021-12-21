@@ -64,7 +64,7 @@ public class JacksonParserTest extends JsonSurferTest {
     public void testNonBlockingParser() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
         SurfingConfiguration config = surfer.configBuilder()
-                .bind("$['foo','bar']", mockListener)
+                .bind("$[\"foo\",\"bar\"]", mockListener)
                 .build();
         byte[] part1 = "{\"foo\": 12".getBytes("UTF-8");
         byte[] part2 = "34, \"bar\": \"ab".getBytes("UTF-8");

@@ -24,19 +24,12 @@
 
 package org.jsfr.json.compiler;
 
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
-
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.jsfr.json.compiler.JsonPathParser.RelativePathContext;
 import org.jsfr.json.exception.JsonPathCompilerException;
 import org.jsfr.json.filter.EqualityBoolPredicate;
 import org.jsfr.json.filter.EqualityNumPredicate;
@@ -53,6 +46,14 @@ import org.jsfr.json.filter.NotEqualityNumPredicate;
 import org.jsfr.json.filter.NotEqualityStrPredicate;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.path.SyntaxMode;
+
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 /**
  * Created by Leo on 2015/4/1.
@@ -87,7 +88,7 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
 
     @Override
     public Void visitSearchChild(JsonPathParser.SearchChildContext ctx) {
-        String key = ctx.KEY().getText();
+        String key = getKeyOrQuotedString(ctx);
         currentPathBuilder().scan();
         JsonPathParser.ArrayContext array = ctx.array();
         if (array != null) {
@@ -117,11 +118,11 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitArray(JsonPathParser.ArrayContext ctx) {
-        if (ctx.getParent().getRuleIndex() == 2) {
-            array(null, ctx);
+    public Void visitRelativePath(RelativePathContext ctx) {
+        if (ctx.array() != null) {
+            array(null, ctx.array());
         }
-        return super.visitArray(ctx);
+        return super.visitRelativePath(ctx);
     }
 
     @Override
@@ -130,7 +131,7 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         String[] strings = new String[ctx.QUOTED_STRING().size()];
         for (TerminalNode node : ctx.QUOTED_STRING()) {
             String quotedString = node.getText();
-            strings[i++] = removeQuote(quotedString);
+            strings[i++] = unescapeString(quotedString);
         }
         currentPathBuilder().children(strings);
         return super.visitChildren(ctx);
@@ -273,7 +274,7 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         filterPathBuilder = createFilterPathBuilder();
         Void rst = super.visitFilterEqualStr(ctx);
         filterBuilder.append(
-            new EqualityStrPredicate(filterPathBuilder.build(), removeQuote(ctx.QUOTED_STRING().getText())));
+            new EqualityStrPredicate(filterPathBuilder.build(), unescapeString(ctx.QUOTED_STRING().getText())));
         filterPathBuilder = null;
         return rst;
     }
@@ -283,7 +284,7 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         filterPathBuilder = createFilterPathBuilder();
         Void rst = super.visitFilterNEqualStr(ctx);
         filterBuilder.append(
-            new NotEqualityStrPredicate(filterPathBuilder.build(), removeQuote(ctx.QUOTED_STRING().getText())));
+            new NotEqualityStrPredicate(filterPathBuilder.build(), unescapeString(ctx.QUOTED_STRING().getText())));
         filterPathBuilder = null;
         return rst;
     }
@@ -297,14 +298,72 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         return rst;
     }
 
-    private static String removeQuote(String quotedString) {
-        return quotedString.substring(1, quotedString.length() - 1);
+    static String unescapeString(String quotedString) {
+        assert quotedString.startsWith("\"") && quotedString.endsWith("\"");
+        StringBuilder res = new StringBuilder(quotedString.length() - 2);
+        int end = quotedString.length() - 1;
+        for (int i = 1; i < end; i++) {
+            char ch = quotedString.charAt(i);
+            assert ch != '"' : "unexpected end quote";
+            if (ch == '\\') {
+                ch = quotedString.charAt(++i);
+                switch (ch) {
+                    case '"':
+                    case '\'':
+                    case '\\':
+                    case '/':
+                        break;
+
+                    case 'b':
+                        ch = '\b';
+                        break;
+
+                    case 'f':
+                        ch = '\f';
+                        break;
+
+                    case 'n':
+                        ch = '\n';
+                        break;
+
+                    case 'r':
+                        ch = '\r';
+                        break;
+
+                    case 't':
+                        ch = '\t';
+                        break;
+
+                    case 'u':
+                        if (i + 4 >= end) {
+                            throw new JsonPathCompilerException("Invalid escape");
+                        }
+                        ch = (char) Integer.parseInt(""
+                                + quotedString.charAt(++i)
+                                + quotedString.charAt(++i)
+                                + quotedString.charAt(++i)
+                                + quotedString.charAt(++i), 16);
+                        break;
+
+                    default:
+                        throw new JsonPathCompilerException("Invalid escape");
+                }
+            }
+            res.append(ch);
+        }
+        return res.toString();
     }
 
     private static String getKeyOrQuotedString(JsonPathParser.ChildNodeContext ctx) {
         return ctx.KEY() != null
             ? ctx.KEY().getText()
-            : removeQuote(ctx.QUOTED_STRING().getText());
+            : unescapeString(ctx.QUOTED_STRING().getText());
+    }
+
+    private static String getKeyOrQuotedString(JsonPathParser.SearchChildContext ctx) {
+        return ctx.KEY() != null
+            ? ctx.KEY().getText()
+            : unescapeString(ctx.QUOTED_STRING().getText());
     }
 
     private static Pattern toPattern(String str) {
@@ -445,10 +504,4 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         compiler.visit(tree);
         return compiler.pathBuilder.build();
     }
-
-    //    public static void main(String[] s) {
-    //        JsonPath path = compile("$..abc.c.d[1].e[2,3,6]");
-    //        System.out.println(path);
-    //    }
-
 }
