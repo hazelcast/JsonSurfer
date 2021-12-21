@@ -39,6 +39,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jsfr.json.compiler.JsonPathParser.RelativePathContext;
 import org.jsfr.json.exception.JsonPathCompilerException;
+import org.jsfr.json.exception.JsonSurfingException;
 import org.jsfr.json.filter.EqualityBoolPredicate;
 import org.jsfr.json.filter.EqualityNumPredicate;
 import org.jsfr.json.filter.EqualityStrPredicate;
@@ -131,7 +132,7 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         String[] strings = new String[ctx.QUOTED_STRING().size()];
         for (TerminalNode node : ctx.QUOTED_STRING()) {
             String quotedString = node.getText();
-            strings[i++] = removeQuote(quotedString);
+            strings[i++] = unescapeString(quotedString);
         }
         currentPathBuilder().children(strings);
         return super.visitChildren(ctx);
@@ -274,7 +275,7 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         filterPathBuilder = createFilterPathBuilder();
         Void rst = super.visitFilterEqualStr(ctx);
         filterBuilder.append(
-            new EqualityStrPredicate(filterPathBuilder.build(), removeQuote(ctx.QUOTED_STRING().getText())));
+            new EqualityStrPredicate(filterPathBuilder.build(), unescapeString(ctx.QUOTED_STRING().getText())));
         filterPathBuilder = null;
         return rst;
     }
@@ -284,7 +285,7 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         filterPathBuilder = createFilterPathBuilder();
         Void rst = super.visitFilterNEqualStr(ctx);
         filterBuilder.append(
-            new NotEqualityStrPredicate(filterPathBuilder.build(), removeQuote(ctx.QUOTED_STRING().getText())));
+            new NotEqualityStrPredicate(filterPathBuilder.build(), unescapeString(ctx.QUOTED_STRING().getText())));
         filterPathBuilder = null;
         return rst;
     }
@@ -298,12 +299,56 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         return rst;
     }
 
-    private static String removeQuote(String quotedString) {
+    static String unescapeString(String quotedString) {
+        assert quotedString.startsWith("\"") && quotedString.endsWith("\"");
         StringBuilder res = new StringBuilder(quotedString.length() - 2);
-        for (int i = 1; i < quotedString.length() - 1; i++) {
+        int end = quotedString.length() - 1;
+        for (int i = 1; i < end; i++) {
             char ch = quotedString.charAt(i);
+            assert ch != '"' : "unexpected end quote";
             if (ch == '\\') {
                 ch = quotedString.charAt(++i);
+                switch (ch) {
+                    case '"':
+                    case '\'':
+                    case '\\':
+                    case '/':
+                        break;
+
+                    case 'b':
+                        ch = '\b';
+                        break;
+
+                    case 'f':
+                        ch = '\f';
+                        break;
+
+                    case 'n':
+                        ch = '\n';
+                        break;
+
+                    case 'r':
+                        ch = '\r';
+                        break;
+
+                    case 't':
+                        ch = '\t';
+                        break;
+
+                    case 'u':
+                        if (i + 4 >= end) {
+                            throw new JsonSurfingException("Invalid escape");
+                        }
+                        ch = (char) Integer.parseInt(""
+                                + quotedString.charAt(++i)
+                                + quotedString.charAt(++i)
+                                + quotedString.charAt(++i)
+                                + quotedString.charAt(++i), 16);
+                        break;
+
+                    default:
+                        throw new JsonSurfingException("Invalid escape");
+                }
             }
             res.append(ch);
         }
@@ -313,13 +358,13 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
     private static String getKeyOrQuotedString(JsonPathParser.ChildNodeContext ctx) {
         return ctx.KEY() != null
             ? ctx.KEY().getText()
-            : removeQuote(ctx.QUOTED_STRING().getText());
+            : unescapeString(ctx.QUOTED_STRING().getText());
     }
 
     private static String getKeyOrQuotedString(JsonPathParser.SearchChildContext ctx) {
         return ctx.KEY() != null
             ? ctx.KEY().getText()
-            : removeQuote(ctx.QUOTED_STRING().getText());
+            : unescapeString(ctx.QUOTED_STRING().getText());
     }
 
     private static Pattern toPattern(String str) {

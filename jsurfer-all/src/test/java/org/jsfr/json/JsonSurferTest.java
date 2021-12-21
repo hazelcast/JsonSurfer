@@ -1214,7 +1214,8 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testQuoteRemoving() throws IOException {
         //given
         Collector collector = surfer.collector(read("sample_filter.json"));
-        JsonPath path = JsonPathCompiler.compile("$.store.book[?(@.title == \"Book with \\\"quoted\\\" word in name\")].price");
+        JsonPath path = JsonPathCompiler.compile(
+                "$.store.book[?(@.title == \"\\\"double-quoted\\\" and \\'single-quoted\\' word in title\")].price");
 
         //when
         ValueBox<Collection<Object>> box = collector.collectAll(path, Object.class);
