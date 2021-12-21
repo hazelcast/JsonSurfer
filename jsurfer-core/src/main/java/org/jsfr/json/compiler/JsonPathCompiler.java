@@ -58,7 +58,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Leo on 2015/4/1.
  */
-@SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:MethodCount"})
+@SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:MethodCount", "checkstyle:ClassDataAbstractionCoupling"})
 public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
 
     private JsonPath.Builder pathBuilder;
@@ -142,12 +142,6 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         currentPathBuilder().anyChild();
         return super.visitAnyChild(ctx);
     }
-
-    //    @Override
-    //    public Void visitAnyIndex(JsonPathParser.AnyIndexContext ctx) {
-    //        currentPathBuilder().anyIndex();
-    //        return super.visitAnyIndex(ctx);
-    //    }
 
     @Override
     public Void visitAny(JsonPathParser.AnyContext ctx) {

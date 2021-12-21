@@ -24,9 +24,9 @@
 
 package org.jsfr.json.filter;
 
-import java.math.BigDecimal;
-
 import org.jsfr.json.path.JsonPath;
+
+import java.math.BigDecimal;
 
 public abstract class BasicJsonPathFilter extends CloneableJsonPathFilter {
 

@@ -24,11 +24,6 @@
 
 package org.jsfr.json.path;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
 import com.google.gson.Gson;
 import org.jsfr.json.Book;
 import org.jsfr.json.exception.JsonPathCompilerException;
@@ -36,6 +31,11 @@ import org.jsfr.json.exception.JsonSurfingException;
 import org.jsfr.json.provider.JavaCollectionProvider;
 import org.jsfr.json.resolver.PoJoResolver;
 import org.junit.Test;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.jsfr.json.TestUtils.readClasspathResource;
 import static org.jsfr.json.compiler.JsonPathCompiler.compile;
