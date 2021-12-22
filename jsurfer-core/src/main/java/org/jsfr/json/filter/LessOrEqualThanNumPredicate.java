@@ -24,11 +24,11 @@
 
 package org.jsfr.json.filter;
 
-import java.math.BigDecimal;
-
 import org.jsfr.json.PrimitiveHolder;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.provider.JsonProvider;
+
+import java.math.BigDecimal;
 
 public class LessOrEqualThanNumPredicate extends BasicJsonPathFilter {
 

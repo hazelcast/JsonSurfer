@@ -24,11 +24,11 @@
 
 package org.jsfr.json.filter;
 
-import java.util.Objects;
-
 import org.jsfr.json.PrimitiveHolder;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.provider.JsonProvider;
+
+import java.util.Objects;
 
 public class NotEqualityStrPredicate extends BasicJsonPathFilter {
 

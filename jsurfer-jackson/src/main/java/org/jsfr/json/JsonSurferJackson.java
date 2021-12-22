@@ -24,8 +24,8 @@
 
 package org.jsfr.json;
 
-import org.jsfr.json.provider.JacksonProvider;
 import com.fasterxml.jackson.core.JsonFactory;
+import org.jsfr.json.provider.JacksonProvider;
 
 /**
  * Created by Leo on 2017/4/1.
