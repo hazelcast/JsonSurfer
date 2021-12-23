@@ -94,7 +94,7 @@ public class JsonPath implements Iterable<PathOperator> {
 
         public static Builder start(SyntaxMode mode) {
             if (mode == SyntaxMode.STRICT) {
-                throw new JsonPathCompilerException("Strict JsonPath mode not yet supported");
+                throw new JsonPathCompilerException("Strict SQL/JSON path mode not supported");
             }
             Builder builder = new Builder();
             builder.jsonPath = new JsonPath();

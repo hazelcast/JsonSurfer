@@ -161,7 +161,7 @@ public class JsonPathTest {
             () -> compile(path));
 
         //then
-        assertEquals("Strict JsonPath mode not yet supported", exception.getMessage());
+        assertEquals("Strict SQL/JSON path mode not supported", exception.getMessage());
     }
 
     @Test
