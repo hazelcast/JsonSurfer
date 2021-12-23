@@ -18,6 +18,9 @@ public class JsonPathCompilerException extends JsonSurfingException {
     }
 
     public static JsonPathCompilerException from(RuntimeException e) {
+        if (e instanceof JsonPathCompilerException) {
+            return (JsonPathCompilerException) e;
+        }
         if (e.getCause() instanceof InputMismatchException) {
             InputMismatchException mismatchException = (InputMismatchException) e.getCause();
             return fromInputMismatchException(mismatchException);
@@ -26,7 +29,7 @@ public class JsonPathCompilerException extends JsonSurfingException {
             InputMismatchException mismatchException = (InputMismatchException) e;
             return fromInputMismatchException(mismatchException);
         }
-        return new JsonPathCompilerException(e.getCause());
+        return new JsonPathCompilerException(e);
     }
 
     private static JsonPathCompilerException fromInputMismatchException(InputMismatchException mismatchException) {
