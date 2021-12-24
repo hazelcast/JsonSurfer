@@ -32,10 +32,14 @@ public class JsonPathCompilerException extends JsonSurfingException {
 
     private static JsonPathCompilerException fromInputMismatchException(RecognitionException e) {
         Token token = e.getOffendingToken();
-        String msg = String.format("Unexpected token at line %d, columns %d to %d",
-                token.getLine(),
-                token.getCharPositionInLine(),
-                token.getCharPositionInLine() + token.getStopIndex() - token.getStartIndex() + 1);
+        int startColumn = token.getCharPositionInLine();
+        int endColumn = startColumn + token.getStopIndex() - token.getStartIndex() + 1;
+        String msg;
+        if (startColumn == endColumn) {
+            msg = String.format("Unexpected token at line %d, column %d", token.getLine(), startColumn);
+        } else {
+            msg = String.format("Unexpected token at line %d, columns %d to %d", token.getLine(), startColumn, endColumn);
+        }
 
         if (e.getMessage() != null) {
             msg += ": " + e.getMessage();

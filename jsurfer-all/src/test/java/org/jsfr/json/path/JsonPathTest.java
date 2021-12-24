@@ -202,7 +202,7 @@ public class JsonPathTest {
 
         //then
         assertEquals("Unexpected token at line 1, columns 1 to 2", exception1.getMessage());
-        assertEquals("Unexpected token at line 1, columns 0 to 0", exception2.getMessage());
+        assertEquals("Unexpected token at line 1, column 0", exception2.getMessage());
         assertEquals("Unexpected token at line 1, columns 0 to 1", exception3.getMessage());
         assertEquals("Unexpected token at line 2, columns 14 to 18", exception4.getMessage());
         assertEquals("Line 1, column 2: token recognition error at: '''", exception5.getMessage());
