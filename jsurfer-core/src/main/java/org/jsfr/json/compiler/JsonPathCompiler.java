@@ -492,20 +492,14 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         JsonPathParser parser = new JsonPathParser(tokens);
         parser.setErrorHandler(new BailErrorStrategy());
         JsonPathParser.PathContext tree;
+
+        // replace the default ConsoleErrorListener with our ThrowingErrorListener
+        parser.removeErrorListeners();
         lexer.removeErrorListeners();
-        lexer.addErrorListener(new BaseErrorListener() {
-            @Override
-            public void syntaxError(
-                    Recognizer<?, ?> recognizer,
-                    Object offendingSymbol,
-                    int line,
-                    int charPositionInLine,
-                    String msg,
-                    RecognitionException e
-            ) {
-                throw new JsonPathCompilerException("Line " + line + ", column " + charPositionInLine + ": " + msg);
-            }
-        });
+        BaseErrorListener errorListener = new ThrowingErrorListener();
+        parser.addErrorListener(errorListener);
+        lexer.addErrorListener(errorListener);
+
         try {
             tree = parser.path();
         } catch (RuntimeException e) {
@@ -514,5 +508,20 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         JsonPathCompiler compiler = new JsonPathCompiler();
         compiler.visit(tree);
         return compiler.pathBuilder.build();
+    }
+
+    private static class ThrowingErrorListener extends BaseErrorListener {
+
+        @Override
+        public void syntaxError(
+                Recognizer<?, ?> recognizer,
+                Object offendingSymbol,
+                int line,
+                int charPositionInLine,
+                String msg,
+                RecognitionException e
+        ) {
+            throw new JsonPathCompilerException("Line " + line + ", column " + charPositionInLine + ": " + msg);
+        }
     }
 }

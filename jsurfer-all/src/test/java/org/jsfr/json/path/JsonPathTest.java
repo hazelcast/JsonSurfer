@@ -206,7 +206,7 @@ public class JsonPathTest {
         assertEquals("Unexpected token at line 1, columns 0 to 1", exception3.getMessage());
         assertEquals("Unexpected token at line 2, columns 14 to 18", exception4.getMessage());
         assertEquals("Line 1, column 2: token recognition error at: '''", exception5.getMessage());
-        assertEquals("Unexpected token at line 1, columns 2 to 3", exception6.getMessage());
+        assertEquals("Line 1, column 2: no viable alternative at input '.['", exception6.getMessage());
     }
 
     @Test
