@@ -492,6 +492,7 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         JsonPathParser parser = new JsonPathParser(tokens);
         parser.setErrorHandler(new BailErrorStrategy());
         JsonPathParser.PathContext tree;
+        lexer.removeErrorListeners();
         lexer.addErrorListener(new BaseErrorListener() {
             @Override
             public void syntaxError(
