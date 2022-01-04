@@ -1215,7 +1215,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         //given
         Collector collector = surfer.collector(read("sample_filter.json"));
         JsonPath path = JsonPathCompiler.compile(
-                "$.store.book[?(@.title == \"\\\"double-quoted\\\" and \\'single-quoted\\' word in title\")].price");
+                "$.store.book[?(@.title == \"\\\"quoted\\\", 'apostrophe' and newline \\n\\t in title\")].price");
 
         //when
         ValueBox<Collection<Object>> box = collector.collectAll(path, Object.class);

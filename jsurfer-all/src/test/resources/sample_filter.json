@@ -34,7 +34,7 @@
       {
         "category": "fake",
         "author": "Special Character",
-        "title": " \"quoted\" and 'apostrophe', \n\t word in title",
+        "title": "\"quoted\", 'apostrophe' and newline \n\t in title",
         "isbn": "0-123-45678-9",
         "price": 42.42
       }
