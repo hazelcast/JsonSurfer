@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.hazelcast.jsurfer</groupId>
     <artifactId>jsurfer</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9</version>
     <packaging>pom</packaging>
     <name>JsonSurfer</name>
     <description>Let's surf on json</description>
