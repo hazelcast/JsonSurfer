@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  */
 public class MatchRegexPredicate extends BasicJsonPathFilter {
 
-    private Pattern regex;
+    private final Pattern regex;
 
     public MatchRegexPredicate(JsonPath relativePath, Pattern regex) {
         super(relativePath);
@@ -46,10 +46,16 @@ public class MatchRegexPredicate extends BasicJsonPathFilter {
     public boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
         if (primitiveHolder != null && this.getRelativePath().matchFilterPath(jsonPosition)) {
             Object candidate = primitiveHolder.getValue();
-            String string = (String) jsonProvider.cast(candidate, String.class);
-            return regex.matcher(string).find();
+            return regex.matcher(cast(candidate, jsonProvider)).find();
         }
         return false;
+    }
+
+    private static String cast(Object candidate, JsonProvider jsonProvider) {
+        if (candidate instanceof Number || candidate instanceof String) {
+            return candidate.toString();
+        }
+        return (String) jsonProvider.cast(candidate, String.class);
     }
 
 }

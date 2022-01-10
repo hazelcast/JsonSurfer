@@ -51,7 +51,7 @@ filterEqualBool: '@' relativePath* '==' BOOL;
 filterNEqualBool: '@' relativePath* NE BOOL;
 filterEqualStr: '@' relativePath* '==' QUOTED_STRING;
 filterNEqualStr: '@' relativePath* NE QUOTED_STRING;
-filterMatchRegex: '@' relativePath* '=~' REGEX;
+filterMatchRegex: '@' relativePath* 'like_regex' QUOTED_STRING;
 //exprArrayIdx: '@.length-' NUM;
 NegationOperator: '!';
 AndOperator: '&&';
@@ -62,7 +62,6 @@ NUM
     |   '-'? INT                 // -3, 45
     ;
 QUOTED_STRING : ('"' ( ~('"'|'\\') | ('\\' .) )* '"');
-REGEX : '/' ( ~('/'|'\\') | ('\\' .) )* '/' [idmsuxU]*;
 BOOL: 'true'|'false';
 NE: '<>'|'!=';
 KEY :  (ESC | ~(["\\] | '.' | '*' | '[' | ']' | '(' | ')' | ',' | ':'| '=' | '@' | '?' | '&' | '|' | '>' | '<' | '\'' | '!' | [ \t\n\r]))+  ;

@@ -290,7 +290,8 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
     public Void visitFilterMatchRegex(JsonPathParser.FilterMatchRegexContext ctx) {
         filterPathBuilder = createFilterPathBuilder();
         Void rst = super.visitFilterMatchRegex(ctx);
-        filterBuilder.append(new MatchRegexPredicate(filterPathBuilder.build(), toPattern(ctx.REGEX().getText())));
+        filterBuilder.append(new MatchRegexPredicate(filterPathBuilder.build(),
+            toPattern(ctx.QUOTED_STRING().getText())));
         filterPathBuilder = null;
         return rst;
     }
@@ -364,42 +365,11 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
     }
 
     private static Pattern toPattern(String str) {
-        // slash not escaped by backslash
-        String[] split = str.split("(?<!\\\\)/");
-        // includes flags
-        if (split.length == 3) {
-            String regex = split[1];
-            String flagsStr = split[2];
-            int flags = 0;
-            if (flagsStr.contains("i")) {
-                flags |= Pattern.CASE_INSENSITIVE;
-            }
-            if (flagsStr.contains("d")) {
-                flags |= Pattern.UNIX_LINES;
-            }
-            if (flagsStr.contains("m")) {
-                flags |= Pattern.MULTILINE;
-            }
-            if (flagsStr.contains("s")) {
-                flags |= Pattern.DOTALL;
-            }
-            if (flagsStr.contains("u")) {
-                flags |= Pattern.UNICODE_CASE;
-            }
-            if (flagsStr.contains("x")) {
-                flags |= Pattern.COMMENTS;
-            }
-            if (flagsStr.contains("U")) {
-                flags |= Pattern.UNICODE_CHARACTER_CLASS;
-            }
-            return Pattern.compile(regex, flags);
-            // no flags defined
-        } else if (split.length == 2 && str.endsWith("/")) {
-            String regex = split[1];
-            return Pattern.compile(regex);
-        } else {
-            throw new InputMismatchException("Invalid regex pattern");
+        if (!str.startsWith("\"") || !str.endsWith("\"")) {
+            throw new JsonPathCompilerException("Invalid regex literal pattern");
         }
+        String unquoted = str.substring(1, str.length() - 1);
+        return Pattern.compile(unquoted);
     }
 
     private void array(String key, JsonPathParser.ArrayContext ctx) {

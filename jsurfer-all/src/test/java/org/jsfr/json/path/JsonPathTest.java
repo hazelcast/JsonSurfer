@@ -170,7 +170,7 @@ public class JsonPathTest {
         String path1 = "$((@@$#229))";
         String path2 = "";
         String path3 = "[1,2,3]";
-        String path4 = "$.store.book\n[?(@.author=~ /abc)]";
+        String path4 = "$.store.book\n[?(@.author like_regex /abc)]";
         String path5 = "$.'store'";
         String path6 = "$.[\"first name\"]";
 
@@ -204,7 +204,7 @@ public class JsonPathTest {
         assertEquals("Unexpected token at line 1, columns 1 to 2", exception1.getMessage());
         assertEquals("Unexpected token at line 1, column 0", exception2.getMessage());
         assertEquals("Unexpected token at line 1, columns 0 to 1", exception3.getMessage());
-        assertEquals("Unexpected token at line 2, columns 14 to 18", exception4.getMessage());
+        assertEquals("Unexpected token at line 2, columns 23 to 27", exception4.getMessage());
         assertEquals("Line 1, column 2: token recognition error at: '''", exception5.getMessage());
         assertEquals("Line 1, column 2: no viable alternative at input '.['", exception6.getMessage());
     }

@@ -891,7 +891,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterMatchRegex() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(@.isbn=~/\\d-\\d\\d\\d-21311-\\d/)]", mockListener)
+        surfer.configBuilder().bind("$.store.book[?(@.isbn like_regex \"\\d-\\d\\d\\d-21311-\\d\")]", mockListener)
             .buildAndSurf(read("sample_filter.json"));
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("Test filter") {
 
@@ -906,7 +906,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterMatchRegexFlags() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
         surfer.configBuilder()
-            .bind("$.store.book[?(@.author=~/tolkien/i)]", mockListener)
+            .bind("$.store.book[?(@.author like_regex \"(?i)tolkien\")]", mockListener)
             .buildAndSurf(read("sample_filter.json"));
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("Test filter") {
 
@@ -1224,6 +1224,51 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         //then
         assertEquals(1, box.get().size());
         assertEquals(42.42, box.get().iterator().next());
+    }
+
+    @Test
+    public void testRegexFilterOnArrayElement() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("array_strings.json"));
+        JsonPath path = JsonPathCompiler.compile(
+            "$[?(@ like_regex \"foo\")]");
+
+        //when
+        ValueBox<Collection<Object>> box = collector.collectAll(path, Object.class);
+        collector.exec();
+
+        //then
+        assertEquals(asList("foo", "foo1"), box.get());
+    }
+
+    @Test
+    public void testRegexFilterOnArrayElementCaseInsensitive() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("array_strings.json"));
+        JsonPath path = JsonPathCompiler.compile(
+            "$[?(@ like_regex \"(?i)foo\")]");
+
+        //when
+        ValueBox<Collection<Object>> box = collector.collectAll(path, Object.class);
+        collector.exec();
+
+        //then
+        assertEquals(asList("Foo", "foo", "foo1"), box.get());
+    }
+
+    @Test
+    public void testRegexFilterMatchEverythingIfEmpty() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("array_strings.json"));
+        JsonPath path = JsonPathCompiler.compile(
+            "$[?(@ like_regex \"\")]");
+
+        //when
+        ValueBox<Collection<Object>> box = collector.collectAll(path, Object.class);
+        collector.exec();
+
+        //then
+        assertEquals(10, box.get().size());
     }
 
     private Object json(String key, String value) {
