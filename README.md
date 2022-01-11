@@ -1,3 +1,26 @@
+# SqlJsonSurfer
+
+This work is based on https://github.com/jsurfer/JsonSurfer and modified
+to support the JSONPath/SQL standard. The current implementation is a
+work in progress, it doesn't cover all JSONPath/SQL features.
+
+Most notable changes:
+
+- support for `strict/lax` modes in the syntax, but only `lax` mode is
+  currently supported (one can specify `lax` in the JSONPath expression).
+
+- array range syntax is `[a to b]`, where `b` is inclusive. The support
+  for traditional JSON syntax of `[a:b]` (`b` exclusive) is also
+  provided. This is an extension to the SQL syntax.
+
+- properties are quoted as `$."my property"`, instead of `$['my
+  property']`.
+
+- strings can be only double-quoted, single-quoted strings are not
+  supported.
+
+- for regex filter, SQL uses SQL's `like_regex` operator
+
 # JsonSurfer - Let's surf on Json!
 
 This repo was copied from https://github.com/jsurfer/JsonSurfer
@@ -52,25 +75,25 @@ Jackson, FastJson and JsonSimple. Choose one and add to your POM.
 <dependency>
     <groupId>com.hazelcast.jsurfer</groupId>
     <artifactId>jsurfer-gson</artifactId>
-    <version>1.7.0-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
 </dependency>
 
 <dependency>
     <groupId>com.hazelcast.jsurfer</groupId>
     <artifactId>jsurfer-jackson</artifactId>
-    <version>1.7.0-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
 </dependency>
 
 <dependency>
     <groupId>com.hazelcast.jsurfer</groupId>
     <artifactId>jsurfer-fastjson</artifactId>
-    <version>1.7.0-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
 </dependency>
 
 <dependency>
     <groupId>com.hazelcast.jsurfer</groupId>
     <artifactId>jsurfer-jsonsimple</artifactId>
-    <version>1.7.0-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
 </dependency>
 
 ```
