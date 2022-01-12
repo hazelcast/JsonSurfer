@@ -893,7 +893,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterMatchRegex() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(@.isbn like_regex \"\\d-\\d\\d\\d-21311-\\d\")]", mockListener)
+        surfer.configBuilder().bind("$.store.book[?(@.isbn like_regex \"\\\\d-\\\\d\\\\d\\\\d-21311-\\\\d\")]", mockListener)
             .buildAndSurf(read("sample_filter.json"));
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("Test filter") {
 
