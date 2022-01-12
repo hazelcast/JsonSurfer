@@ -24,7 +24,10 @@
 
 package org.jsfr.json;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.avro.AvroFactory;
 import com.fasterxml.jackson.dataformat.avro.AvroMapper;
 import com.fasterxml.jackson.dataformat.avro.AvroSchema;
@@ -52,10 +55,10 @@ import static org.mockito.Mockito.verify;
 /**
  * Created by Leo on 2015/3/30.
  */
-public class JacksonParserTest extends JsonSurferTest {
+public class JacksonParserTest extends JsonSurferTest<ObjectNode, ArrayNode, JsonNode> {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         provider = new JacksonProvider();
         surfer = new JsonSurfer(JacksonParser.INSTANCE, provider);
     }

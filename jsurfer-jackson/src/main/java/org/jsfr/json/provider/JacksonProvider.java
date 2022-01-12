@@ -41,9 +41,9 @@ public class JacksonProvider implements JsonProvider<ObjectNode, ArrayNode, Json
      */
     public static final JacksonProvider INSTANCE = new JacksonProvider();
 
-    private ObjectMapper om;
+    private final ObjectMapper om;
 
-    private JsonNodeFactory factory;
+    private final JsonNodeFactory factory;
 
     public JacksonProvider() {
         this(new ObjectMapper());

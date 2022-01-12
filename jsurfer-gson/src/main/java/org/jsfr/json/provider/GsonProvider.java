@@ -34,6 +34,8 @@ import com.google.gson.JsonPrimitive;
 
 import java.math.BigInteger;
 
+import static org.jsfr.json.provider.CastUtil.castJavaObject;
+
 public class GsonProvider implements JsonProvider<JsonObject, JsonArray, JsonElement> {
 
     /**
@@ -118,11 +120,16 @@ public class GsonProvider implements JsonProvider<JsonObject, JsonArray, JsonEle
 
     @Override
     public <T> T cast(JsonElement value, Class<T> tClass) {
-        if (internalGson.getAdapter(tClass) != null) {
-            return internalGson.fromJson(value, tClass);
-        } else {
-            return tClass.cast(value);
+        if (value == null || value instanceof JsonNull) {
+            return tClass.cast(null);
         }
+        if (internalGson.getAdapter(tClass) != null) {
+            T casted = internalGson.fromJson(value, tClass);
+            if (casted != null) {
+                return casted;
+            }
+        }
+        return castJavaObject(value, tClass);
     }
 
 

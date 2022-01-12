@@ -24,16 +24,19 @@
 
 package org.jsfr.json;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.jsfr.json.provider.GsonProvider;
 import org.junit.Before;
 
 /**
  * Created by Leo on 2015/3/29.
  */
-public class GsonParserTest extends JsonSurferTest {
+public class GsonParserTest extends JsonSurferTest<JsonObject, JsonArray, JsonElement> {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         provider = GsonProvider.INSTANCE;
         surfer = new JsonSurfer(GsonParser.INSTANCE, provider);
     }

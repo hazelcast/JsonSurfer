@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,6 +54,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -1268,7 +1270,97 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         collector.exec();
 
         //then
-        assertEquals(10, box.get().size());
+        assertEquals(12, box.get().size());
+    }
+
+    @Test
+    public void testProviderCastPrimitivesToItself() {
+        //given
+
+        //when
+        P intVal = provider.primitive(1);
+        P lonVal = provider.primitive(2L);
+        P bigIntVal = provider.primitive(BigInteger.valueOf(3));
+        P doubleVal = provider.primitive(4.0d);
+        P boolVal = provider.primitive(false);
+        P strVal = provider.primitive("str");
+
+        //then
+        assertEquals(intVal, provider.cast(intVal, intVal.getClass()));
+        assertEquals(lonVal, provider.cast(lonVal, lonVal.getClass()));
+        assertEquals(bigIntVal, provider.cast(bigIntVal, bigIntVal.getClass()));
+        assertEquals(doubleVal, provider.cast(doubleVal, doubleVal.getClass()));
+        assertEquals(boolVal, provider.cast(boolVal, boolVal.getClass()));
+        assertEquals(strVal, provider.cast(strVal, strVal.getClass()));
+    }
+
+    @Test
+    public void testProviderCastNulls() {
+        //given
+
+        //when
+        P intVal = provider.primitive(1);
+        P lonVal = provider.primitive(2L);
+        P bigIntVal = provider.primitive(BigInteger.valueOf(3));
+        P doubleVal = provider.primitive(4.0d);
+        P boolVal = provider.primitive(false);
+        P strVal = provider.primitive("str");
+        P nullVal = provider.primitiveNull();
+
+        //then
+        assertNull(provider.cast(null, intVal.getClass()));
+        assertNull(provider.cast(null, lonVal.getClass()));
+        assertNull(provider.cast(null, bigIntVal.getClass()));
+        assertNull(provider.cast(null, doubleVal.getClass()));
+        assertNull(provider.cast(null, boolVal.getClass()));
+        assertNull(provider.cast(null, strVal.getClass()));
+    }
+
+    @Test
+    public void testProviderCastPrimitivesToString() {
+        //given
+
+        //when
+        P intVal = provider.primitive(1);
+        P lonVal = provider.primitive(2L);
+        P bigIntVal = provider.primitive(BigInteger.valueOf(3));
+        P doubleVal = provider.primitive(4.0d);
+        P boolVal = provider.primitive(false);
+        P strVal = provider.primitive("str");
+        P nullVal = provider.primitiveNull();
+
+        //then
+        assertEquals("1", provider.cast(intVal, String.class));
+        assertEquals("2", provider.cast(lonVal, String.class));
+        assertEquals("3", provider.cast(bigIntVal, String.class));
+        assertEquals("4.0", provider.cast(doubleVal, String.class));
+        assertEquals("false", provider.cast(boolVal, String.class));
+        assertEquals("str", provider.cast(strVal, String.class));
+        assertNull(provider.cast(nullVal, String.class));
+    }
+
+    @Test
+    public void testProviderCastException() {
+        //given
+        class TempClass {
+
+        }
+
+        //when
+        P intVal = provider.primitive(1);
+        P lonVal = provider.primitive(2L);
+        P bigIntVal = provider.primitive(BigInteger.valueOf(3));
+        P doubleVal = provider.primitive(4.0d);
+        P boolVal = provider.primitive(false);
+        P strVal = provider.primitive("str");
+
+        //then
+        assertThrows(ClassCastException.class, () -> provider.cast(intVal, TempClass.class));
+        assertThrows(ClassCastException.class, () -> provider.cast(lonVal, TempClass.class));
+        assertThrows(ClassCastException.class, () -> provider.cast(bigIntVal, TempClass.class));
+        assertThrows(ClassCastException.class, () -> provider.cast(doubleVal, TempClass.class));
+        assertThrows(ClassCastException.class, () -> provider.cast(boolVal, TempClass.class));
+        assertThrows(ClassCastException.class, () -> provider.cast(strVal, TempClass.class));
     }
 
     private Object json(String key, String value) {

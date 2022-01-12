@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.jsfr.json.provider.CastUtil.castJavaObject;
+
 public final class JavaCollectionProvider implements JsonProvider<Map<String, Object>, List<Object>, Object> {
 
     /**
@@ -107,7 +109,7 @@ public final class JavaCollectionProvider implements JsonProvider<Map<String, Ob
 
     @Override
     public <T> T cast(Object value, Class<T> tClass) {
-        return tClass.cast(value);
+        return castJavaObject(value, tClass);
     }
 
 }

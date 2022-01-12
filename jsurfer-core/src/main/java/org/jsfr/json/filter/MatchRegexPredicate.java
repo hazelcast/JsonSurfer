@@ -24,11 +24,11 @@
 
 package org.jsfr.json.filter;
 
+import java.util.regex.Pattern;
+
 import org.jsfr.json.PrimitiveHolder;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.provider.JsonProvider;
-
-import java.util.regex.Pattern;
 
 /**
  * Created by Leo on 2017/4/4.
@@ -46,16 +46,13 @@ public class MatchRegexPredicate extends BasicJsonPathFilter {
     public boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
         if (primitiveHolder != null && this.getRelativePath().matchFilterPath(jsonPosition)) {
             Object candidate = primitiveHolder.getValue();
-            return regex.matcher(cast(candidate, jsonProvider)).find();
+            String string = (String) jsonProvider.cast(candidate, String.class);
+            if (string == null) {
+                return false;
+            }
+            return regex.matcher(string).find();
         }
         return false;
-    }
-
-    private static String cast(Object candidate, JsonProvider jsonProvider) {
-        if (candidate instanceof Number || candidate instanceof String) {
-            return candidate.toString();
-        }
-        return (String) jsonProvider.cast(candidate, String.class);
     }
 
 }

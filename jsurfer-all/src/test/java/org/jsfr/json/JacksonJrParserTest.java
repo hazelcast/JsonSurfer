@@ -24,11 +24,14 @@
 
 package org.jsfr.json;
 
+import java.util.List;
+import java.util.Map;
+
 import org.jsfr.json.provider.JacksonJrProvider;
 import org.junit.Before;
 import org.junit.Ignore;
 
-public class JacksonJrParserTest extends JsonSurferTest {
+public class JacksonJrParserTest extends JsonSurferTest<Map<Object, Object>, List<Object>, Object> {
 
     @Before
     public void setUp() {
