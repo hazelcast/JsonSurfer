@@ -1229,6 +1229,22 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     }
 
     @Test
+    public void testQuoteRemoving_regex() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("sample_filter.json"));
+        JsonPath path = JsonPathCompiler.compile(
+                "$.store.book[?(@.title like_regex \"\\\"quoted\\\", 'apostrophe' and newline \\n\\t in title\")].price");
+
+        //when
+        ValueBox<Collection<Object>> box = collector.collectAll(path, Object.class);
+        collector.exec();
+
+        //then
+        assertEquals(1, box.get().size());
+        assertEquals(42.42, box.get().iterator().next());
+    }
+
+    @Test
     public void testRegexFilterOnArrayElement() throws IOException {
         //given
         Collector collector = surfer.collector(read("array_strings.json"));

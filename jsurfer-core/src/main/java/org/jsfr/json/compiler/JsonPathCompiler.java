@@ -368,7 +368,7 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         if (!str.startsWith("\"") || !str.endsWith("\"")) {
             throw new JsonPathCompilerException("Invalid regex literal pattern");
         }
-        String unquoted = str.substring(1, str.length() - 1);
+        String unquoted = unescapeString(str);
         return Pattern.compile(unquoted);
     }
 
