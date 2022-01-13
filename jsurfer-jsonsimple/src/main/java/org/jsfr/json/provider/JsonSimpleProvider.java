@@ -29,6 +29,8 @@ import org.json.simple.JSONObject;
 
 import java.math.BigInteger;
 
+import static org.jsfr.json.provider.CastUtil.castJavaObject;
+
 public final class JsonSimpleProvider implements JsonProvider<JSONObject, JSONArray, Object> {
 
     /**
@@ -107,8 +109,7 @@ public final class JsonSimpleProvider implements JsonProvider<JSONObject, JSONAr
 
     @Override
     public <T> T cast(Object value, Class<T> tClass) {
-        return tClass.cast(value);
+        return castJavaObject(value, tClass);
     }
-
 
 }

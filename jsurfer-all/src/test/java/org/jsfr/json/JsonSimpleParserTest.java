@@ -25,6 +25,8 @@
 package org.jsfr.json;
 
 import org.jsfr.json.provider.JsonSimpleProvider;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -32,10 +34,10 @@ import org.junit.Test;
 /**
  * Created by Leo on 2017/8/26.
  */
-public class JsonSimpleParserTest extends JsonSurferTest {
+public class JsonSimpleParserTest extends JsonSurferTest<JSONObject, JSONArray, Object> {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         provider = JsonSimpleProvider.INSTANCE;
         surfer = new JsonSurfer(JsonSimpleParser.INSTANCE, provider);
     }

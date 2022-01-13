@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.jsfr.json.provider.CastUtil.castJavaObject;
+
 public class JacksonJrProvider implements JsonProvider<Map<Object, Object>, List<Object>, Object> {
 
     /**
@@ -107,6 +109,6 @@ public class JacksonJrProvider implements JsonProvider<Map<Object, Object>, List
 
     @Override
     public <T> T cast(Object value, Class<T> tClass) {
-        return tClass.cast(value);
+        return castJavaObject(value, tClass);
     }
 }

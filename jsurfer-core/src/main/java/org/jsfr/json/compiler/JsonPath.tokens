@@ -27,11 +27,10 @@ AndOperator=26
 OrOperator=27
 NUM=28
 QUOTED_STRING=29
-REGEX=30
-BOOL=31
-NE=32
-KEY=33
-WS=34
+BOOL=30
+NE=31
+KEY=32
+WS=33
 '$'=1
 'lax'=2
 'strict'=3
@@ -49,7 +48,7 @@ WS=34
 '<'=15
 '<='=16
 '=='=17
-'=~'=18
+'like_regex'=18
 '[*]'=19
 '['=20
 ']'=21

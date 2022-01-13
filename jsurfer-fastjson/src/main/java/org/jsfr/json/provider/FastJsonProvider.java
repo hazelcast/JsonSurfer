@@ -30,6 +30,8 @@ import com.alibaba.fastjson.JSONObject;
 
 import java.math.BigInteger;
 
+import static org.jsfr.json.provider.CastUtil.castJavaObject;
+
 /**
  * Created by Leo on 2017/4/1.
  */
@@ -114,7 +116,7 @@ public final class FastJsonProvider implements JsonProvider<JSONObject, JSONArra
         if (value instanceof JSON) {
             return JSON.toJavaObject((JSON) value, tClass);
         } else {
-            return tClass.cast(value);
+            return castJavaObject(value, tClass);
         }
     }
 

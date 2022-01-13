@@ -24,18 +24,18 @@
 
 package org.jsfr.json.filter;
 
+import java.util.regex.Pattern;
+
 import org.jsfr.json.PrimitiveHolder;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.provider.JsonProvider;
-
-import java.util.regex.Pattern;
 
 /**
  * Created by Leo on 2017/4/4.
  */
 public class MatchRegexPredicate extends BasicJsonPathFilter {
 
-    private Pattern regex;
+    private final Pattern regex;
 
     public MatchRegexPredicate(JsonPath relativePath, Pattern regex) {
         super(relativePath);
@@ -47,6 +47,9 @@ public class MatchRegexPredicate extends BasicJsonPathFilter {
         if (primitiveHolder != null && this.getRelativePath().matchFilterPath(jsonPosition)) {
             Object candidate = primitiveHolder.getValue();
             String string = (String) jsonProvider.cast(candidate, String.class);
+            if (string == null) {
+                return false;
+            }
             return regex.matcher(string).find();
         }
         return false;

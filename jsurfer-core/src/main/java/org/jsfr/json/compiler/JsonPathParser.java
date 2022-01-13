@@ -23,7 +23,7 @@ public class JsonPathParser extends Parser {
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
 		T__17=18, ANY_INDEX=19, OPEN_SQ_BRACKET=20, CLOSE_SQ_BRACKET=21, TO=22, 
 		COMMA=23, COLON=24, NegationOperator=25, AndOperator=26, OrOperator=27, 
-		NUM=28, QUOTED_STRING=29, REGEX=30, BOOL=31, NE=32, KEY=33, WS=34;
+		NUM=28, QUOTED_STRING=29, BOOL=30, NE=31, KEY=32, WS=33;
 	public static final int
 		RULE_path = 0, RULE_syntaxMode = 1, RULE_relativePath = 2, RULE_searchChild = 3, 
 		RULE_search = 4, RULE_anyChild = 5, RULE_any = 6, RULE_index = 7, RULE_indexes = 8, 
@@ -46,7 +46,7 @@ public class JsonPathParser extends Parser {
 	private static String[] makeLiteralNames() {
 		return new String[] {
 			null, "'$'", "'lax'", "'strict'", "'..'", "'.*'", "'*'", "'.'", "'[?('", 
-			"')]'", "'('", "')'", "'@'", "'>'", "'>='", "'<'", "'<='", "'=='", "'=~'", 
+			"')]'", "'('", "')'", "'@'", "'>'", "'>='", "'<'", "'<='", "'=='", "'like_regex'", 
 			"'[*]'", "'['", "']'", "'to'", "','", "':'", "'!'", "'&&'", "'||'"
 		};
 	}
@@ -56,7 +56,7 @@ public class JsonPathParser extends Parser {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, null, null, "ANY_INDEX", "OPEN_SQ_BRACKET", 
 			"CLOSE_SQ_BRACKET", "TO", "COMMA", "COLON", "NegationOperator", "AndOperator", 
-			"OrOperator", "NUM", "QUOTED_STRING", "REGEX", "BOOL", "NE", "KEY", "WS"
+			"OrOperator", "NUM", "QUOTED_STRING", "BOOL", "NE", "KEY", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -1809,7 +1809,7 @@ public class JsonPathParser extends Parser {
 	}
 
 	public static class FilterMatchRegexContext extends ParserRuleContext {
-		public TerminalNode REGEX() { return getToken(JsonPathParser.REGEX, 0); }
+		public TerminalNode QUOTED_STRING() { return getToken(JsonPathParser.QUOTED_STRING, 0); }
 		public List<RelativePathContext> relativePath() {
 			return getRuleContexts(RelativePathContext.class);
 		}
@@ -1853,7 +1853,7 @@ public class JsonPathParser extends Parser {
 			setState(296);
 			match(T__17);
 			setState(297);
-			match(REGEX);
+			match(QUOTED_STRING);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1885,7 +1885,7 @@ public class JsonPathParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3$\u012e\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3#\u012e\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
@@ -1910,9 +1910,9 @@ public class JsonPathParser extends Parser {
 		"\16\32\u0115\13\32\3\32\3\32\3\32\3\33\3\33\7\33\u011c\n\33\f\33\16\33"+
 		"\u011f\13\33\3\33\3\33\3\33\3\34\3\34\7\34\u0126\n\34\f\34\16\34\u0129"+
 		"\13\34\3\34\3\34\3\34\3\34\2\3\36\35\2\4\6\b\n\f\16\20\22\24\26\30\32"+
-		"\34\36 \"$&(*,.\60\62\64\66\2\4\3\2\4\5\4\2\37\37##\2\u0141\29\3\2\2\2"+
-		"\4D\3\2\2\2\6M\3\2\2\2\bO\3\2\2\2\nT\3\2\2\2\fV\3\2\2\2\16X\3\2\2\2\20"+
-		"_\3\2\2\2\22a\3\2\2\2\24t\3\2\2\2\26~\3\2\2\2\30\u0082\3\2\2\2\32\u008c"+
+		"\34\36 \"$&(*,.\60\62\64\66\2\4\3\2\4\5\4\2\37\37\"\"\2\u0141\29\3\2\2"+
+		"\2\4D\3\2\2\2\6M\3\2\2\2\bO\3\2\2\2\nT\3\2\2\2\fV\3\2\2\2\16X\3\2\2\2"+
+		"\20_\3\2\2\2\22a\3\2\2\2\24t\3\2\2\2\26~\3\2\2\2\30\u0082\3\2\2\2\32\u008c"+
 		"\3\2\2\2\34\u008e\3\2\2\2\36\u00ab\3\2\2\2 \u00b8\3\2\2\2\"\u00bf\3\2"+
 		"\2\2$\u00c9\3\2\2\2&\u00d3\3\2\2\2(\u00dd\3\2\2\2*\u00e7\3\2\2\2,\u00f1"+
 		"\3\2\2\2.\u00fb\3\2\2\2\60\u0105\3\2\2\2\62\u010f\3\2\2\2\64\u0119\3\2"+
@@ -1971,24 +1971,24 @@ public class JsonPathParser extends Parser {
 		"\3\2\2\2\u00ee\u00ef\7\23\2\2\u00ef\u00f0\7\36\2\2\u00f0+\3\2\2\2\u00f1"+
 		"\u00f5\7\16\2\2\u00f2\u00f4\5\6\4\2\u00f3\u00f2\3\2\2\2\u00f4\u00f7\3"+
 		"\2\2\2\u00f5\u00f3\3\2\2\2\u00f5\u00f6\3\2\2\2\u00f6\u00f8\3\2\2\2\u00f7"+
-		"\u00f5\3\2\2\2\u00f8\u00f9\7\"\2\2\u00f9\u00fa\7\36\2\2\u00fa-\3\2\2\2"+
+		"\u00f5\3\2\2\2\u00f8\u00f9\7!\2\2\u00f9\u00fa\7\36\2\2\u00fa-\3\2\2\2"+
 		"\u00fb\u00ff\7\16\2\2\u00fc\u00fe\5\6\4\2\u00fd\u00fc\3\2\2\2\u00fe\u0101"+
 		"\3\2\2\2\u00ff\u00fd\3\2\2\2\u00ff\u0100\3\2\2\2\u0100\u0102\3\2\2\2\u0101"+
-		"\u00ff\3\2\2\2\u0102\u0103\7\23\2\2\u0103\u0104\7!\2\2\u0104/\3\2\2\2"+
+		"\u00ff\3\2\2\2\u0102\u0103\7\23\2\2\u0103\u0104\7 \2\2\u0104/\3\2\2\2"+
 		"\u0105\u0109\7\16\2\2\u0106\u0108\5\6\4\2\u0107\u0106\3\2\2\2\u0108\u010b"+
 		"\3\2\2\2\u0109\u0107\3\2\2\2\u0109\u010a\3\2\2\2\u010a\u010c\3\2\2\2\u010b"+
-		"\u0109\3\2\2\2\u010c\u010d\7\"\2\2\u010d\u010e\7!\2\2\u010e\61\3\2\2\2"+
+		"\u0109\3\2\2\2\u010c\u010d\7!\2\2\u010d\u010e\7 \2\2\u010e\61\3\2\2\2"+
 		"\u010f\u0113\7\16\2\2\u0110\u0112\5\6\4\2\u0111\u0110\3\2\2\2\u0112\u0115"+
 		"\3\2\2\2\u0113\u0111\3\2\2\2\u0113\u0114\3\2\2\2\u0114\u0116\3\2\2\2\u0115"+
 		"\u0113\3\2\2\2\u0116\u0117\7\23\2\2\u0117\u0118\7\37\2\2\u0118\63\3\2"+
 		"\2\2\u0119\u011d\7\16\2\2\u011a\u011c\5\6\4\2\u011b\u011a\3\2\2\2\u011c"+
 		"\u011f\3\2\2\2\u011d\u011b\3\2\2\2\u011d\u011e\3\2\2\2\u011e\u0120\3\2"+
-		"\2\2\u011f\u011d\3\2\2\2\u0120\u0121\7\"\2\2\u0121\u0122\7\37\2\2\u0122"+
+		"\2\2\u011f\u011d\3\2\2\2\u0120\u0121\7!\2\2\u0121\u0122\7\37\2\2\u0122"+
 		"\65\3\2\2\2\u0123\u0127\7\16\2\2\u0124\u0126\5\6\4\2\u0125\u0124\3\2\2"+
 		"\2\u0126\u0129\3\2\2\2\u0127\u0125\3\2\2\2\u0127\u0128\3\2\2\2\u0128\u012a"+
-		"\3\2\2\2\u0129\u0127\3\2\2\2\u012a\u012b\7\24\2\2\u012b\u012c\7 \2\2\u012c"+
-		"\67\3\2\2\2\369?MR_ekovz\u0085\u008c\u0094\u00ab\u00b3\u00b5\u00bc\u00c3"+
-		"\u00cd\u00d7\u00e1\u00eb\u00f5\u00ff\u0109\u0113\u011d\u0127";
+		"\3\2\2\2\u0129\u0127\3\2\2\2\u012a\u012b\7\24\2\2\u012b\u012c\7\37\2\2"+
+		"\u012c\67\3\2\2\2\369?MR_ekovz\u0085\u008c\u0094\u00ab\u00b3\u00b5\u00bc"+
+		"\u00c3\u00cd\u00d7\u00e1\u00eb\u00f5\u00ff\u0109\u0113\u011d\u0127";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

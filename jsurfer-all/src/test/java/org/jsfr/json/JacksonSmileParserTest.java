@@ -26,6 +26,8 @@ package org.jsfr.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import org.jsfr.json.provider.JacksonProvider;
 import org.junit.Before;
@@ -34,10 +36,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class JacksonSmileParserTest extends JsonSurferTest {
+public class JacksonSmileParserTest extends JsonSurferTest<ObjectNode, ArrayNode, JsonNode> {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         provider = new JacksonProvider();
         surfer = new JsonSurfer(new JacksonParser(new SmileFactory()), provider);
     }
