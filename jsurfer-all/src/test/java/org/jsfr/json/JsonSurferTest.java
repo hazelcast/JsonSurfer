@@ -121,8 +121,8 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testTypeBindingOneWithFilter() throws Exception {
         Book book = surfer.collectOne(read("sample.json"), Book.class,
-            JsonPathCompiler.compile("$..book[?(@.category==\"fiction\")]"),
-            JsonPathCompiler.compile("$..book[?(@.price>9)]"));
+            JsonPathCompiler.compile("$..book[*]?(@.category==\"fiction\")"),
+            JsonPathCompiler.compile("$..book[*]?(@.price>9)"));
         assertEquals("Evelyn Waugh", book.getAuthor());
     }
 
@@ -190,7 +190,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterEqualBoolean() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(@.marked==true)]", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(@.marked==true)", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -206,7 +206,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterEqualNumber() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(@.price==8.95)]", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(@.price==8.95)", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -221,7 +221,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterGreaterThan() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(@.price>10)]", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(@.price>10)", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -245,7 +245,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterLessThan() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(@.price<10)]", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(@.price<10)", mockListener)
             .buildAndSurf(read("sample.json"));
 
         O book1 = provider.createObject();
@@ -268,7 +268,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterEqualString1() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(@.description.year==\"2010\")]", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(@.description.year==\"2010\")", mockListener)
             .buildAndSurf(read("sample_filter.json"));
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("Test filter") {
 
@@ -282,7 +282,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterEqualString() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(@.category==\"fiction\")]", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(@.category==\"fiction\")", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -315,7 +315,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterExistence() throws Exception {
 
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(@.isbn)]", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(@.isbn)", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -340,7 +340,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterExistence2() throws Exception {
 
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(@.description)]", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(@.description)", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -357,7 +357,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterNegation() throws Exception {
 
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(!(@.isbn))]", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(!(@.isbn))", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -382,7 +382,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterAggregate() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
         surfer.configBuilder()
-            .bind("$.store.book[?(@.price < 10 || @.category && @.isbn && !(@.price<10))]", mockListener)
+            .bind("$.store.book[*]?(@.price < 10 || @.category && @.isbn && !(@.price<10))", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -414,7 +414,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterThenChild() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(@.description.year==\"2010\")].author", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(@.description.year==\"2010\").author", mockListener)
             .buildAndSurf(read("sample_filter2.json"));
         verify(mockListener, times(1)).onValue(eq(provider.primitive("Evelyn Waugh")), any(ParsingContext.class));
         verify(mockListener, times(1)).onValue(eq(provider.primitive("Nigel Rees")), any(ParsingContext.class));
@@ -423,7 +423,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterThenChildDeepScan() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(@.price==8.95)]..year", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(@.price==8.95)..year", mockListener)
             .buildAndSurf(read("sample_filter2.json"));
         verify(mockListener, times(1)).onValue(eq(provider.primitive("2010")), any(ParsingContext.class));
         verify(mockListener, times(2)).onValue(eq(provider.primitive("1997")), any(ParsingContext.class));
@@ -433,7 +433,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterAfterDeepScanAndThenChildDeepScan() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$..book[?(@.price==8.95)]..year", mockListener)
+        surfer.configBuilder().bind("$..book[*]?(@.price==8.95)..year", mockListener)
             .buildAndSurf(read("sample_filter2.json"));
         verify(mockListener, times(1)).onValue(eq(provider.primitive("2010")), any(ParsingContext.class));
         verify(mockListener, times(2)).onValue(eq(provider.primitive("1997")), any(ParsingContext.class));
@@ -444,7 +444,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterAggregateThenChild() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
         surfer.configBuilder()
-            .bind("$.store.book[?(@.author==\"Nigel Rees\"||@.description.year==\"2010\")].title", mockListener)
+            .bind("$.store.book[*]?(@.author==\"Nigel Rees\"||@.description.year==\"2010\").title", mockListener)
             .buildAndSurf(read("sample_filter2.json"));
         verify(mockListener, times(2)).onValue(eq(provider.primitive("Sayings of the Century")),
             any(ParsingContext.class));
@@ -457,7 +457,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathDoubleFilter() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
         surfer.configBuilder()
-            .bind("$.store.book[?(@.category==\"fiction\")].volumes[?(@.year==\"1954\")]", mockListener)
+            .bind("$.store.book[*]?(@.category==\"fiction\").volumes[*]?(@.year==\"1954\")", mockListener)
             .buildAndSurf(read("sample_filter2.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -490,7 +490,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathDoubleFilterThenChild() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
         surfer.configBuilder()
-            .bind("$.store.book[?(@.category==\"fiction\")].volumes[?(@.year==\"1954\")].title", mockListener)
+            .bind("$.store.book[*]?(@.category==\"fiction\").volumes[*]?(@.year==\"1954\").title", mockListener)
             .buildAndSurf(read("sample_filter2.json"));
 
         verify(mockListener, times(1)).onValue(eq(provider.primitive("The Fellowship of the Ring")),
@@ -504,7 +504,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterNotMatch() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$..book[?(@.category==\"comic\")]", mockListener)
+        surfer.configBuilder().bind("$..book[*]?(@.category==\"comic\")", mockListener)
             .buildAndSurf(read("sample_filter2.json"));
         verify(mockListener, times(0)).onValue(any(), any(ParsingContext.class));
     }
@@ -512,7 +512,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterNotMatch2() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book.title[?(@.title==\"comic\")]", mockListener)
+        surfer.configBuilder().bind("$.store.book.title[*]?(@.title==\"comic\")", mockListener)
             .buildAndSurf(read("sample_filter2.json"));
         verify(mockListener, times(0)).onValue(any(), any(ParsingContext.class));
     }
@@ -521,7 +521,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathDoubleFilterThenChildWithDeepScan() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
         surfer.configBuilder()
-            .bind("$..book[?(@.category==\"fiction\" && @.volumes[2].year==\"1955\")]..title",
+            .bind("$..book[*]?(@.category==\"fiction\" && @.volumes[2].year==\"1955\")..title",
                 mockListener)
             .buildAndSurf(read("sample_filter2.json"));
 
@@ -624,24 +624,6 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
             .buildAndSurf(read("sample.json"));
         verify(mockListener, times(18)).onValue(any(),
             any(ParsingContext.class));
-    }
-
-    @Test
-    public void testArraySlicing() throws Exception {
-        JsonPathListener mock1 = mock(JsonPathListener.class);
-        JsonPathListener mock2 = mock(JsonPathListener.class);
-        JsonPathListener mock3 = mock(JsonPathListener.class);
-        JsonPathListener mock4 = mock(JsonPathListener.class);
-        surfer.configBuilder()
-            .bind("$[:2]", mock1)
-            .bind("$[0:2]", mock2)
-            .bind("$[2:]", mock3)
-            .bind("$[:]", mock4)
-            .buildAndSurf(read("array.json"));
-        verify(mock1, times(2)).onValue(any(), any(ParsingContext.class));
-        verify(mock2, times(2)).onValue(any(), any(ParsingContext.class));
-        verify(mock3, times(3)).onValue(any(), any(ParsingContext.class));
-        verify(mock4, times(5)).onValue(any(), any(ParsingContext.class));
     }
 
     @Test
@@ -893,7 +875,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testJsonPathFilterMatchRegex() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[?(@.isbn like_regex \"\\\\d-\\\\d\\\\d\\\\d-21311-\\\\d\")]", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(@.isbn like_regex \"\\\\d-\\\\d\\\\d\\\\d-21311-\\\\d\")", mockListener)
             .buildAndSurf(read("sample_filter.json"));
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("Test filter") {
 
@@ -908,7 +890,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterMatchRegexFlags() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
         surfer.configBuilder()
-            .bind("$.store.book[?(@.author like_regex \"(?i)tolkien\")]", mockListener)
+            .bind("$.store.book[*]?(@.author like_regex \"(?i)tolkien\")", mockListener)
             .buildAndSurf(read("sample_filter.json"));
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("Test filter") {
 
@@ -927,8 +909,8 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
 
         surfer.configBuilder()
             .bind("$.store.book[0,1]", mockListener1)
-            .bind("$.store.book[?(@.author==\"Herman Melville\")]", mockListener2)
-            .bind("$.store.book[?(@.author==\"Nigel Rees\")]", mockListener3)
+            .bind("$.store.book[*]?(@.author==\"Herman Melville\")", mockListener2)
+            .bind("$.store.book[*]?(@.author==\"Nigel Rees\")", mockListener3)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener1, times(2)).onValue(any(), any(ParsingContext.class));
@@ -945,9 +927,9 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
 
         SurfingConfiguration config = surfer.configBuilder()
             .bind("$.store.book[0,1]", mockListener1)
-            .bind("$.store.book[?(@.author==\"Herman Melville\")]", mockListener2)
-            .bind("$.store.book[?(@.author==\"Nigel Rees\")]", mockListener3)
-            .bind("$.store.book[?(@.volumes)]", mockListener4)
+            .bind("$.store.book[*]?(@.author==\"Herman Melville\")", mockListener2)
+            .bind("$.store.book[*]?(@.author==\"Nigel Rees\")", mockListener3)
+            .bind("$.store.book[*]?(@.volumes)", mockListener4)
             .build();
         surfer.surf(read("sample_filter.json"), config);
         surfer.surf(read("sample_filter2.json"), config);
@@ -966,7 +948,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         JsonPathListener mockListener3 = mock(JsonPathListener.class);
 
         surfer.configBuilder()
-            .bind("$.store.book[?(@.category == \"reference\")]", mockListener1)
+            .bind("$.store.book[*]?(@.category == \"reference\")", mockListener1)
             .bind("$.store.bicycle.color", mockListener2)
             .bind("$.store.bicycle", mockListener3)
             .buildAndSurf(read("sample.json"));
@@ -1008,9 +990,9 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         Collector collector = surfer.collector(read("array.json"));
 
         // when
-        ValueBox<Boolean> boolVal = collector.collectOne("$[?(@ == true)]", Boolean.class);
-        ValueBox<String> stringValSingleQuote = collector.collectOne("$[?(@ == \"abc\")]", String.class);
-        ValueBox<Double> decimalVal = collector.collectOne("$[?(@ == 8.88)]", Double.class);
+        ValueBox<Boolean> boolVal = collector.collectOne("$[*]?(@ == true)", Boolean.class);
+        ValueBox<String> stringValSingleQuote = collector.collectOne("$[*]?(@ == \"abc\")", String.class);
+        ValueBox<Double> decimalVal = collector.collectOne("$[*]?(@ == 8.88)", Double.class);
         collector.exec();
 
         //then
@@ -1025,9 +1007,9 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         Collector collector = surfer.collector(read("array.json"));
 
         // when
-        ValueBox<Double> gtVal = collector.collectOne("$[?(@ > 8)]", Double.class);
-        ValueBox<Double> geVal1 = collector.collectOne("$[?(@ >= 8.87)]", Double.class);
-        ValueBox<Double> geVal2 = collector.collectOne("$[?(@ >= 8.88)]", Double.class);
+        ValueBox<Double> gtVal = collector.collectOne("$[*]?(@ > 8)", Double.class);
+        ValueBox<Double> geVal1 = collector.collectOne("$[*]?(@ >= 8.87)", Double.class);
+        ValueBox<Double> geVal2 = collector.collectOne("$[*]?(@ >= 8.88)", Double.class);
         collector.exec();
 
         //then
@@ -1042,9 +1024,9 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         Collector collector = surfer.collector(read("array.json"));
 
         // when
-        ValueBox<Double> ltVal = collector.collectOne("$[?(@ < 9)]", Double.class);
-        ValueBox<Double> leVal1 = collector.collectOne("$[?(@ < 8.89)]", Double.class);
-        ValueBox<Double> leVal2 = collector.collectOne("$[?(@ <= 8.88)]", Double.class);
+        ValueBox<Double> ltVal = collector.collectOne("$[*]?(@ < 9)", Double.class);
+        ValueBox<Double> leVal1 = collector.collectOne("$[*]?(@ < 8.89)", Double.class);
+        ValueBox<Double> leVal2 = collector.collectOne("$[*]?(@ <= 8.88)", Double.class);
         collector.exec();
 
         //then
@@ -1059,8 +1041,8 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         Collector collector = surfer.collector(read("array.json"));
 
         // when
-        ValueBox<Collection<Object>> ne1 = collector.collectAll("$[?(@ != true)]", Object.class);
-        ValueBox<Collection<Object>> ne2 = collector.collectAll("$[?(@ <> true)]", Object.class);
+        ValueBox<Collection<Object>> ne1 = collector.collectAll("$[*]?(@ != true)", Object.class);
+        ValueBox<Collection<Object>> ne2 = collector.collectAll("$[*]?(@ <> true)", Object.class);
         collector.exec();
 
         //then
@@ -1074,8 +1056,8 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         Collector collector = surfer.collector(read("array.json"));
 
         // when
-        ValueBox<Collection<Object>> ne1 = collector.collectAll("$[?(@ != \"abc\")]", Object.class);
-        ValueBox<Collection<Object>> ne2 = collector.collectAll("$[?(@ <> \"abc\")]", Object.class);
+        ValueBox<Collection<Object>> ne1 = collector.collectAll("$[*]?(@ != \"abc\")", Object.class);
+        ValueBox<Collection<Object>> ne2 = collector.collectAll("$[*]?(@ <> \"abc\")", Object.class);
         collector.exec();
 
         //then
@@ -1089,8 +1071,8 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         Collector collector = surfer.collector(read("array.json"));
 
         // when
-        ValueBox<Collection<Object>> ne1 = collector.collectAll("$[?(@ != 8.88)]", Object.class);
-        ValueBox<Collection<Object>> ne2 = collector.collectAll("$[?(@ <> 8.88)]", Object.class);
+        ValueBox<Collection<Object>> ne1 = collector.collectAll("$[*]?(@ != 8.88)", Object.class);
+        ValueBox<Collection<Object>> ne2 = collector.collectAll("$[*]?(@ <> 8.88)", Object.class);
         collector.exec();
 
         //then
@@ -1217,7 +1199,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         //given
         Collector collector = surfer.collector(read("sample_filter.json"));
         JsonPath path = JsonPathCompiler.compile(
-                "$.store.book[?(@.title == \"\\\"quoted\\\", 'apostrophe' and newline \\n\\t in title\")].price");
+                "$.store.book[*]?(@.title == \"\\\"quoted\\\", 'apostrophe' and newline \\n\\t in title\").price");
 
         //when
         ValueBox<Collection<Object>> box = collector.collectAll(path, Object.class);
@@ -1233,7 +1215,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         //given
         Collector collector = surfer.collector(read("sample_filter.json"));
         JsonPath path = JsonPathCompiler.compile(
-                "$.store.book[?(@.title like_regex \"\\\"quoted\\\", 'apostrophe' and newline \\n\\t in title\")].price");
+                "$.store.book[*]?(@.title like_regex \"\\\"quoted\\\", 'apostrophe' and newline \\n\\t in title\").price");
 
         //when
         ValueBox<Collection<Object>> box = collector.collectAll(path, Object.class);
@@ -1249,7 +1231,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         //given
         Collector collector = surfer.collector(read("array_strings.json"));
         JsonPath path = JsonPathCompiler.compile(
-            "$[?(@ like_regex \"foo\")]");
+            "$[*]?(@ like_regex \"foo\")");
 
         //when
         ValueBox<Collection<Object>> box = collector.collectAll(path, Object.class);
@@ -1264,7 +1246,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         //given
         Collector collector = surfer.collector(read("array_strings.json"));
         JsonPath path = JsonPathCompiler.compile(
-            "$[?(@ like_regex \"(?i)foo\")]");
+            "$[*]?(@ like_regex \"(?i)foo\")");
 
         //when
         ValueBox<Collection<Object>> box = collector.collectAll(path, Object.class);
@@ -1279,7 +1261,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         //given
         Collector collector = surfer.collector(read("array_strings.json"));
         JsonPath path = JsonPathCompiler.compile(
-            "$[?(@ like_regex \"\")]");
+            "$[*]?(@ like_regex \"\")");
 
         //when
         ValueBox<Collection<Object>> box = collector.collectAll(path, Object.class);
@@ -1377,6 +1359,48 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         assertThrows(ClassCastException.class, () -> provider.cast(doubleVal, TempClass.class));
         assertThrows(ClassCastException.class, () -> provider.cast(boolVal, TempClass.class));
         assertThrows(ClassCastException.class, () -> provider.cast(strVal, TempClass.class));
+    }
+
+    @Test
+    public void testIndexAndFilter() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("array_strings.json"));
+        JsonPath path1 = JsonPathCompiler.compile(
+            "$[0]?(@ like_regex \"(?i)foo\")");
+        JsonPath path2 = JsonPathCompiler.compile(
+            "$[1]?(@ like_regex \"(?i)foo\")");
+
+        //when
+        ValueBox<Collection<Object>> box1 = collector.collectAll(path1, Object.class);
+        ValueBox<Collection<Object>> box2 = collector.collectAll(path2, Object.class);
+        collector.exec();
+
+        //then
+        assertTrue(box1.get().isEmpty());
+        assertEquals(Collections.singletonList("Foo"), box2.get());
+    }
+
+    @Test
+    public void testIndexRangeAndFilter() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("array_strings.json"));
+        JsonPath path1 = JsonPathCompiler.compile(
+            "$[0 to 1]?(@ like_regex \"(?i)foo\")");
+        JsonPath path2 = JsonPathCompiler.compile(
+            "$[1 to 2]?(@ like_regex \"(?i)foo\")");
+        JsonPath path3 = JsonPathCompiler.compile(
+            "$[1,2,3]?(@ like_regex \"(?i)foo\")");
+
+        //when
+        ValueBox<Collection<Object>> box1 = collector.collectAll(path1, Object.class);
+        ValueBox<Collection<Object>> box2 = collector.collectAll(path2, Object.class);
+        ValueBox<Collection<Object>> box3 = collector.collectAll(path3, Object.class);
+        collector.exec();
+
+        //then
+        assertEquals(Collections.singletonList("Foo"), box1.get());
+        assertEquals(asList("Foo", "foo"), box2.get());
+        assertEquals(asList("Foo", "foo", "foo1"), box3.get());
     }
 
     private Object json(String key, String value) {

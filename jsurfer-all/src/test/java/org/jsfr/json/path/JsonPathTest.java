@@ -87,14 +87,14 @@ public class JsonPathTest {
 
     @Test
     public void shallMatch() {
-        JsonPath path1 = compile("$..store..book..book[?(@.category==\"fiction\")]..title");
-        JsonPath path2 = compile("$..store..book.store.book[?(@.category==\"fiction\")]..title");
-        JsonPath path3 = compile("$..store..book.store[?(@.category==\"fiction\")]..title");
-        JsonPath path4 = compile("$..book..book..book..store.book[?(@.category==\"fiction\")]..title");
+        JsonPath path1 = compile("$..store..book..book[*]?(@.category==\"fiction\")..title");
+        JsonPath path2 = compile("$..store..book.store.book[*]?(@.category==\"fiction\")..title");
+        JsonPath path3 = compile("$..store..book.store[*]?(@.category==\"fiction\")..title");
+        JsonPath path4 = compile("$..book..book..book..store.book[*]?(@.category==\"fiction\")..title");
         JsonPath position = compile("$.book.store.book.store.book[1].volumes[1].title");
         assertTrue(path1.matchWithDeepScan(position));
         assertTrue(path2.matchWithDeepScan(position));
-        assertFalse(path3.matchWithDeepScan(position));
+        assertTrue(path3.matchWithDeepScan(position));
         assertFalse(path4.matchWithDeepScan(position));
     }
 
@@ -170,7 +170,7 @@ public class JsonPathTest {
         String path1 = "$((@@$#229))";
         String path2 = "";
         String path3 = "[1,2,3]";
-        String path4 = "$.store.book\n[?(@.author like_regex /abc)]";
+        String path4 = "$.store.book\n[*]?(@.author like_regex /abc)";
         String path5 = "$.'store'";
         String path6 = "$.[\"first name\"]";
 
@@ -204,7 +204,8 @@ public class JsonPathTest {
         assertEquals("Unexpected token at line 1, columns 1 to 2", exception1.getMessage());
         assertEquals("Unexpected token at line 1, column 0", exception2.getMessage());
         assertEquals("Unexpected token at line 1, columns 0 to 1", exception3.getMessage());
-        assertEquals("Unexpected token at line 2, columns 23 to 27", exception4.getMessage());
+        assertEquals("Line 2, column 25: no viable alternative at input '[*]?(@.authorlike_regex/abc'",
+            exception4.getMessage());
         assertEquals("Line 1, column 2: token recognition error at: '''", exception5.getMessage());
         assertEquals("Line 1, column 2: no viable alternative at input '.['", exception6.getMessage());
     }
@@ -226,18 +227,20 @@ public class JsonPathTest {
     }
 
     @Test
-    public void arraySlicing() {
+    public void arrayFilter() {
         //given
-        JsonPath path = compile("$.book[0:2]");
+        JsonPath path1 = compile("$.book[1]?(@.year == 2016)");
+        JsonPath path2 = compile("$.book[*]?(@.year == 2016).title");
+        JsonPath path3 = compile("$.book[0 to 2]?(@.year == 2016)");
 
         //when
-        boolean matched1 = path.match(compile("$.book[0]"));
-        boolean matched2 = path.match(compile("$.book[1]"));
-        boolean matched3 = path.match(compile("$.book[2]"));
 
         //then
-        assertTrue(matched1);
-        assertTrue(matched2);
-        assertFalse(matched3);
+        assertFalse(path1.match(compile("$.book[0]")));
+        assertTrue(path1.match(compile("$.book[1]")));
+        assertFalse(path2.match(compile("$.book[0].name")));
+        assertTrue(path2.match(compile("$.book[1].title")));
+        assertFalse(path3.match(compile("$.book[3]")));
+        assertTrue(path3.match(compile("$.book[1]")));
     }
 }

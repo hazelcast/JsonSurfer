@@ -67,12 +67,6 @@ public interface JsonPathVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIndexes(JsonPathParser.IndexesContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JsonPathParser#slicing}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSlicing(JsonPathParser.SlicingContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link JsonPathParser#filter}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

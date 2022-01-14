@@ -24,10 +24,12 @@
 
 package org.jsfr.json.path;
 
-public class ArrayWildcard extends ChildNode {
+import org.jsfr.json.filter.JsonPathFilter;
 
-    public ArrayWildcard(String key) {
-        super(key);
+public class ArrayWildcard extends FilterableChildNode {
+
+    public ArrayWildcard(String key, JsonPathFilter jsonPathFilter) {
+        super(key, jsonPathFilter);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class ArrayWildcard extends ChildNode {
 
     @Override
     public String toString() {
-        return super.toString() + "[*]";
+        return super.toString() + "[*]" + (super.getJsonPathFilter() != null ? "?(@...)" : "");
     }
 
 }

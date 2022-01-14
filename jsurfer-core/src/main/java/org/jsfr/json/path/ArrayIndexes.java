@@ -28,17 +28,16 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-/**
- * Created by Administrator on 2015/3/25.
- */
-public class ArrayIndexes extends ChildNode {
+import org.jsfr.json.filter.JsonPathFilter;
+
+public class ArrayIndexes extends FilterableChildNode {
 
     private final Set<Integer> indexes;
     private final TreeMap<Integer, Integer> ranges;
 
-    protected ArrayIndexes(String key, Set<Integer> indexes, TreeMap<Integer, Integer> ranges) {
-        super(key);
-        assert indexes.size() + ranges.size() > 0;
+    public ArrayIndexes(String key, JsonPathFilter jsonPathFilter,
+        Set<Integer> indexes, TreeMap<Integer, Integer> ranges) {
+        super(key, jsonPathFilter);
         this.indexes = indexes;
         this.ranges = ranges;
     }
@@ -87,6 +86,7 @@ public class ArrayIndexes extends ChildNode {
         } else {
             res.setCharAt(res.length() - 1, ']');
         }
+        res.append(super.getJsonPathFilter() != null ? "?(@...)" : "");
         return res.toString();
     }
 }
