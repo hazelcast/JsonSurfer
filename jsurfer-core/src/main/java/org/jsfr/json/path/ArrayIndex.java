@@ -24,12 +24,10 @@
 
 package org.jsfr.json.path;
 
+import org.jsfr.json.filter.JsonPathFilter;
 import org.jsfr.json.resolver.DocumentResolver;
 
-/**
- * Created by Administrator on 2015/3/22.
- */
-public class ArrayIndex extends ChildNode {
+public class ArrayIndex extends FilterableChildNode {
 
     private int arrayIndex = -1;
 
@@ -37,8 +35,8 @@ public class ArrayIndex extends ChildNode {
         super(key);
     }
 
-    public ArrayIndex(String key, int arrayIndex) {
-        super(key);
+    public ArrayIndex(String key, JsonPathFilter jsonPathFilter, int arrayIndex) {
+        super(key, jsonPathFilter);
         this.arrayIndex = arrayIndex;
     }
 
@@ -48,10 +46,6 @@ public class ArrayIndex extends ChildNode {
 
     public void reset() {
         this.arrayIndex = -1;
-    }
-
-    public void setArrayIndex(int arrayIndex) {
-        this.arrayIndex = arrayIndex;
     }
 
     public void increaseArrayIndex() {
@@ -82,10 +76,11 @@ public class ArrayIndex extends ChildNode {
 
     @Override
     public String toString() {
+        String filter = super.getJsonPathFilter() != null ? "?(@...)" : "";
         if (getKey() == null) {
-            return "[" + arrayIndex + "]";
+            return "[" + arrayIndex + "]" + filter;
         } else {
-            return super.toString() + "[" + arrayIndex + "]";
+            return super.toString() + "[" + arrayIndex + "]" + filter;
         }
     }
 }

@@ -25,7 +25,7 @@
 package org.jsfr.json;
 
 import org.jsfr.json.filter.JsonPathFilter;
-import org.jsfr.json.path.ArrayFilter;
+import org.jsfr.json.path.FilterableChildNode;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.path.PathOperator;
 import org.jsfr.json.provider.JsonProvider;
@@ -70,11 +70,14 @@ public class SurfingConfiguration {
         ArrayList<FilterConfig> filterConfigs = new ArrayList<>();
         for (int i = 0; i < path.pathDepth(); i++) {
             PathOperator operator = path.get(i);
-            if (operator instanceof ArrayFilter) {
-                FilterConfig fc = new FilterConfig();
-                fc.filter = ((ArrayFilter) operator).getJsonPathFilter();
-                fc.filterRootPath = path.derivePath(i + 1);
-                filterConfigs.add(fc);
+            if (operator instanceof FilterableChildNode) {
+                FilterableChildNode nodeWithFilter = (FilterableChildNode) operator;
+                if (nodeWithFilter.getJsonPathFilter() != null) {
+                    FilterConfig fc = new FilterConfig();
+                    fc.filter = nodeWithFilter.getJsonPathFilter();
+                    fc.filterRootPath = path.derivePath(i + 1);
+                    filterConfigs.add(fc);
+                }
             }
         }
         return filterConfigs;

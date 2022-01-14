@@ -41,6 +41,7 @@ import org.jsfr.json.filter.ExistencePredicate;
 import org.jsfr.json.filter.FilterBuilder;
 import org.jsfr.json.filter.GreaterOrEqualThanNumPredicate;
 import org.jsfr.json.filter.GreaterThanNumPredicate;
+import org.jsfr.json.filter.JsonPathFilter;
 import org.jsfr.json.filter.LessOrEqualThanNumPredicate;
 import org.jsfr.json.filter.LessThanNumPredicate;
 import org.jsfr.json.filter.MatchRegexPredicate;
@@ -373,25 +374,28 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
     }
 
     private void array(String key, JsonPathParser.ArrayContext ctx) {
+        JsonPathFilter jsonPathFilter = null;
+        if (ctx.filter() != null) {
+            filterBuilder = new FilterBuilder();
+            super.visitFilter(ctx.filter());
+            jsonPathFilter = filterBuilder.build();
+        }
+        JsonPath.Builder pathBuilder = currentPathBuilder();
         if (ctx.index() != null) {
-            arrayIndex(key, currentPathBuilder(), ctx.index());
+            arrayIndex(key, jsonPathFilter, pathBuilder, ctx.index());
         } else if (ctx.indexes() != null) {
-            arrayIndexes(key, currentPathBuilder(), ctx.indexes());
-        } else if (ctx.slicing() != null) {
-            arraySlicing(key, this.pathBuilder, ctx.slicing());
-        } else if (ctx.filter() != null) {
-            arrayFilter(key, ctx.filter());
+            arrayIndexes(key, jsonPathFilter, pathBuilder, ctx.indexes());
         } else if (ctx.ANY_INDEX() != null) {
-            currentPathBuilder().arrayWildcard(key);
+            arrayWildcard(key, jsonPathFilter, pathBuilder);
         }
     }
 
-    private static void arrayIndex(String key, JsonPath.Builder builder,
+    private static void arrayIndex(String key, JsonPathFilter filter, JsonPath.Builder builder,
         JsonPathParser.IndexContext ctx) {
-        builder.array(key, Integer.parseInt(ctx.NUM().getText()));
+        builder.array(key, filter, Integer.parseInt(ctx.NUM().getText()));
     }
 
-    private static void arrayIndexes(String key, JsonPath.Builder builder,
+    private static void arrayIndexes(String key, JsonPathFilter filter, JsonPath.Builder builder,
         JsonPathParser.IndexesContext ctx) {
         Set<Integer> indexes = new HashSet<>();
         TreeMap<Integer, Integer> ranges = new TreeMap<>();
@@ -419,33 +423,11 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
                 indexes.add(index);
             }
         }
-        builder.array(key, indexes, ranges);
+        builder.array(key, filter, indexes, ranges);
     }
 
-    private static void arraySlicing(String key, JsonPath.Builder builder,
-        JsonPathParser.SlicingContext ctx) {
-        Integer left = null;
-        Integer right;
-        Integer temp = null;
-        for (ParseTree node : ctx.children) {
-            if (node instanceof TerminalNode) {
-                TerminalNode tNode = (TerminalNode) node;
-                if (((TerminalNode) node).getSymbol().getType() == JsonPathParser.COLON) {
-                    left = temp;
-                    temp = null;
-                } else if (tNode.getSymbol().getType() == JsonPathParser.NUM) {
-                    temp = Integer.parseInt(tNode.getText());
-                }
-            }
-        }
-        right = temp;
-        builder.array(key, left, right);
-    }
-
-    private void arrayFilter(String key, JsonPathParser.FilterContext ctx) {
-        filterBuilder = new FilterBuilder();
-        super.visitFilter(ctx);
-        pathBuilder.arrayFilter(key, filterBuilder.build());
+    private static void arrayWildcard(String key, JsonPathFilter filter, JsonPath.Builder builder) {
+        builder.arrayWildcard(key, filter);
     }
 
     public static JsonPath[] compile(String... paths) {
@@ -472,6 +454,8 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
 
         try {
             tree = parser.path();
+        } catch (JsonPathCompilerException e) {
+            throw e;
         } catch (RuntimeException e) {
             throw JsonPathCompilerException.from(e);
         }
