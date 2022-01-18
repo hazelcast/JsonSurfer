@@ -689,7 +689,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testAny() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store..bicycle..*", mockListener)
+        surfer.configBuilder().bind("$.store..bicycle.*", mockListener)
             .buildAndSurf(read("sample.json"));
         verify(mockListener).onValue(eq(provider.primitive("red")), any(ParsingContext.class));
         verify(mockListener).onValue(eq(provider.primitive(19.95)), any(ParsingContext.class));
@@ -698,7 +698,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testFindEverything() throws Exception {
         surfer.configBuilder()
-            .bind("$..*", (value, context) -> LOGGER.trace("value: {}", value))
+            .bind("$.*", (value, context) -> LOGGER.trace("value: {}", value))
             .buildAndSurf(read("sample.json"));
     }
 

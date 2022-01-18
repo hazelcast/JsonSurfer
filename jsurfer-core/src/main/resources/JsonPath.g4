@@ -6,9 +6,8 @@ package org.jsfr.json.compiler;
 
 path: syntaxMode? '$' relativePath* EOF;
 syntaxMode: 'lax' | 'strict';
-relativePath: searchChild|search|childNode|array|childrenNode|anyChild|any;
+relativePath: searchChild|childNode|array|childrenNode|anyChild|any;
 searchChild: '..' (KEY | QUOTED_STRING) array?;
-search: '..' ;
 anyChild: '.*' ;
 any: '*' ;
 ANY_INDEX: '[*]' ;

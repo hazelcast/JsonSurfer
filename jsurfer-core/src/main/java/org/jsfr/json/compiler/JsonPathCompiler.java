@@ -103,11 +103,6 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         return super.visitSearchChild(ctx);
     }
 
-    @Override
-    public Void visitSearch(JsonPathParser.SearchContext ctx) {
-        currentPathBuilder().scan();
-        return super.visitSearch(ctx);
-    }
 
     @Override
     public Void visitChildNode(JsonPathParser.ChildNodeContext ctx) {
