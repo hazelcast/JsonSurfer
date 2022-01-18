@@ -38,7 +38,7 @@ filterExpr : NegationOperator '(' filterExpr ')'
            | filterLeNum
            | filterExist
            ;
-filterExist:  '@' relativePath*;
+filterExist:  'exists' '(' '@' relativePath* ')';
 filterGtNum:  '@' relativePath* '>' NUM;
 filterGeNum:  '@' relativePath* '>=' NUM;
 filterLtNum:  '@' relativePath* '<' NUM;

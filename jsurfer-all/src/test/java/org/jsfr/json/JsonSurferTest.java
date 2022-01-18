@@ -315,7 +315,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterExistence() throws Exception {
 
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[*]?(@.isbn)", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(exists (@.isbn))", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -340,7 +340,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterExistence2() throws Exception {
 
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[*]?(@.description)", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(exists (@.description))", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -357,7 +357,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterNegation() throws Exception {
 
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[*]?(!(@.isbn))", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(!(exists (@.isbn)))", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -382,7 +382,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterAggregate() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
         surfer.configBuilder()
-            .bind("$.store.book[*]?(@.price < 10 || @.category && @.isbn && !(@.price<10))", mockListener)
+            .bind("$.store.book[*]?(@.price < 10 || exists (@.category) && exists (@.isbn) && !(@.price<10))", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -929,7 +929,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
             .bind("$.store.book[0,1]", mockListener1)
             .bind("$.store.book[*]?(@.author==\"Herman Melville\")", mockListener2)
             .bind("$.store.book[*]?(@.author==\"Nigel Rees\")", mockListener3)
-            .bind("$.store.book[*]?(@.volumes)", mockListener4)
+            .bind("$.store.book[*]?(exists (@.volumes))", mockListener4)
             .build();
         surfer.surf(read("sample_filter.json"), config);
         surfer.surf(read("sample_filter2.json"), config);
