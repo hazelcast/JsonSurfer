@@ -156,31 +156,6 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>${maven.checkstyle.plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>checkstyle</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <configLocation>checkstyle/checkstyle.xml</configLocation>
-                            <suppressionsLocation>checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
-                            <enableRSS>false</enableRSS>
-                            <linkXRef>false</linkXRef>
-                            <consoleOutput>true</consoleOutput>
-                            <failsOnError>true</failsOnError>
-                            <failOnViolation>true</failOnViolation>
-                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                            <enableRulesSummary>true</enableRulesSummary>
-                            <propertyExpansion>main.basedir=${main.basedir}</propertyExpansion>
-                        </configuration>
-                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -195,6 +170,31 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven.checkstyle.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>checkstyle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configLocation>checkstyle/checkstyle.xml</configLocation>
+                    <suppressionsLocation>checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+                    <enableRSS>false</enableRSS>
+                    <linkXRef>false</linkXRef>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <failOnViolation>true</failOnViolation>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <enableRulesSummary>true</enableRulesSummary>
+                    <propertyExpansion>main.basedir=${main.basedir}</propertyExpansion>
                 </configuration>
             </plugin>
             <plugin>
