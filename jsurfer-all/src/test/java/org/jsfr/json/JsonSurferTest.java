@@ -24,6 +24,16 @@
 
 package org.jsfr.json;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -36,17 +46,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.jsfr.json.TestUtils.readClasspathResource;
@@ -1292,7 +1293,6 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         P doubleVal = provider.primitive(4.0d);
         P boolVal = provider.primitive(false);
         P strVal = provider.primitive("str");
-        P nullVal = provider.primitiveNull();
 
         //then
         assertNull(provider.cast(null, intVal.getClass()));
@@ -1392,9 +1392,93 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         assertEquals(asList("Foo", "foo", "foo1"), box3.get());
     }
 
+    @Test
+    public void testArrayElementFilterByNotEqualNull() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("array.json"));
+        JsonPath path1 = JsonPathCompiler.compile(
+            "$[*]?(@ <> null)");
+        JsonPath path2 = JsonPathCompiler.compile(
+            "$[*]?(@ != null)");
+
+        //when
+        ValueBox<Collection<Object>> box1 = collector.collectAll(path1, Object.class);
+        ValueBox<Collection<Object>> box2 = collector.collectAll(path2, Object.class);
+        collector.exec();
+
+        //then
+        assertThat(box1.get(), hasItems("abc", 8.88, true, json("key", "value")));
+        assertThat(box2.get(), hasItems("abc", 8.88, true, json("key", "value")));
+        assertEquals(4, box1.get().size());
+        assertEquals(4, box2.get().size());
+    }
+
+    @Test
+    public void testArrayElementChildFilterByNotEqualNull() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("sample6.json"));
+        JsonPath path1 = JsonPathCompiler.compile(
+            "$.phones[*]?(@.extension <> null)");
+        JsonPath path2 = JsonPathCompiler.compile(
+            "$.phones[*]?(@.extension != null)");
+
+        //when
+        ValueBox<Collection<Object>> box1 = collector.collectAll(path1, Object.class);
+        ValueBox<Collection<Object>> box2 = collector.collectAll(path2, Object.class);
+        collector.exec();
+
+        //then
+        Object json = json("number", "0123-4567-8888", "extension", "1", "type", "iPhone");
+        assertThat(box1.get(), hasItem(json));
+        assertThat(box2.get(), hasItem(json));
+        assertEquals(1, box1.get().size());
+        assertEquals(1, box2.get().size());
+    }
+
+    @Test
+    public void testArrayElementFilterByEqualNull() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("array.json"));
+        JsonPath path1 = JsonPathCompiler.compile(
+            "$[*]?(@ == null)");
+
+        //when
+        ValueBox<Collection<Object>> box1 = collector.collectAll(path1, Object.class);
+        collector.exec();
+
+        //then
+        assertEquals(1, box1.get().size());
+        assertNull(box1.get().iterator().next());
+    }
+
+    @Test
+    public void testArrayElementChildFilterByEqualNull() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("sample6.json"));
+        JsonPath path1 = JsonPathCompiler.compile(
+            "$.phones[*]?(@.extension == null)");
+
+        //when
+        ValueBox<Collection<Object>> box1 = collector.collectAll(path1, Object.class);
+        collector.exec();
+
+        //then
+        Object json = json("number", "0123-4567-8910", "extension", null, "type", "home");
+        assertThat(box1.get(), hasItem(json));
+        assertEquals(1, box1.get().size());
+    }
+
     private Object json(String key, String value) {
         O object = this.provider.createObject();
         this.provider.put(object, key, this.provider.primitive(value));
+        return this.provider.cast(object, Object.class);
+    }
+
+    private Object json(String key, String value, String key2, String value2, String key3, String value3) {
+        O object = this.provider.createObject();
+        this.provider.put(object, key, this.provider.primitive(value));
+        this.provider.put(object, key2, this.provider.primitive(value2));
+        this.provider.put(object, key3, this.provider.primitive(value3));
         return this.provider.cast(object, Object.class);
     }
 

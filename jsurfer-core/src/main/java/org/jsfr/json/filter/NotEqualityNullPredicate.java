@@ -1,8 +1,6 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019 WANG Lingsong
- *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -22,37 +20,26 @@
  * SOFTWARE.
  */
 
-package org.jsfr.json.provider;
+package org.jsfr.json.filter;
 
-import org.jsfr.json.resolver.DocumentResolver;
+import org.jsfr.json.PrimitiveHolder;
+import org.jsfr.json.path.JsonPath;
+import org.jsfr.json.provider.JsonProvider;
 
-import java.math.BigInteger;
+public class NotEqualityNullPredicate extends BasicJsonPathFilter {
 
-public interface JsonProvider<O, A, P> extends DocumentResolver<O, A> {
+    public NotEqualityNullPredicate(JsonPath relativePath) {
+        super(relativePath);
+    }
 
-    O createObject();
+    @Override
+    public boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
+        if (primitiveHolder != null && this.getRelativePath().matchFilterPath(jsonPosition)) {
+            Object candidate = primitiveHolder.getValue();
+            return !jsonProvider.isPrimitiveNull(candidate);
+        } else {
+            return false;
+        }
+    }
 
-    A createArray();
-
-    void put(O object, String key, P value);
-
-    void add(A array, P value);
-
-    P primitive(boolean value);
-
-    P primitive(int value);
-
-    P primitive(BigInteger value);
-
-    P primitive(double value);
-
-    P primitive(long value);
-
-    P primitive(String value);
-
-    P primitiveNull();
-
-    <T> T cast(P value, Class<T> tClass);
-
-    boolean isPrimitiveNull(Object value);
 }

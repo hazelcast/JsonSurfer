@@ -112,4 +112,9 @@ public final class JavaCollectionProvider implements JsonProvider<Map<String, Ob
         return castJavaObject(value, tClass);
     }
 
+    @Override
+    public boolean isPrimitiveNull(Object value) {
+        return value == null;
+    }
+
 }

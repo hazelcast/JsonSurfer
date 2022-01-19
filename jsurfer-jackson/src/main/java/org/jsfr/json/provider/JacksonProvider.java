@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.jsfr.json.exception.JsonSurfingException;
 
@@ -132,6 +133,11 @@ public class JacksonProvider implements JsonProvider<ObjectNode, ArrayNode, Json
         } catch (JsonProcessingException e) {
             throw new JsonSurfingException(e);
         }
+    }
+
+    @Override
+    public boolean isPrimitiveNull(Object value) {
+        return value instanceof NullNode;
     }
 
 }

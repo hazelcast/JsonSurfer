@@ -111,4 +111,10 @@ public class JacksonJrProvider implements JsonProvider<Map<Object, Object>, List
     public <T> T cast(Object value, Class<T> tClass) {
         return castJavaObject(value, tClass);
     }
+
+    @Override
+    public boolean isPrimitiveNull(Object value) {
+        return value == null;
+    }
+
 }

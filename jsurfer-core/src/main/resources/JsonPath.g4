@@ -31,6 +31,8 @@ filterExpr : NegationOperator '(' filterExpr ')'
            | filterMatchRegex
            | filterEqualBool
            | filterNEqualBool
+           | filterEqualNull
+           | filterNEqualNull
            | filterGtNum
            | filterGeNum
            | filterLtNum
@@ -48,6 +50,8 @@ filterEqualBool: '@' relativePath* '==' BOOL;
 filterNEqualBool: '@' relativePath* NE BOOL;
 filterEqualStr: '@' relativePath* '==' QUOTED_STRING;
 filterNEqualStr: '@' relativePath* NE QUOTED_STRING;
+filterEqualNull: '@' relativePath* '==' NULL;
+filterNEqualNull: '@' relativePath* NE NULL;
 filterMatchRegex: '@' relativePath* 'like_regex' QUOTED_STRING;
 //exprArrayIdx: '@.length-' NUM;
 NegationOperator: '!';
@@ -60,6 +64,7 @@ NUM
     ;
 QUOTED_STRING : ('"' ( ~('"'|'\\') | ('\\' .) )* '"');
 BOOL: 'true'|'false';
+NULL: 'null';
 NE: '<>'|'!=';
 KEY :  (ESC | ~(["\\] | '.' | '*' | '[' | ']' | '(' | ')' | ',' | ':'| '=' | '@' | '?' | '&' | '|' | '>' | '<' | '\'' | '!' | [ \t\n\r]))+  ;
 
