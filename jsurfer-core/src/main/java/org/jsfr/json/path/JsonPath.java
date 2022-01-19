@@ -123,29 +123,20 @@ public class JsonPath implements Iterable<PathOperator> {
         }
 
 
-        public Builder array(String key, int index) {
-            jsonPath.push(new ArrayIndex(key, index));
+        public Builder array(String key, JsonPathFilter jsonPathFilter, int index) {
+            jsonPath.push(new ArrayIndex(key, jsonPathFilter, index));
             return this;
         }
 
         @SuppressWarnings("checkstyle:IllegalType")
-        public Builder array(String key, Set<Integer> indexes, TreeMap<Integer, Integer> ranges) {
-            jsonPath.push(new ArrayIndexes(key, indexes, ranges));
+        public Builder array(String key, JsonPathFilter jsonPathFilter, Set<Integer> indexes,
+            TreeMap<Integer, Integer> ranges) {
+            jsonPath.push(new ArrayIndexes(key, jsonPathFilter, indexes, ranges));
             return this;
         }
 
-        public Builder array(String key, Integer lower, Integer upper) {
-            jsonPath.push(new ArraySlicing(key, lower, upper));
-            return this;
-        }
-
-        public Builder arrayWildcard(String key) {
-            jsonPath.push(new ArrayWildcard(key));
-            return this;
-        }
-
-        public Builder arrayFilter(String key, JsonPathFilter jsonPathFilter) {
-            jsonPath.push(new ArrayFilter(key, jsonPathFilter));
+        public Builder arrayWildcard(String key, JsonPathFilter jsonPathFilter) {
+            jsonPath.push(new ArrayWildcard(key, jsonPathFilter));
             return this;
         }
 

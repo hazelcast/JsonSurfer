@@ -18,11 +18,10 @@ OPEN_SQ_BRACKET: '[';
 CLOSE_SQ_BRACKET: ']';
 TO: 'to';
 COMMA: ',';
-slicing: '[' NUM? COLON NUM? ']';
-filter: '[?(' filterExpr ')]';
+filter: '?(' filterExpr ')';
 COLON : ':';
 childNode: '.' (KEY | QUOTED_STRING) array?;
-array: index | indexes | slicing | filter | ANY_INDEX;
+array: (index | indexes | ANY_INDEX) filter?;
 childrenNode: '[' QUOTED_STRING ( ',' QUOTED_STRING )* ']' ;
 filterExpr : NegationOperator '(' filterExpr ')'
            | filterExpr AndOperator filterExpr

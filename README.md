@@ -9,9 +9,7 @@ Most notable changes:
 - support for `strict/lax` modes in the syntax, but only `lax` mode is
   currently supported (one can specify `lax` in the JSONPath expression).
 
-- array range syntax is `[a to b]`, where `b` is inclusive. The support
-  for traditional JSON syntax of `[a:b]` (`b` exclusive) is also
-  provided. This is an extension to the SQL syntax.
+- array range syntax is `[a to b]`, where `b` is inclusive. 
 
 - properties are quoted as `$."my property"`, instead of `$['my
   property']`.
@@ -53,17 +51,16 @@ This repo was copied from https://github.com/jsurfer/JsonSurfer
 
 * Supported JsonPath operator in JsonSurfer:
 
-| Operator                  |   Description     |
-| :-----------------------: |:-----------------:|
-| `$`                       | root              |
-| `@`                       | current node      |
-| `*`                       | wildcard          |
-| `..`                      | recursive descent |
-| `.<name>`                 | child             |
+|         Operator          |   Description     |
+|:-------------------------:|:-----------------:|
+|            `$`            | root              |
+|            `@`            | current node      |
+|            `*`            | wildcard          |
+|           `..`            | recursive descent |
+|         `.<name>`         | child             |
 | `['<name>' (, '<name>')]` | child/children    |
 | `[<number> (, <number>)]` | index/indices     |
-| `[start:end]`             | array slice       |
-| `[?(<expression>)]`       | filter expression |
+|     `?(<expression>)`     | filter expression |
 
 * JsonSurfer is available in central maven repository.
 
@@ -75,25 +72,25 @@ Jackson, FastJson and JsonSimple. Choose one and add to your POM.
 <dependency>
     <groupId>com.hazelcast.jsurfer</groupId>
     <artifactId>jsurfer-gson</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
 </dependency>
 
 <dependency>
     <groupId>com.hazelcast.jsurfer</groupId>
     <artifactId>jsurfer-jackson</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
 </dependency>
 
 <dependency>
     <groupId>com.hazelcast.jsurfer</groupId>
     <artifactId>jsurfer-fastjson</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
 </dependency>
 
 <dependency>
     <groupId>com.hazelcast.jsurfer</groupId>
     <artifactId>jsurfer-jsonsimple</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
 </dependency>
 
 ```
@@ -197,7 +194,7 @@ JsonPath object is immutable and can be reused safely.
 
 You can use logical operators '&&' and '||' to create more complex filter expression. For example:
 ```
-$.store.book[?(@.price < 10 || @.category && @.isbn && @.price>10)].volumes[?(@.chapter == 1)]
+$.store.book[*]?(@.price < 10 || @.category && @.isbn && @.price>10).volumes[*]?(@.chapter == 1)
 ```
 
 #### Resolver API:
@@ -384,17 +381,17 @@ Sample Json:
 }
 ```
 
-| JsonPath                  |   Result     |
-| :-----------------------: |:-----------------:|
-| ```$.store.book[*].author``` | [Find the authors of all books](#find-the-authors-of-all-books)  |
-| ```$..author```              | [All authors](#all-authors)                    |
-| ```$.store.*```              | [All things in store](#all-things-in-store)                   |
-| ```$.store..price``` | [The price of everything in the store](#the-price-of-everything-in-the-store)  |
-| ```$..book[2]```              | [The third book](#the-third-book)                   |
-| ```$..book[0,1]```              | [The first two books](#the-first-two-books)                 |
-| ```$.store.book[?(@.price==8.95)]``` | [Filter all books whose price equals to 8.95](#filter-all-books-whose-price-equals-to-8.95)  |
-| ```$.store.book[?(@.category=='fiction')]```              | [Filter all books which belong to fiction category](#filter-all-books-which-belong-to-fiction-category)                   |
-| ```$.store.book[?(@.author=~/tolkien/i)]```              | [All books matching regex](#all-books-matching-regex)                 |
+|                         JsonPath                          |   Result     |
+|:---------------------------------------------------------:|:-----------------:|
+|               ```$.store.book[*].author```                | [Find the authors of all books](#find-the-authors-of-all-books)  |
+|                      ```$..author```                      | [All authors](#all-authors)                    |
+|                      ```$.store.*```                      | [All things in store](#all-things-in-store)                   |
+|                   ```$.store..price```                    | [The price of everything in the store](#the-price-of-everything-in-the-store)  |
+|                     ```$..book[2]```                      | [The third book](#the-third-book)                   |
+|                    ```$..book[0,1]```                     | [The first two books](#the-first-two-books)                 |
+|           ```$.store.book[*]?(@.price==8.95)```           | [Filter all books whose price equals to 8.95](#filter-all-books-whose-price-equals-to-8.95)  |
+| ```$.store.book[*]?(@.category=='fiction')```             | [Filter all books which belong to fiction category](#filter-all-books-which-belong-to-fiction-category)                   |
+|  ```$.store.book[*]?(@.author like_regex /tolkien/i)```   | [All books matching regex](#all-books-matching-regex)                 |
 
 #### Find the authors of all books: 
 ```javascript
@@ -524,12 +521,12 @@ Output
 ```
 #### Filter all books whose price equals to 8.95
 ```javascript
-$.store.book[?(@.price==8.95)]
+$.store.book[*]?(@.price==8.95)
 ```
 ```java
         JsonSurfer surfer = JsonSurferGson.INSTANCE;
         surfer.configBuilder()
-                .bind("$.store.book[?(@.price==8.95)]", new JsonPathListener() {
+                .bind("$.store.book[*]?(@.price==8.95)", new JsonPathListener() {
                     @Override
                     public void onValue(Object value, ParsingContext context) {
                         System.out.println(value);
@@ -543,12 +540,12 @@ Output
 ```
 #### Filter all books which belong to fiction category
 ```javascript
-$.store.book[?(@.category=='fiction')]
+$.store.book[*]?(@.category=='fiction')
 ```
 ```java
         JsonSurfer surfer = JsonSurferGson.INSTANCE;
         surfer.configBuilder()
-                .bind("$.store.book[?(@.category=='fiction')]", new JsonPathListener() {
+                .bind("$.store.book[*]?(@.category=='fiction')", new JsonPathListener() {
                     @Override
                     public void onValue(Object value, ParsingContext context) {
                         System.out.println(value);
@@ -564,12 +561,12 @@ Output
 ```
 #### All books matching regex
 ```javascript
-$.store.book[?(@.author=~/tolkien/i)]
+$.store.book[*]?(@.author like_regex "tolkien")
 ```
 ```java
         JsonSurfer surfer = JsonSurferGson.INSTANCE;
         surfer.configBuilder()
-                .bind("$.store.book[?(@.author=~/tolkien/i)]')]", new JsonPathListener() {
+                .bind("$.store.book[*]?(@.author like_regex \"tolkien\")')", new JsonPathListener() {
                     @Override
                     public void onValue(Object value, ParsingContext context) {
                         System.out.println(value);
