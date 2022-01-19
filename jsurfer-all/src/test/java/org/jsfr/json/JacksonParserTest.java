@@ -43,6 +43,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -64,14 +65,15 @@ public class JacksonParserTest extends JsonSurferTest<ObjectNode, ArrayNode, Jso
     }
 
     @Test
-    public void testNonBlockingParser() throws Exception {
+    public void testNonBlockingParser() {
         JsonPathListener mockListener = mock(JsonPathListener.class);
         SurfingConfiguration config = surfer.configBuilder()
-                .bind("$[\"foo\",\"bar\"]", mockListener)
+                .bind("$.\"foo\"", mockListener)
+                .bind("$.\"bar\"", mockListener)
                 .build();
-        byte[] part1 = "{\"foo\": 12".getBytes("UTF-8");
-        byte[] part2 = "34, \"bar\": \"ab".getBytes("UTF-8");
-        byte[] part3 = "cd\"}".getBytes("UTF-8");
+        byte[] part1 = "{\"foo\": 12".getBytes(StandardCharsets.UTF_8);
+        byte[] part2 = "34, \"bar\": \"ab".getBytes(StandardCharsets.UTF_8);
+        byte[] part3 = "cd\"}".getBytes(StandardCharsets.UTF_8);
 
         NonBlockingParser nonBlockingParser = surfer.createNonBlockingParser(config);
         assertTrue(nonBlockingParser.feed(part1, 0, part1.length));

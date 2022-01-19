@@ -27,18 +27,18 @@ public class JsonPathParser extends Parser {
 	public static final int
 		RULE_path = 0, RULE_syntaxMode = 1, RULE_relativePath = 2, RULE_searchChild = 3, 
 		RULE_anyChild = 4, RULE_any = 5, RULE_index = 6, RULE_indexes = 7, RULE_filter = 8, 
-		RULE_childNode = 9, RULE_array = 10, RULE_childrenNode = 11, RULE_filterExpr = 12, 
-		RULE_filterExist = 13, RULE_filterGtNum = 14, RULE_filterGeNum = 15, RULE_filterLtNum = 16, 
-		RULE_filterLeNum = 17, RULE_filterEqualNum = 18, RULE_filterNEqualNum = 19, 
-		RULE_filterEqualBool = 20, RULE_filterNEqualBool = 21, RULE_filterEqualStr = 22, 
-		RULE_filterNEqualStr = 23, RULE_filterMatchRegex = 24;
+		RULE_childNode = 9, RULE_array = 10, RULE_filterExpr = 11, RULE_filterExist = 12, 
+		RULE_filterGtNum = 13, RULE_filterGeNum = 14, RULE_filterLtNum = 15, RULE_filterLeNum = 16, 
+		RULE_filterEqualNum = 17, RULE_filterNEqualNum = 18, RULE_filterEqualBool = 19, 
+		RULE_filterNEqualBool = 20, RULE_filterEqualStr = 21, RULE_filterNEqualStr = 22, 
+		RULE_filterMatchRegex = 23;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"path", "syntaxMode", "relativePath", "searchChild", "anyChild", "any", 
-			"index", "indexes", "filter", "childNode", "array", "childrenNode", "filterExpr", 
-			"filterExist", "filterGtNum", "filterGeNum", "filterLtNum", "filterLeNum", 
-			"filterEqualNum", "filterNEqualNum", "filterEqualBool", "filterNEqualBool", 
-			"filterEqualStr", "filterNEqualStr", "filterMatchRegex"
+			"index", "indexes", "filter", "childNode", "array", "filterExpr", "filterExist", 
+			"filterGtNum", "filterGeNum", "filterLtNum", "filterLeNum", "filterEqualNum", 
+			"filterNEqualNum", "filterEqualBool", "filterNEqualBool", "filterEqualStr", 
+			"filterNEqualStr", "filterMatchRegex"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -140,33 +140,33 @@ public class JsonPathParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(51);
+			setState(49);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__1 || _la==T__2) {
 				{
-				setState(50);
+				setState(48);
 				syntaxMode();
 				}
 			}
 
-			setState(53);
+			setState(51);
 			match(T__0);
-			setState(57);
+			setState(55);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ANY_INDEX) | (1L << OPEN_SQ_BRACKET))) != 0)) {
 				{
 				{
-				setState(54);
+				setState(52);
 				relativePath();
 				}
 				}
-				setState(59);
+				setState(57);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(60);
+			setState(58);
 			match(EOF);
 			}
 		}
@@ -200,7 +200,7 @@ public class JsonPathParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(62);
+			setState(60);
 			_la = _input.LA(1);
 			if ( !(_la==T__1 || _la==T__2) ) {
 			_errHandler.recoverInline(this);
@@ -233,9 +233,6 @@ public class JsonPathParser extends Parser {
 		public ArrayContext array() {
 			return getRuleContext(ArrayContext.class,0);
 		}
-		public ChildrenNodeContext childrenNode() {
-			return getRuleContext(ChildrenNodeContext.class,0);
-		}
 		public AnyChildContext anyChild() {
 			return getRuleContext(AnyChildContext.class,0);
 		}
@@ -257,48 +254,41 @@ public class JsonPathParser extends Parser {
 		RelativePathContext _localctx = new RelativePathContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_relativePath);
 		try {
-			setState(70);
+			setState(67);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(64);
+				setState(62);
 				searchChild();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(65);
+				setState(63);
 				childNode();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(66);
+				setState(64);
 				array();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(67);
-				childrenNode();
+				setState(65);
+				anyChild();
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(68);
-				anyChild();
-				}
-				break;
-			case 6:
-				enterOuterAlt(_localctx, 6);
-				{
-				setState(69);
+				setState(66);
 				any();
 				}
 				break;
@@ -339,9 +329,9 @@ public class JsonPathParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(72);
+			setState(69);
 			match(T__3);
-			setState(73);
+			setState(70);
 			_la = _input.LA(1);
 			if ( !(_la==QUOTED_STRING || _la==KEY) ) {
 			_errHandler.recoverInline(this);
@@ -351,12 +341,12 @@ public class JsonPathParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(75);
+			setState(72);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 			case 1:
 				{
-				setState(74);
+				setState(71);
 				array();
 				}
 				break;
@@ -392,7 +382,7 @@ public class JsonPathParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(77);
+			setState(74);
 			match(T__4);
 			}
 		}
@@ -425,7 +415,7 @@ public class JsonPathParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(79);
+			setState(76);
 			match(T__5);
 			}
 		}
@@ -459,18 +449,18 @@ public class JsonPathParser extends Parser {
 		IndexContext _localctx = new IndexContext(_ctx, getState());
 		enterRule(_localctx, 12, RULE_index);
 		try {
-			setState(86);
+			setState(83);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case OPEN_SQ_BRACKET:
 				enterOuterAlt(_localctx, 1);
 				{
 				{
-				setState(81);
+				setState(78);
 				match(OPEN_SQ_BRACKET);
-				setState(82);
+				setState(79);
 				match(NUM);
-				setState(83);
+				setState(80);
 				match(CLOSE_SQ_BRACKET);
 				}
 				}
@@ -479,9 +469,9 @@ public class JsonPathParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				{
-				setState(84);
+				setState(81);
 				match(T__6);
-				setState(85);
+				setState(82);
 				match(NUM);
 				}
 				}
@@ -534,51 +524,51 @@ public class JsonPathParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(88);
+			setState(85);
 			match(OPEN_SQ_BRACKET);
-			setState(89);
+			setState(86);
 			match(NUM);
-			setState(92);
+			setState(89);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==TO) {
 				{
-				setState(90);
+				setState(87);
 				match(TO);
-				setState(91);
+				setState(88);
 				match(NUM);
 				}
 			}
 
-			setState(102);
+			setState(99);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==COMMA) {
 				{
 				{
-				setState(94);
+				setState(91);
 				match(COMMA);
-				setState(95);
+				setState(92);
 				match(NUM);
-				setState(98);
+				setState(95);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==TO) {
 					{
-					setState(96);
+					setState(93);
 					match(TO);
-					setState(97);
+					setState(94);
 					match(NUM);
 					}
 				}
 
 				}
 				}
-				setState(104);
+				setState(101);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(105);
+			setState(102);
 			match(CLOSE_SQ_BRACKET);
 			}
 		}
@@ -614,11 +604,11 @@ public class JsonPathParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(107);
+			setState(104);
 			match(T__7);
-			setState(108);
+			setState(105);
 			filterExpr(0);
-			setState(109);
+			setState(106);
 			match(T__8);
 			}
 		}
@@ -657,9 +647,9 @@ public class JsonPathParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(111);
+			setState(108);
 			match(T__6);
-			setState(112);
+			setState(109);
 			_la = _input.LA(1);
 			if ( !(_la==QUOTED_STRING || _la==KEY) ) {
 			_errHandler.recoverInline(this);
@@ -669,12 +659,12 @@ public class JsonPathParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(114);
+			setState(111);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,8,_ctx) ) {
 			case 1:
 				{
-				setState(113);
+				setState(110);
 				array();
 				}
 				break;
@@ -721,102 +711,38 @@ public class JsonPathParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(119);
+			setState(116);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,9,_ctx) ) {
 			case 1:
 				{
-				setState(116);
+				setState(113);
 				index();
 				}
 				break;
 			case 2:
 				{
-				setState(117);
+				setState(114);
 				indexes();
 				}
 				break;
 			case 3:
 				{
-				setState(118);
+				setState(115);
 				match(ANY_INDEX);
 				}
 				break;
 			}
-			setState(122);
+			setState(119);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__7) {
 				{
-				setState(121);
+				setState(118);
 				filter();
 				}
 			}
 
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class ChildrenNodeContext extends ParserRuleContext {
-		public TerminalNode OPEN_SQ_BRACKET() { return getToken(JsonPathParser.OPEN_SQ_BRACKET, 0); }
-		public List<TerminalNode> QUOTED_STRING() { return getTokens(JsonPathParser.QUOTED_STRING); }
-		public TerminalNode QUOTED_STRING(int i) {
-			return getToken(JsonPathParser.QUOTED_STRING, i);
-		}
-		public TerminalNode CLOSE_SQ_BRACKET() { return getToken(JsonPathParser.CLOSE_SQ_BRACKET, 0); }
-		public List<TerminalNode> COMMA() { return getTokens(JsonPathParser.COMMA); }
-		public TerminalNode COMMA(int i) {
-			return getToken(JsonPathParser.COMMA, i);
-		}
-		public ChildrenNodeContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_childrenNode; }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JsonPathVisitor ) return ((JsonPathVisitor<? extends T>)visitor).visitChildrenNode(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final ChildrenNodeContext childrenNode() throws RecognitionException {
-		ChildrenNodeContext _localctx = new ChildrenNodeContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_childrenNode);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(124);
-			match(OPEN_SQ_BRACKET);
-			setState(125);
-			match(QUOTED_STRING);
-			setState(130);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			while (_la==COMMA) {
-				{
-				{
-				setState(126);
-				match(COMMA);
-				setState(127);
-				match(QUOTED_STRING);
-				}
-				}
-				setState(132);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-			}
-			setState(133);
-			match(CLOSE_SQ_BRACKET);
 			}
 		}
 		catch (RecognitionException re) {
@@ -896,121 +822,121 @@ public class JsonPathParser extends Parser {
 		int _parentState = getState();
 		FilterExprContext _localctx = new FilterExprContext(_ctx, _parentState);
 		FilterExprContext _prevctx = _localctx;
-		int _startState = 24;
-		enterRecursionRule(_localctx, 24, RULE_filterExpr, _p);
+		int _startState = 22;
+		enterRecursionRule(_localctx, 22, RULE_filterExpr, _p);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(153);
+			setState(139);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,11,_ctx) ) {
 			case 1:
 				{
-				setState(136);
+				setState(122);
 				match(NegationOperator);
-				setState(137);
+				setState(123);
 				match(T__9);
-				setState(138);
+				setState(124);
 				filterExpr(0);
-				setState(139);
+				setState(125);
 				match(T__8);
 				}
 				break;
 			case 2:
 				{
-				setState(141);
+				setState(127);
 				filterEqualNum();
 				}
 				break;
 			case 3:
 				{
-				setState(142);
+				setState(128);
 				filterNEqualNum();
 				}
 				break;
 			case 4:
 				{
-				setState(143);
+				setState(129);
 				filterEqualStr();
 				}
 				break;
 			case 5:
 				{
-				setState(144);
+				setState(130);
 				filterNEqualStr();
 				}
 				break;
 			case 6:
 				{
-				setState(145);
+				setState(131);
 				filterMatchRegex();
 				}
 				break;
 			case 7:
 				{
-				setState(146);
+				setState(132);
 				filterEqualBool();
 				}
 				break;
 			case 8:
 				{
-				setState(147);
+				setState(133);
 				filterNEqualBool();
 				}
 				break;
 			case 9:
 				{
-				setState(148);
+				setState(134);
 				filterGtNum();
 				}
 				break;
 			case 10:
 				{
-				setState(149);
+				setState(135);
 				filterGeNum();
 				}
 				break;
 			case 11:
 				{
-				setState(150);
+				setState(136);
 				filterLtNum();
 				}
 				break;
 			case 12:
 				{
-				setState(151);
+				setState(137);
 				filterLeNum();
 				}
 				break;
 			case 13:
 				{
-				setState(152);
+				setState(138);
 				filterExist();
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(163);
+			setState(149);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,14,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(161);
+					setState(147);
 					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,13,_ctx) ) {
+					switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
 					case 1:
 						{
 						_localctx = new FilterExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_filterExpr);
-						setState(155);
+						setState(141);
 						if (!(precpred(_ctx, 14))) throw new FailedPredicateException(this, "precpred(_ctx, 14)");
-						setState(156);
+						setState(142);
 						match(AndOperator);
-						setState(157);
+						setState(143);
 						filterExpr(15);
 						}
 						break;
@@ -1018,20 +944,20 @@ public class JsonPathParser extends Parser {
 						{
 						_localctx = new FilterExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_filterExpr);
-						setState(158);
+						setState(144);
 						if (!(precpred(_ctx, 13))) throw new FailedPredicateException(this, "precpred(_ctx, 13)");
-						setState(159);
+						setState(145);
 						match(OrOperator);
-						setState(160);
+						setState(146);
 						filterExpr(14);
 						}
 						break;
 					}
 					} 
 				}
-				setState(165);
+				setState(151);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,14,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
 			}
 			}
 		}
@@ -1066,32 +992,32 @@ public class JsonPathParser extends Parser {
 
 	public final FilterExistContext filterExist() throws RecognitionException {
 		FilterExistContext _localctx = new FilterExistContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_filterExist);
+		enterRule(_localctx, 24, RULE_filterExist);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(166);
+			setState(152);
 			match(T__10);
-			setState(167);
+			setState(153);
 			match(T__9);
-			setState(168);
+			setState(154);
 			match(T__11);
-			setState(172);
+			setState(158);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ANY_INDEX) | (1L << OPEN_SQ_BRACKET))) != 0)) {
 				{
 				{
-				setState(169);
+				setState(155);
 				relativePath();
 				}
 				}
-				setState(174);
+				setState(160);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(175);
+			setState(161);
 			match(T__8);
 			}
 		}
@@ -1127,30 +1053,30 @@ public class JsonPathParser extends Parser {
 
 	public final FilterGtNumContext filterGtNum() throws RecognitionException {
 		FilterGtNumContext _localctx = new FilterGtNumContext(_ctx, getState());
-		enterRule(_localctx, 28, RULE_filterGtNum);
+		enterRule(_localctx, 26, RULE_filterGtNum);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(177);
+			setState(163);
 			match(T__11);
-			setState(181);
+			setState(167);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ANY_INDEX) | (1L << OPEN_SQ_BRACKET))) != 0)) {
 				{
 				{
-				setState(178);
+				setState(164);
 				relativePath();
 				}
 				}
-				setState(183);
+				setState(169);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(184);
+			setState(170);
 			match(T__12);
-			setState(185);
+			setState(171);
 			match(NUM);
 			}
 		}
@@ -1186,30 +1112,30 @@ public class JsonPathParser extends Parser {
 
 	public final FilterGeNumContext filterGeNum() throws RecognitionException {
 		FilterGeNumContext _localctx = new FilterGeNumContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_filterGeNum);
+		enterRule(_localctx, 28, RULE_filterGeNum);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(187);
+			setState(173);
 			match(T__11);
-			setState(191);
+			setState(177);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ANY_INDEX) | (1L << OPEN_SQ_BRACKET))) != 0)) {
 				{
 				{
-				setState(188);
+				setState(174);
 				relativePath();
 				}
 				}
-				setState(193);
+				setState(179);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(194);
+			setState(180);
 			match(T__13);
-			setState(195);
+			setState(181);
 			match(NUM);
 			}
 		}
@@ -1245,30 +1171,30 @@ public class JsonPathParser extends Parser {
 
 	public final FilterLtNumContext filterLtNum() throws RecognitionException {
 		FilterLtNumContext _localctx = new FilterLtNumContext(_ctx, getState());
-		enterRule(_localctx, 32, RULE_filterLtNum);
+		enterRule(_localctx, 30, RULE_filterLtNum);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(197);
+			setState(183);
 			match(T__11);
-			setState(201);
+			setState(187);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ANY_INDEX) | (1L << OPEN_SQ_BRACKET))) != 0)) {
 				{
 				{
-				setState(198);
+				setState(184);
 				relativePath();
 				}
 				}
-				setState(203);
+				setState(189);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(204);
+			setState(190);
 			match(T__14);
-			setState(205);
+			setState(191);
 			match(NUM);
 			}
 		}
@@ -1304,30 +1230,30 @@ public class JsonPathParser extends Parser {
 
 	public final FilterLeNumContext filterLeNum() throws RecognitionException {
 		FilterLeNumContext _localctx = new FilterLeNumContext(_ctx, getState());
-		enterRule(_localctx, 34, RULE_filterLeNum);
+		enterRule(_localctx, 32, RULE_filterLeNum);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(207);
+			setState(193);
 			match(T__11);
-			setState(211);
+			setState(197);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ANY_INDEX) | (1L << OPEN_SQ_BRACKET))) != 0)) {
 				{
 				{
-				setState(208);
+				setState(194);
 				relativePath();
 				}
 				}
-				setState(213);
+				setState(199);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(214);
+			setState(200);
 			match(T__15);
-			setState(215);
+			setState(201);
 			match(NUM);
 			}
 		}
@@ -1363,30 +1289,30 @@ public class JsonPathParser extends Parser {
 
 	public final FilterEqualNumContext filterEqualNum() throws RecognitionException {
 		FilterEqualNumContext _localctx = new FilterEqualNumContext(_ctx, getState());
-		enterRule(_localctx, 36, RULE_filterEqualNum);
+		enterRule(_localctx, 34, RULE_filterEqualNum);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(217);
+			setState(203);
 			match(T__11);
-			setState(221);
+			setState(207);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ANY_INDEX) | (1L << OPEN_SQ_BRACKET))) != 0)) {
 				{
 				{
-				setState(218);
+				setState(204);
 				relativePath();
 				}
 				}
-				setState(223);
+				setState(209);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(224);
+			setState(210);
 			match(T__16);
-			setState(225);
+			setState(211);
 			match(NUM);
 			}
 		}
@@ -1423,30 +1349,30 @@ public class JsonPathParser extends Parser {
 
 	public final FilterNEqualNumContext filterNEqualNum() throws RecognitionException {
 		FilterNEqualNumContext _localctx = new FilterNEqualNumContext(_ctx, getState());
-		enterRule(_localctx, 38, RULE_filterNEqualNum);
+		enterRule(_localctx, 36, RULE_filterNEqualNum);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(227);
+			setState(213);
 			match(T__11);
-			setState(231);
+			setState(217);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ANY_INDEX) | (1L << OPEN_SQ_BRACKET))) != 0)) {
 				{
 				{
-				setState(228);
+				setState(214);
 				relativePath();
 				}
 				}
-				setState(233);
+				setState(219);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(234);
+			setState(220);
 			match(NE);
-			setState(235);
+			setState(221);
 			match(NUM);
 			}
 		}
@@ -1482,30 +1408,30 @@ public class JsonPathParser extends Parser {
 
 	public final FilterEqualBoolContext filterEqualBool() throws RecognitionException {
 		FilterEqualBoolContext _localctx = new FilterEqualBoolContext(_ctx, getState());
-		enterRule(_localctx, 40, RULE_filterEqualBool);
+		enterRule(_localctx, 38, RULE_filterEqualBool);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(237);
+			setState(223);
 			match(T__11);
-			setState(241);
+			setState(227);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ANY_INDEX) | (1L << OPEN_SQ_BRACKET))) != 0)) {
 				{
 				{
-				setState(238);
+				setState(224);
 				relativePath();
 				}
 				}
-				setState(243);
+				setState(229);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(244);
+			setState(230);
 			match(T__16);
-			setState(245);
+			setState(231);
 			match(BOOL);
 			}
 		}
@@ -1542,30 +1468,30 @@ public class JsonPathParser extends Parser {
 
 	public final FilterNEqualBoolContext filterNEqualBool() throws RecognitionException {
 		FilterNEqualBoolContext _localctx = new FilterNEqualBoolContext(_ctx, getState());
-		enterRule(_localctx, 42, RULE_filterNEqualBool);
+		enterRule(_localctx, 40, RULE_filterNEqualBool);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(247);
+			setState(233);
 			match(T__11);
-			setState(251);
+			setState(237);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ANY_INDEX) | (1L << OPEN_SQ_BRACKET))) != 0)) {
 				{
 				{
-				setState(248);
+				setState(234);
 				relativePath();
 				}
 				}
-				setState(253);
+				setState(239);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(254);
+			setState(240);
 			match(NE);
-			setState(255);
+			setState(241);
 			match(BOOL);
 			}
 		}
@@ -1601,30 +1527,30 @@ public class JsonPathParser extends Parser {
 
 	public final FilterEqualStrContext filterEqualStr() throws RecognitionException {
 		FilterEqualStrContext _localctx = new FilterEqualStrContext(_ctx, getState());
-		enterRule(_localctx, 44, RULE_filterEqualStr);
+		enterRule(_localctx, 42, RULE_filterEqualStr);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(257);
+			setState(243);
 			match(T__11);
-			setState(261);
+			setState(247);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ANY_INDEX) | (1L << OPEN_SQ_BRACKET))) != 0)) {
 				{
 				{
-				setState(258);
+				setState(244);
 				relativePath();
 				}
 				}
-				setState(263);
+				setState(249);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(264);
+			setState(250);
 			match(T__16);
-			setState(265);
+			setState(251);
 			match(QUOTED_STRING);
 			}
 		}
@@ -1661,30 +1587,30 @@ public class JsonPathParser extends Parser {
 
 	public final FilterNEqualStrContext filterNEqualStr() throws RecognitionException {
 		FilterNEqualStrContext _localctx = new FilterNEqualStrContext(_ctx, getState());
-		enterRule(_localctx, 46, RULE_filterNEqualStr);
+		enterRule(_localctx, 44, RULE_filterNEqualStr);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(267);
+			setState(253);
 			match(T__11);
-			setState(271);
+			setState(257);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ANY_INDEX) | (1L << OPEN_SQ_BRACKET))) != 0)) {
 				{
 				{
-				setState(268);
+				setState(254);
 				relativePath();
 				}
 				}
-				setState(273);
+				setState(259);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(274);
+			setState(260);
 			match(NE);
-			setState(275);
+			setState(261);
 			match(QUOTED_STRING);
 			}
 		}
@@ -1720,30 +1646,30 @@ public class JsonPathParser extends Parser {
 
 	public final FilterMatchRegexContext filterMatchRegex() throws RecognitionException {
 		FilterMatchRegexContext _localctx = new FilterMatchRegexContext(_ctx, getState());
-		enterRule(_localctx, 48, RULE_filterMatchRegex);
+		enterRule(_localctx, 46, RULE_filterMatchRegex);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(277);
+			setState(263);
 			match(T__11);
-			setState(281);
+			setState(267);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ANY_INDEX) | (1L << OPEN_SQ_BRACKET))) != 0)) {
 				{
 				{
-				setState(278);
+				setState(264);
 				relativePath();
 				}
 				}
-				setState(283);
+				setState(269);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(284);
+			setState(270);
 			match(T__17);
-			setState(285);
+			setState(271);
 			match(QUOTED_STRING);
 			}
 		}
@@ -1760,7 +1686,7 @@ public class JsonPathParser extends Parser {
 
 	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-		case 12:
+		case 11:
 			return filterExpr_sempred((FilterExprContext)_localctx, predIndex);
 		}
 		return true;
@@ -1776,105 +1702,99 @@ public class JsonPathParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3#\u0122\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3#\u0114\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
-		"\4\32\t\32\3\2\5\2\66\n\2\3\2\3\2\7\2:\n\2\f\2\16\2=\13\2\3\2\3\2\3\3"+
-		"\3\3\3\4\3\4\3\4\3\4\3\4\3\4\5\4I\n\4\3\5\3\5\3\5\5\5N\n\5\3\6\3\6\3\7"+
-		"\3\7\3\b\3\b\3\b\3\b\3\b\5\bY\n\b\3\t\3\t\3\t\3\t\5\t_\n\t\3\t\3\t\3\t"+
-		"\3\t\5\te\n\t\7\tg\n\t\f\t\16\tj\13\t\3\t\3\t\3\n\3\n\3\n\3\n\3\13\3\13"+
-		"\3\13\5\13u\n\13\3\f\3\f\3\f\5\fz\n\f\3\f\5\f}\n\f\3\r\3\r\3\r\3\r\7\r"+
-		"\u0083\n\r\f\r\16\r\u0086\13\r\3\r\3\r\3\16\3\16\3\16\3\16\3\16\3\16\3"+
-		"\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\5\16\u009c"+
-		"\n\16\3\16\3\16\3\16\3\16\3\16\3\16\7\16\u00a4\n\16\f\16\16\16\u00a7\13"+
-		"\16\3\17\3\17\3\17\3\17\7\17\u00ad\n\17\f\17\16\17\u00b0\13\17\3\17\3"+
-		"\17\3\20\3\20\7\20\u00b6\n\20\f\20\16\20\u00b9\13\20\3\20\3\20\3\20\3"+
-		"\21\3\21\7\21\u00c0\n\21\f\21\16\21\u00c3\13\21\3\21\3\21\3\21\3\22\3"+
-		"\22\7\22\u00ca\n\22\f\22\16\22\u00cd\13\22\3\22\3\22\3\22\3\23\3\23\7"+
-		"\23\u00d4\n\23\f\23\16\23\u00d7\13\23\3\23\3\23\3\23\3\24\3\24\7\24\u00de"+
-		"\n\24\f\24\16\24\u00e1\13\24\3\24\3\24\3\24\3\25\3\25\7\25\u00e8\n\25"+
-		"\f\25\16\25\u00eb\13\25\3\25\3\25\3\25\3\26\3\26\7\26\u00f2\n\26\f\26"+
-		"\16\26\u00f5\13\26\3\26\3\26\3\26\3\27\3\27\7\27\u00fc\n\27\f\27\16\27"+
-		"\u00ff\13\27\3\27\3\27\3\27\3\30\3\30\7\30\u0106\n\30\f\30\16\30\u0109"+
-		"\13\30\3\30\3\30\3\30\3\31\3\31\7\31\u0110\n\31\f\31\16\31\u0113\13\31"+
-		"\3\31\3\31\3\31\3\32\3\32\7\32\u011a\n\32\f\32\16\32\u011d\13\32\3\32"+
-		"\3\32\3\32\3\32\2\3\32\33\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&"+
-		"(*,.\60\62\2\4\3\2\4\5\4\2\37\37\"\"\2\u0133\2\65\3\2\2\2\4@\3\2\2\2\6"+
-		"H\3\2\2\2\bJ\3\2\2\2\nO\3\2\2\2\fQ\3\2\2\2\16X\3\2\2\2\20Z\3\2\2\2\22"+
-		"m\3\2\2\2\24q\3\2\2\2\26y\3\2\2\2\30~\3\2\2\2\32\u009b\3\2\2\2\34\u00a8"+
-		"\3\2\2\2\36\u00b3\3\2\2\2 \u00bd\3\2\2\2\"\u00c7\3\2\2\2$\u00d1\3\2\2"+
-		"\2&\u00db\3\2\2\2(\u00e5\3\2\2\2*\u00ef\3\2\2\2,\u00f9\3\2\2\2.\u0103"+
-		"\3\2\2\2\60\u010d\3\2\2\2\62\u0117\3\2\2\2\64\66\5\4\3\2\65\64\3\2\2\2"+
-		"\65\66\3\2\2\2\66\67\3\2\2\2\67;\7\3\2\28:\5\6\4\298\3\2\2\2:=\3\2\2\2"+
-		";9\3\2\2\2;<\3\2\2\2<>\3\2\2\2=;\3\2\2\2>?\7\2\2\3?\3\3\2\2\2@A\t\2\2"+
-		"\2A\5\3\2\2\2BI\5\b\5\2CI\5\24\13\2DI\5\26\f\2EI\5\30\r\2FI\5\n\6\2GI"+
-		"\5\f\7\2HB\3\2\2\2HC\3\2\2\2HD\3\2\2\2HE\3\2\2\2HF\3\2\2\2HG\3\2\2\2I"+
-		"\7\3\2\2\2JK\7\6\2\2KM\t\3\2\2LN\5\26\f\2ML\3\2\2\2MN\3\2\2\2N\t\3\2\2"+
-		"\2OP\7\7\2\2P\13\3\2\2\2QR\7\b\2\2R\r\3\2\2\2ST\7\26\2\2TU\7\36\2\2UY"+
-		"\7\27\2\2VW\7\t\2\2WY\7\36\2\2XS\3\2\2\2XV\3\2\2\2Y\17\3\2\2\2Z[\7\26"+
-		"\2\2[^\7\36\2\2\\]\7\30\2\2]_\7\36\2\2^\\\3\2\2\2^_\3\2\2\2_h\3\2\2\2"+
-		"`a\7\31\2\2ad\7\36\2\2bc\7\30\2\2ce\7\36\2\2db\3\2\2\2de\3\2\2\2eg\3\2"+
-		"\2\2f`\3\2\2\2gj\3\2\2\2hf\3\2\2\2hi\3\2\2\2ik\3\2\2\2jh\3\2\2\2kl\7\27"+
-		"\2\2l\21\3\2\2\2mn\7\n\2\2no\5\32\16\2op\7\13\2\2p\23\3\2\2\2qr\7\t\2"+
-		"\2rt\t\3\2\2su\5\26\f\2ts\3\2\2\2tu\3\2\2\2u\25\3\2\2\2vz\5\16\b\2wz\5"+
-		"\20\t\2xz\7\25\2\2yv\3\2\2\2yw\3\2\2\2yx\3\2\2\2z|\3\2\2\2{}\5\22\n\2"+
-		"|{\3\2\2\2|}\3\2\2\2}\27\3\2\2\2~\177\7\26\2\2\177\u0084\7\37\2\2\u0080"+
-		"\u0081\7\31\2\2\u0081\u0083\7\37\2\2\u0082\u0080\3\2\2\2\u0083\u0086\3"+
-		"\2\2\2\u0084\u0082\3\2\2\2\u0084\u0085\3\2\2\2\u0085\u0087\3\2\2\2\u0086"+
-		"\u0084\3\2\2\2\u0087\u0088\7\27\2\2\u0088\31\3\2\2\2\u0089\u008a\b\16"+
-		"\1\2\u008a\u008b\7\33\2\2\u008b\u008c\7\f\2\2\u008c\u008d\5\32\16\2\u008d"+
-		"\u008e\7\13\2\2\u008e\u009c\3\2\2\2\u008f\u009c\5&\24\2\u0090\u009c\5"+
-		"(\25\2\u0091\u009c\5.\30\2\u0092\u009c\5\60\31\2\u0093\u009c\5\62\32\2"+
-		"\u0094\u009c\5*\26\2\u0095\u009c\5,\27\2\u0096\u009c\5\36\20\2\u0097\u009c"+
-		"\5 \21\2\u0098\u009c\5\"\22\2\u0099\u009c\5$\23\2\u009a\u009c\5\34\17"+
-		"\2\u009b\u0089\3\2\2\2\u009b\u008f\3\2\2\2\u009b\u0090\3\2\2\2\u009b\u0091"+
-		"\3\2\2\2\u009b\u0092\3\2\2\2\u009b\u0093\3\2\2\2\u009b\u0094\3\2\2\2\u009b"+
-		"\u0095\3\2\2\2\u009b\u0096\3\2\2\2\u009b\u0097\3\2\2\2\u009b\u0098\3\2"+
-		"\2\2\u009b\u0099\3\2\2\2\u009b\u009a\3\2\2\2\u009c\u00a5\3\2\2\2\u009d"+
-		"\u009e\f\20\2\2\u009e\u009f\7\34\2\2\u009f\u00a4\5\32\16\21\u00a0\u00a1"+
-		"\f\17\2\2\u00a1\u00a2\7\35\2\2\u00a2\u00a4\5\32\16\20\u00a3\u009d\3\2"+
-		"\2\2\u00a3\u00a0\3\2\2\2\u00a4\u00a7\3\2\2\2\u00a5\u00a3\3\2\2\2\u00a5"+
-		"\u00a6\3\2\2\2\u00a6\33\3\2\2\2\u00a7\u00a5\3\2\2\2\u00a8\u00a9\7\r\2"+
-		"\2\u00a9\u00aa\7\f\2\2\u00aa\u00ae\7\16\2\2\u00ab\u00ad\5\6\4\2\u00ac"+
-		"\u00ab\3\2\2\2\u00ad\u00b0\3\2\2\2\u00ae\u00ac\3\2\2\2\u00ae\u00af\3\2"+
-		"\2\2\u00af\u00b1\3\2\2\2\u00b0\u00ae\3\2\2\2\u00b1\u00b2\7\13\2\2\u00b2"+
-		"\35\3\2\2\2\u00b3\u00b7\7\16\2\2\u00b4\u00b6\5\6\4\2\u00b5\u00b4\3\2\2"+
-		"\2\u00b6\u00b9\3\2\2\2\u00b7\u00b5\3\2\2\2\u00b7\u00b8\3\2\2\2\u00b8\u00ba"+
-		"\3\2\2\2\u00b9\u00b7\3\2\2\2\u00ba\u00bb\7\17\2\2\u00bb\u00bc\7\36\2\2"+
-		"\u00bc\37\3\2\2\2\u00bd\u00c1\7\16\2\2\u00be\u00c0\5\6\4\2\u00bf\u00be"+
-		"\3\2\2\2\u00c0\u00c3\3\2\2\2\u00c1\u00bf\3\2\2\2\u00c1\u00c2\3\2\2\2\u00c2"+
-		"\u00c4\3\2\2\2\u00c3\u00c1\3\2\2\2\u00c4\u00c5\7\20\2\2\u00c5\u00c6\7"+
-		"\36\2\2\u00c6!\3\2\2\2\u00c7\u00cb\7\16\2\2\u00c8\u00ca\5\6\4\2\u00c9"+
-		"\u00c8\3\2\2\2\u00ca\u00cd\3\2\2\2\u00cb\u00c9\3\2\2\2\u00cb\u00cc\3\2"+
-		"\2\2\u00cc\u00ce\3\2\2\2\u00cd\u00cb\3\2\2\2\u00ce\u00cf\7\21\2\2\u00cf"+
-		"\u00d0\7\36\2\2\u00d0#\3\2\2\2\u00d1\u00d5\7\16\2\2\u00d2\u00d4\5\6\4"+
-		"\2\u00d3\u00d2\3\2\2\2\u00d4\u00d7\3\2\2\2\u00d5\u00d3\3\2\2\2\u00d5\u00d6"+
-		"\3\2\2\2\u00d6\u00d8\3\2\2\2\u00d7\u00d5\3\2\2\2\u00d8\u00d9\7\22\2\2"+
-		"\u00d9\u00da\7\36\2\2\u00da%\3\2\2\2\u00db\u00df\7\16\2\2\u00dc\u00de"+
-		"\5\6\4\2\u00dd\u00dc\3\2\2\2\u00de\u00e1\3\2\2\2\u00df\u00dd\3\2\2\2\u00df"+
-		"\u00e0\3\2\2\2\u00e0\u00e2\3\2\2\2\u00e1\u00df\3\2\2\2\u00e2\u00e3\7\23"+
-		"\2\2\u00e3\u00e4\7\36\2\2\u00e4\'\3\2\2\2\u00e5\u00e9\7\16\2\2\u00e6\u00e8"+
-		"\5\6\4\2\u00e7\u00e6\3\2\2\2\u00e8\u00eb\3\2\2\2\u00e9\u00e7\3\2\2\2\u00e9"+
-		"\u00ea\3\2\2\2\u00ea\u00ec\3\2\2\2\u00eb\u00e9\3\2\2\2\u00ec\u00ed\7!"+
-		"\2\2\u00ed\u00ee\7\36\2\2\u00ee)\3\2\2\2\u00ef\u00f3\7\16\2\2\u00f0\u00f2"+
-		"\5\6\4\2\u00f1\u00f0\3\2\2\2\u00f2\u00f5\3\2\2\2\u00f3\u00f1\3\2\2\2\u00f3"+
-		"\u00f4\3\2\2\2\u00f4\u00f6\3\2\2\2\u00f5\u00f3\3\2\2\2\u00f6\u00f7\7\23"+
-		"\2\2\u00f7\u00f8\7 \2\2\u00f8+\3\2\2\2\u00f9\u00fd\7\16\2\2\u00fa\u00fc"+
-		"\5\6\4\2\u00fb\u00fa\3\2\2\2\u00fc\u00ff\3\2\2\2\u00fd\u00fb\3\2\2\2\u00fd"+
-		"\u00fe\3\2\2\2\u00fe\u0100\3\2\2\2\u00ff\u00fd\3\2\2\2\u0100\u0101\7!"+
-		"\2\2\u0101\u0102\7 \2\2\u0102-\3\2\2\2\u0103\u0107\7\16\2\2\u0104\u0106"+
-		"\5\6\4\2\u0105\u0104\3\2\2\2\u0106\u0109\3\2\2\2\u0107\u0105\3\2\2\2\u0107"+
-		"\u0108\3\2\2\2\u0108\u010a\3\2\2\2\u0109\u0107\3\2\2\2\u010a\u010b\7\23"+
-		"\2\2\u010b\u010c\7\37\2\2\u010c/\3\2\2\2\u010d\u0111\7\16\2\2\u010e\u0110"+
-		"\5\6\4\2\u010f\u010e\3\2\2\2\u0110\u0113\3\2\2\2\u0111\u010f\3\2\2\2\u0111"+
-		"\u0112\3\2\2\2\u0112\u0114\3\2\2\2\u0113\u0111\3\2\2\2\u0114\u0115\7!"+
-		"\2\2\u0115\u0116\7\37\2\2\u0116\61\3\2\2\2\u0117\u011b\7\16\2\2\u0118"+
-		"\u011a\5\6\4\2\u0119\u0118\3\2\2\2\u011a\u011d\3\2\2\2\u011b\u0119\3\2"+
-		"\2\2\u011b\u011c\3\2\2\2\u011c\u011e\3\2\2\2\u011d\u011b\3\2\2\2\u011e"+
-		"\u011f\7\24\2\2\u011f\u0120\7\37\2\2\u0120\63\3\2\2\2\35\65;HMX^dhty|"+
-		"\u0084\u009b\u00a3\u00a5\u00ae\u00b7\u00c1\u00cb\u00d5\u00df\u00e9\u00f3"+
-		"\u00fd\u0107\u0111\u011b";
+		"\3\2\5\2\64\n\2\3\2\3\2\7\28\n\2\f\2\16\2;\13\2\3\2\3\2\3\3\3\3\3\4\3"+
+		"\4\3\4\3\4\3\4\5\4F\n\4\3\5\3\5\3\5\5\5K\n\5\3\6\3\6\3\7\3\7\3\b\3\b\3"+
+		"\b\3\b\3\b\5\bV\n\b\3\t\3\t\3\t\3\t\5\t\\\n\t\3\t\3\t\3\t\3\t\5\tb\n\t"+
+		"\7\td\n\t\f\t\16\tg\13\t\3\t\3\t\3\n\3\n\3\n\3\n\3\13\3\13\3\13\5\13r"+
+		"\n\13\3\f\3\f\3\f\5\fw\n\f\3\f\5\fz\n\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3"+
+		"\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u008e\n\r\3\r\3\r\3\r\3"+
+		"\r\3\r\3\r\7\r\u0096\n\r\f\r\16\r\u0099\13\r\3\16\3\16\3\16\3\16\7\16"+
+		"\u009f\n\16\f\16\16\16\u00a2\13\16\3\16\3\16\3\17\3\17\7\17\u00a8\n\17"+
+		"\f\17\16\17\u00ab\13\17\3\17\3\17\3\17\3\20\3\20\7\20\u00b2\n\20\f\20"+
+		"\16\20\u00b5\13\20\3\20\3\20\3\20\3\21\3\21\7\21\u00bc\n\21\f\21\16\21"+
+		"\u00bf\13\21\3\21\3\21\3\21\3\22\3\22\7\22\u00c6\n\22\f\22\16\22\u00c9"+
+		"\13\22\3\22\3\22\3\22\3\23\3\23\7\23\u00d0\n\23\f\23\16\23\u00d3\13\23"+
+		"\3\23\3\23\3\23\3\24\3\24\7\24\u00da\n\24\f\24\16\24\u00dd\13\24\3\24"+
+		"\3\24\3\24\3\25\3\25\7\25\u00e4\n\25\f\25\16\25\u00e7\13\25\3\25\3\25"+
+		"\3\25\3\26\3\26\7\26\u00ee\n\26\f\26\16\26\u00f1\13\26\3\26\3\26\3\26"+
+		"\3\27\3\27\7\27\u00f8\n\27\f\27\16\27\u00fb\13\27\3\27\3\27\3\27\3\30"+
+		"\3\30\7\30\u0102\n\30\f\30\16\30\u0105\13\30\3\30\3\30\3\30\3\31\3\31"+
+		"\7\31\u010c\n\31\f\31\16\31\u010f\13\31\3\31\3\31\3\31\3\31\2\3\30\32"+
+		"\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\2\4\3\2\4\5\4\2\37"+
+		"\37\"\"\2\u0124\2\63\3\2\2\2\4>\3\2\2\2\6E\3\2\2\2\bG\3\2\2\2\nL\3\2\2"+
+		"\2\fN\3\2\2\2\16U\3\2\2\2\20W\3\2\2\2\22j\3\2\2\2\24n\3\2\2\2\26v\3\2"+
+		"\2\2\30\u008d\3\2\2\2\32\u009a\3\2\2\2\34\u00a5\3\2\2\2\36\u00af\3\2\2"+
+		"\2 \u00b9\3\2\2\2\"\u00c3\3\2\2\2$\u00cd\3\2\2\2&\u00d7\3\2\2\2(\u00e1"+
+		"\3\2\2\2*\u00eb\3\2\2\2,\u00f5\3\2\2\2.\u00ff\3\2\2\2\60\u0109\3\2\2\2"+
+		"\62\64\5\4\3\2\63\62\3\2\2\2\63\64\3\2\2\2\64\65\3\2\2\2\659\7\3\2\2\66"+
+		"8\5\6\4\2\67\66\3\2\2\28;\3\2\2\29\67\3\2\2\29:\3\2\2\2:<\3\2\2\2;9\3"+
+		"\2\2\2<=\7\2\2\3=\3\3\2\2\2>?\t\2\2\2?\5\3\2\2\2@F\5\b\5\2AF\5\24\13\2"+
+		"BF\5\26\f\2CF\5\n\6\2DF\5\f\7\2E@\3\2\2\2EA\3\2\2\2EB\3\2\2\2EC\3\2\2"+
+		"\2ED\3\2\2\2F\7\3\2\2\2GH\7\6\2\2HJ\t\3\2\2IK\5\26\f\2JI\3\2\2\2JK\3\2"+
+		"\2\2K\t\3\2\2\2LM\7\7\2\2M\13\3\2\2\2NO\7\b\2\2O\r\3\2\2\2PQ\7\26\2\2"+
+		"QR\7\36\2\2RV\7\27\2\2ST\7\t\2\2TV\7\36\2\2UP\3\2\2\2US\3\2\2\2V\17\3"+
+		"\2\2\2WX\7\26\2\2X[\7\36\2\2YZ\7\30\2\2Z\\\7\36\2\2[Y\3\2\2\2[\\\3\2\2"+
+		"\2\\e\3\2\2\2]^\7\31\2\2^a\7\36\2\2_`\7\30\2\2`b\7\36\2\2a_\3\2\2\2ab"+
+		"\3\2\2\2bd\3\2\2\2c]\3\2\2\2dg\3\2\2\2ec\3\2\2\2ef\3\2\2\2fh\3\2\2\2g"+
+		"e\3\2\2\2hi\7\27\2\2i\21\3\2\2\2jk\7\n\2\2kl\5\30\r\2lm\7\13\2\2m\23\3"+
+		"\2\2\2no\7\t\2\2oq\t\3\2\2pr\5\26\f\2qp\3\2\2\2qr\3\2\2\2r\25\3\2\2\2"+
+		"sw\5\16\b\2tw\5\20\t\2uw\7\25\2\2vs\3\2\2\2vt\3\2\2\2vu\3\2\2\2wy\3\2"+
+		"\2\2xz\5\22\n\2yx\3\2\2\2yz\3\2\2\2z\27\3\2\2\2{|\b\r\1\2|}\7\33\2\2}"+
+		"~\7\f\2\2~\177\5\30\r\2\177\u0080\7\13\2\2\u0080\u008e\3\2\2\2\u0081\u008e"+
+		"\5$\23\2\u0082\u008e\5&\24\2\u0083\u008e\5,\27\2\u0084\u008e\5.\30\2\u0085"+
+		"\u008e\5\60\31\2\u0086\u008e\5(\25\2\u0087\u008e\5*\26\2\u0088\u008e\5"+
+		"\34\17\2\u0089\u008e\5\36\20\2\u008a\u008e\5 \21\2\u008b\u008e\5\"\22"+
+		"\2\u008c\u008e\5\32\16\2\u008d{\3\2\2\2\u008d\u0081\3\2\2\2\u008d\u0082"+
+		"\3\2\2\2\u008d\u0083\3\2\2\2\u008d\u0084\3\2\2\2\u008d\u0085\3\2\2\2\u008d"+
+		"\u0086\3\2\2\2\u008d\u0087\3\2\2\2\u008d\u0088\3\2\2\2\u008d\u0089\3\2"+
+		"\2\2\u008d\u008a\3\2\2\2\u008d\u008b\3\2\2\2\u008d\u008c\3\2\2\2\u008e"+
+		"\u0097\3\2\2\2\u008f\u0090\f\20\2\2\u0090\u0091\7\34\2\2\u0091\u0096\5"+
+		"\30\r\21\u0092\u0093\f\17\2\2\u0093\u0094\7\35\2\2\u0094\u0096\5\30\r"+
+		"\20\u0095\u008f\3\2\2\2\u0095\u0092\3\2\2\2\u0096\u0099\3\2\2\2\u0097"+
+		"\u0095\3\2\2\2\u0097\u0098\3\2\2\2\u0098\31\3\2\2\2\u0099\u0097\3\2\2"+
+		"\2\u009a\u009b\7\r\2\2\u009b\u009c\7\f\2\2\u009c\u00a0\7\16\2\2\u009d"+
+		"\u009f\5\6\4\2\u009e\u009d\3\2\2\2\u009f\u00a2\3\2\2\2\u00a0\u009e\3\2"+
+		"\2\2\u00a0\u00a1\3\2\2\2\u00a1\u00a3\3\2\2\2\u00a2\u00a0\3\2\2\2\u00a3"+
+		"\u00a4\7\13\2\2\u00a4\33\3\2\2\2\u00a5\u00a9\7\16\2\2\u00a6\u00a8\5\6"+
+		"\4\2\u00a7\u00a6\3\2\2\2\u00a8\u00ab\3\2\2\2\u00a9\u00a7\3\2\2\2\u00a9"+
+		"\u00aa\3\2\2\2\u00aa\u00ac\3\2\2\2\u00ab\u00a9\3\2\2\2\u00ac\u00ad\7\17"+
+		"\2\2\u00ad\u00ae\7\36\2\2\u00ae\35\3\2\2\2\u00af\u00b3\7\16\2\2\u00b0"+
+		"\u00b2\5\6\4\2\u00b1\u00b0\3\2\2\2\u00b2\u00b5\3\2\2\2\u00b3\u00b1\3\2"+
+		"\2\2\u00b3\u00b4\3\2\2\2\u00b4\u00b6\3\2\2\2\u00b5\u00b3\3\2\2\2\u00b6"+
+		"\u00b7\7\20\2\2\u00b7\u00b8\7\36\2\2\u00b8\37\3\2\2\2\u00b9\u00bd\7\16"+
+		"\2\2\u00ba\u00bc\5\6\4\2\u00bb\u00ba\3\2\2\2\u00bc\u00bf\3\2\2\2\u00bd"+
+		"\u00bb\3\2\2\2\u00bd\u00be\3\2\2\2\u00be\u00c0\3\2\2\2\u00bf\u00bd\3\2"+
+		"\2\2\u00c0\u00c1\7\21\2\2\u00c1\u00c2\7\36\2\2\u00c2!\3\2\2\2\u00c3\u00c7"+
+		"\7\16\2\2\u00c4\u00c6\5\6\4\2\u00c5\u00c4\3\2\2\2\u00c6\u00c9\3\2\2\2"+
+		"\u00c7\u00c5\3\2\2\2\u00c7\u00c8\3\2\2\2\u00c8\u00ca\3\2\2\2\u00c9\u00c7"+
+		"\3\2\2\2\u00ca\u00cb\7\22\2\2\u00cb\u00cc\7\36\2\2\u00cc#\3\2\2\2\u00cd"+
+		"\u00d1\7\16\2\2\u00ce\u00d0\5\6\4\2\u00cf\u00ce\3\2\2\2\u00d0\u00d3\3"+
+		"\2\2\2\u00d1\u00cf\3\2\2\2\u00d1\u00d2\3\2\2\2\u00d2\u00d4\3\2\2\2\u00d3"+
+		"\u00d1\3\2\2\2\u00d4\u00d5\7\23\2\2\u00d5\u00d6\7\36\2\2\u00d6%\3\2\2"+
+		"\2\u00d7\u00db\7\16\2\2\u00d8\u00da\5\6\4\2\u00d9\u00d8\3\2\2\2\u00da"+
+		"\u00dd\3\2\2\2\u00db\u00d9\3\2\2\2\u00db\u00dc\3\2\2\2\u00dc\u00de\3\2"+
+		"\2\2\u00dd\u00db\3\2\2\2\u00de\u00df\7!\2\2\u00df\u00e0\7\36\2\2\u00e0"+
+		"\'\3\2\2\2\u00e1\u00e5\7\16\2\2\u00e2\u00e4\5\6\4\2\u00e3\u00e2\3\2\2"+
+		"\2\u00e4\u00e7\3\2\2\2\u00e5\u00e3\3\2\2\2\u00e5\u00e6\3\2\2\2\u00e6\u00e8"+
+		"\3\2\2\2\u00e7\u00e5\3\2\2\2\u00e8\u00e9\7\23\2\2\u00e9\u00ea\7 \2\2\u00ea"+
+		")\3\2\2\2\u00eb\u00ef\7\16\2\2\u00ec\u00ee\5\6\4\2\u00ed\u00ec\3\2\2\2"+
+		"\u00ee\u00f1\3\2\2\2\u00ef\u00ed\3\2\2\2\u00ef\u00f0\3\2\2\2\u00f0\u00f2"+
+		"\3\2\2\2\u00f1\u00ef\3\2\2\2\u00f2\u00f3\7!\2\2\u00f3\u00f4\7 \2\2\u00f4"+
+		"+\3\2\2\2\u00f5\u00f9\7\16\2\2\u00f6\u00f8\5\6\4\2\u00f7\u00f6\3\2\2\2"+
+		"\u00f8\u00fb\3\2\2\2\u00f9\u00f7\3\2\2\2\u00f9\u00fa\3\2\2\2\u00fa\u00fc"+
+		"\3\2\2\2\u00fb\u00f9\3\2\2\2\u00fc\u00fd\7\23\2\2\u00fd\u00fe\7\37\2\2"+
+		"\u00fe-\3\2\2\2\u00ff\u0103\7\16\2\2\u0100\u0102\5\6\4\2\u0101\u0100\3"+
+		"\2\2\2\u0102\u0105\3\2\2\2\u0103\u0101\3\2\2\2\u0103\u0104\3\2\2\2\u0104"+
+		"\u0106\3\2\2\2\u0105\u0103\3\2\2\2\u0106\u0107\7!\2\2\u0107\u0108\7\37"+
+		"\2\2\u0108/\3\2\2\2\u0109\u010d\7\16\2\2\u010a\u010c\5\6\4\2\u010b\u010a"+
+		"\3\2\2\2\u010c\u010f\3\2\2\2\u010d\u010b\3\2\2\2\u010d\u010e\3\2\2\2\u010e"+
+		"\u0110\3\2\2\2\u010f\u010d\3\2\2\2\u0110\u0111\7\24\2\2\u0111\u0112\7"+
+		"\37\2\2\u0112\61\3\2\2\2\34\639EJU[aeqvy\u008d\u0095\u0097\u00a0\u00a9"+
+		"\u00b3\u00bd\u00c7\u00d1\u00db\u00e5\u00ef\u00f9\u0103\u010d";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -6,7 +6,7 @@ package org.jsfr.json.compiler;
 
 path: syntaxMode? '$' relativePath* EOF;
 syntaxMode: 'lax' | 'strict';
-relativePath: searchChild|childNode|array|childrenNode|anyChild|any;
+relativePath: searchChild|childNode|array|anyChild|any;
 searchChild: '..' (KEY | QUOTED_STRING) array?;
 anyChild: '.*' ;
 any: '*' ;
@@ -21,7 +21,6 @@ filter: '?(' filterExpr ')';
 COLON : ':';
 childNode: '.' (KEY | QUOTED_STRING) array?;
 array: (index | indexes | ANY_INDEX) filter?;
-childrenNode: '[' QUOTED_STRING ( ',' QUOTED_STRING )* ']' ;
 filterExpr : NegationOperator '(' filterExpr ')'
            | filterExpr AndOperator filterExpr
            | filterExpr OrOperator filterExpr

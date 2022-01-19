@@ -125,18 +125,6 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitChildrenNode(JsonPathParser.ChildrenNodeContext ctx) {
-        int i = 0;
-        String[] strings = new String[ctx.QUOTED_STRING().size()];
-        for (TerminalNode node : ctx.QUOTED_STRING()) {
-            String quotedString = node.getText();
-            strings[i++] = unescapeString(quotedString);
-        }
-        currentPathBuilder().children(strings);
-        return super.visitChildren(ctx);
-    }
-
-    @Override
     public Void visitAnyChild(JsonPathParser.AnyChildContext ctx) {
         currentPathBuilder().anyChild();
         return super.visitAnyChild(ctx);

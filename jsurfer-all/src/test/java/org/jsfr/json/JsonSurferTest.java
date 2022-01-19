@@ -702,58 +702,47 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
             .buildAndSurf(read("sample.json"));
     }
 
-    @Test
-    public void testIndexesAndChildrenOperator() throws Exception {
-        JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$..book[1,3][\"author\", \"title\"]", mockListener)
-            .buildAndSurf(read("sample.json"));
-        verify(mockListener).onValue(eq(provider.primitive("Evelyn Waugh")), any(ParsingContext.class));
-        verify(mockListener).onValue(eq(provider.primitive("Sword of Honour")), any(ParsingContext.class));
-        verify(mockListener).onValue(eq(provider.primitive("J. R. R. Tolkien")), any(ParsingContext.class));
-        verify(mockListener).onValue(eq(provider.primitive("The Lord of the Rings")), any(ParsingContext.class));
-    }
 
     @Test
     public void testCollectAllRaw() throws Exception {
-        Collection<Object> values = surfer.collectAll(read("sample.json"), "$..book[1,3][\"author\", \"title\"]");
-        assertEquals(4, values.size());
+        Collection<Object> values = surfer.collectAll(read("sample.json"), "$..book[1,3].\"title\"");
+        assertEquals(2, values.size());
         Iterator<Object> itr = values.iterator();
-        itr.next();
         assertEquals("Sword of Honour", itr.next());
     }
 
     @Test
     public void testCollectOneRaw() throws Exception {
-        Object value = surfer.collectOne(read("sample.json"), "$..book[1,3][\"author\", \"title\"]");
+        Object value = surfer.collectOne(read("sample.json"), "$..book[1,3].\"author\"");
         assertEquals("Evelyn Waugh", value);
     }
 
     @Test
     public void testCollectAll() throws Exception {
         Collection<String> values = surfer.collectAll(read("sample.json"), String.class,
-            JsonPathCompiler.compile("$..book[1,3][\"author\", \"title\"]"));
-        assertEquals(4, values.size());
+            JsonPathCompiler.compile("$..book[1,3].\"author\""));
+        assertEquals(2, values.size());
         assertEquals("Evelyn Waugh", values.iterator().next());
     }
 
     @Test
     public void testCollectAllFromString() throws Exception {
         Collection<Object> values =
-            surfer.collectAll(readAsString("sample.json"), "$..book[1,3][\"author\", \"title\"]");
-        assertEquals(4, values.size());
+            surfer.collectAll(readAsString("sample.json"), "$..book[1,3].\"author\"");
+        assertEquals(2, values.size());
         assertEquals("Evelyn Waugh", values.iterator().next());
     }
 
     @Test
     public void testCollectOne() throws Exception {
         String value = surfer.collectOne(read("sample.json"), String.class,
-            JsonPathCompiler.compile("$..book[1,3][\"author\", \"title\"]"));
+            JsonPathCompiler.compile("$..book[1,3].\"author\""));
         assertEquals("Evelyn Waugh", value);
     }
 
     @Test
     public void testCollectOneFromString() throws Exception {
-        Object value = surfer.collectOne(readAsString("sample.json"), "$..book[1,3][\"author\", \"title\"]");
+        Object value = surfer.collectOne(readAsString("sample.json"), "$..book[1,3].\"author\"");
         assertEquals("Evelyn Waugh", value);
     }
 
