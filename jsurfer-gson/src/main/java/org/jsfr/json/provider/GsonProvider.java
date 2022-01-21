@@ -110,6 +110,9 @@ public class GsonProvider implements JsonProvider<JsonObject, JsonArray, JsonEle
 
     @Override
     public JsonElement primitive(String value) {
+        if (value == null) {
+            return this.primitiveNull();
+        }
         return new JsonPrimitive(value);
     }
 
@@ -120,7 +123,7 @@ public class GsonProvider implements JsonProvider<JsonObject, JsonArray, JsonEle
 
     @Override
     public <T> T cast(JsonElement value, Class<T> tClass) {
-        if (value == null || value instanceof JsonNull) {
+        if (value == null || isPrimitiveNull(value)) {
             return tClass.cast(null);
         }
         if (internalGson.getAdapter(tClass) != null) {
@@ -132,5 +135,9 @@ public class GsonProvider implements JsonProvider<JsonObject, JsonArray, JsonEle
         return castJavaObject(value, tClass);
     }
 
+    @Override
+    public boolean isPrimitiveNull(Object value) {
+        return value instanceof JsonNull;
+    }
 
 }

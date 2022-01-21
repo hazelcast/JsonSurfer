@@ -24,6 +24,14 @@
 
 package org.jsfr.json.compiler;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
+
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
@@ -35,6 +43,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jsfr.json.compiler.JsonPathParser.RelativePathContext;
 import org.jsfr.json.exception.JsonPathCompilerException;
 import org.jsfr.json.filter.EqualityBoolPredicate;
+import org.jsfr.json.filter.EqualityNullPredicate;
 import org.jsfr.json.filter.EqualityNumPredicate;
 import org.jsfr.json.filter.EqualityStrPredicate;
 import org.jsfr.json.filter.ExistencePredicate;
@@ -46,18 +55,11 @@ import org.jsfr.json.filter.LessOrEqualThanNumPredicate;
 import org.jsfr.json.filter.LessThanNumPredicate;
 import org.jsfr.json.filter.MatchRegexPredicate;
 import org.jsfr.json.filter.NotEqualityBoolPredicate;
+import org.jsfr.json.filter.NotEqualityNullPredicate;
 import org.jsfr.json.filter.NotEqualityNumPredicate;
 import org.jsfr.json.filter.NotEqualityStrPredicate;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.path.SyntaxMode;
-
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
 
 /**
  * Created by Leo on 2015/4/1.
@@ -103,11 +105,6 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         return super.visitSearchChild(ctx);
     }
 
-    @Override
-    public Void visitSearch(JsonPathParser.SearchContext ctx) {
-        currentPathBuilder().scan();
-        return super.visitSearch(ctx);
-    }
 
     @Override
     public Void visitChildNode(JsonPathParser.ChildNodeContext ctx) {
@@ -214,6 +211,26 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         Void rst = super.visitFilterNEqualBool(ctx);
         filterBuilder.append(
             new NotEqualityBoolPredicate(filterPathBuilder.build(), Boolean.parseBoolean(ctx.BOOL().getText())));
+        filterPathBuilder = null;
+        return rst;
+    }
+
+    @Override
+    public Void visitFilterEqualNull(JsonPathParser.FilterEqualNullContext ctx) {
+        filterPathBuilder = createFilterPathBuilder();
+        Void rst = super.visitFilterEqualNull(ctx);
+        filterBuilder.append(
+            new EqualityNullPredicate(filterPathBuilder.build()));
+        filterPathBuilder = null;
+        return rst;
+    }
+
+    @Override
+    public Void visitFilterNEqualNull(JsonPathParser.FilterNEqualNullContext ctx) {
+        filterPathBuilder = createFilterPathBuilder();
+        Void rst = super.visitFilterNEqualNull(ctx);
+        filterBuilder.append(
+            new NotEqualityNullPredicate(filterPathBuilder.build()));
         filterPathBuilder = null;
         return rst;
     }

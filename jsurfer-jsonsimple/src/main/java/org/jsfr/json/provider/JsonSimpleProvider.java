@@ -112,4 +112,9 @@ public final class JsonSimpleProvider implements JsonProvider<JSONObject, JSONAr
         return castJavaObject(value, tClass);
     }
 
+    @Override
+    public boolean isPrimitiveNull(Object value) {
+        return value == null;
+    }
+
 }

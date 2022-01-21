@@ -24,6 +24,16 @@
 
 package org.jsfr.json;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -36,17 +46,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.jsfr.json.TestUtils.readClasspathResource;
@@ -315,7 +316,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterExistence() throws Exception {
 
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[*]?(@.isbn)", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(exists (@.isbn))", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -340,7 +341,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterExistence2() throws Exception {
 
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[*]?(@.description)", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(exists (@.description))", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -357,7 +358,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterNegation() throws Exception {
 
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store.book[*]?(!(@.isbn))", mockListener)
+        surfer.configBuilder().bind("$.store.book[*]?(!(exists (@.isbn)))", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -382,7 +383,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testJsonPathFilterAggregate() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
         surfer.configBuilder()
-            .bind("$.store.book[*]?(@.price < 10 || @.category && @.isbn && !(@.price<10))", mockListener)
+            .bind("$.store.book[*]?(@.price < 10 || exists (@.category) && exists (@.isbn) && !(@.price<10))", mockListener)
             .buildAndSurf(read("sample_filter.json"));
 
         verify(mockListener, times(1)).onValue(argThat(new CustomMatcher<Object>("test filter") {
@@ -689,7 +690,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testAny() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
-        surfer.configBuilder().bind("$.store..bicycle..*", mockListener)
+        surfer.configBuilder().bind("$.store..bicycle.*", mockListener)
             .buildAndSurf(read("sample.json"));
         verify(mockListener).onValue(eq(provider.primitive("red")), any(ParsingContext.class));
         verify(mockListener).onValue(eq(provider.primitive(19.95)), any(ParsingContext.class));
@@ -698,7 +699,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testFindEverything() throws Exception {
         surfer.configBuilder()
-            .bind("$..*", (value, context) -> LOGGER.trace("value: {}", value))
+            .bind("$.*", (value, context) -> LOGGER.trace("value: {}", value))
             .buildAndSurf(read("sample.json"));
     }
 
@@ -706,7 +707,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     public void testIndexesAndChildrenOperator() throws Exception {
         JsonPathListener mockListener = mock(JsonPathListener.class);
         surfer.configBuilder().bind("$..book[1,3][\"author\", \"title\"]", mockListener)
-            .buildAndSurf(read("sample.json"));
+                .buildAndSurf(read("sample.json"));
         verify(mockListener).onValue(eq(provider.primitive("Evelyn Waugh")), any(ParsingContext.class));
         verify(mockListener).onValue(eq(provider.primitive("Sword of Honour")), any(ParsingContext.class));
         verify(mockListener).onValue(eq(provider.primitive("J. R. R. Tolkien")), any(ParsingContext.class));
@@ -731,7 +732,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testCollectAll() throws Exception {
         Collection<String> values = surfer.collectAll(read("sample.json"), String.class,
-            JsonPathCompiler.compile("$..book[1,3][\"author\", \"title\"]"));
+                JsonPathCompiler.compile("$..book[1,3][\"author\", \"title\"]"));
         assertEquals(4, values.size());
         assertEquals("Evelyn Waugh", values.iterator().next());
     }
@@ -739,7 +740,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testCollectAllFromString() throws Exception {
         Collection<Object> values =
-            surfer.collectAll(readAsString("sample.json"), "$..book[1,3][\"author\", \"title\"]");
+                surfer.collectAll(readAsString("sample.json"), "$..book[1,3][\"author\", \"title\"]");
         assertEquals(4, values.size());
         assertEquals("Evelyn Waugh", values.iterator().next());
     }
@@ -747,7 +748,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     @Test
     public void testCollectOne() throws Exception {
         String value = surfer.collectOne(read("sample.json"), String.class,
-            JsonPathCompiler.compile("$..book[1,3][\"author\", \"title\"]"));
+                JsonPathCompiler.compile("$..book[1,3][\"author\", \"title\"]"));
         assertEquals("Evelyn Waugh", value);
     }
 
@@ -929,7 +930,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
             .bind("$.store.book[0,1]", mockListener1)
             .bind("$.store.book[*]?(@.author==\"Herman Melville\")", mockListener2)
             .bind("$.store.book[*]?(@.author==\"Nigel Rees\")", mockListener3)
-            .bind("$.store.book[*]?(@.volumes)", mockListener4)
+            .bind("$.store.book[*]?(exists (@.volumes))", mockListener4)
             .build();
         surfer.surf(read("sample_filter.json"), config);
         surfer.surf(read("sample_filter2.json"), config);
@@ -1303,7 +1304,6 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         P doubleVal = provider.primitive(4.0d);
         P boolVal = provider.primitive(false);
         P strVal = provider.primitive("str");
-        P nullVal = provider.primitiveNull();
 
         //then
         assertNull(provider.cast(null, intVal.getClass()));
@@ -1403,9 +1403,93 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         assertEquals(asList("Foo", "foo", "foo1"), box3.get());
     }
 
+    @Test
+    public void testArrayElementFilterByNotEqualNull() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("array.json"));
+        JsonPath path1 = JsonPathCompiler.compile(
+            "$[*]?(@ <> null)");
+        JsonPath path2 = JsonPathCompiler.compile(
+            "$[*]?(@ != null)");
+
+        //when
+        ValueBox<Collection<Object>> box1 = collector.collectAll(path1, Object.class);
+        ValueBox<Collection<Object>> box2 = collector.collectAll(path2, Object.class);
+        collector.exec();
+
+        //then
+        assertThat(box1.get(), hasItems("abc", 8.88, true, json("key", "value")));
+        assertThat(box2.get(), hasItems("abc", 8.88, true, json("key", "value")));
+        assertEquals(4, box1.get().size());
+        assertEquals(4, box2.get().size());
+    }
+
+    @Test
+    public void testArrayElementChildFilterByNotEqualNull() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("sample6.json"));
+        JsonPath path1 = JsonPathCompiler.compile(
+            "$.phones[*]?(@.extension <> null)");
+        JsonPath path2 = JsonPathCompiler.compile(
+            "$.phones[*]?(@.extension != null)");
+
+        //when
+        ValueBox<Collection<Object>> box1 = collector.collectAll(path1, Object.class);
+        ValueBox<Collection<Object>> box2 = collector.collectAll(path2, Object.class);
+        collector.exec();
+
+        //then
+        Object json = json("number", "0123-4567-8888", "extension", "1", "type", "iPhone");
+        assertThat(box1.get(), hasItem(json));
+        assertThat(box2.get(), hasItem(json));
+        assertEquals(1, box1.get().size());
+        assertEquals(1, box2.get().size());
+    }
+
+    @Test
+    public void testArrayElementFilterByEqualNull() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("array.json"));
+        JsonPath path1 = JsonPathCompiler.compile(
+            "$[*]?(@ == null)");
+
+        //when
+        ValueBox<Collection<Object>> box1 = collector.collectAll(path1, Object.class);
+        collector.exec();
+
+        //then
+        assertEquals(1, box1.get().size());
+        assertNull(box1.get().iterator().next());
+    }
+
+    @Test
+    public void testArrayElementChildFilterByEqualNull() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("sample6.json"));
+        JsonPath path1 = JsonPathCompiler.compile(
+            "$.phones[*]?(@.extension == null)");
+
+        //when
+        ValueBox<Collection<Object>> box1 = collector.collectAll(path1, Object.class);
+        collector.exec();
+
+        //then
+        Object json = json("number", "0123-4567-8910", "extension", null, "type", "home");
+        assertThat(box1.get(), hasItem(json));
+        assertEquals(1, box1.get().size());
+    }
+
     private Object json(String key, String value) {
         O object = this.provider.createObject();
         this.provider.put(object, key, this.provider.primitive(value));
+        return this.provider.cast(object, Object.class);
+    }
+
+    private Object json(String key, String value, String key2, String value2, String key3, String value3) {
+        O object = this.provider.createObject();
+        this.provider.put(object, key, this.provider.primitive(value));
+        this.provider.put(object, key2, this.provider.primitive(value2));
+        this.provider.put(object, key3, this.provider.primitive(value3));
         return this.provider.cast(object, Object.class);
     }
 
