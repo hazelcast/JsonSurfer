@@ -120,4 +120,9 @@ public final class FastJsonProvider implements JsonProvider<JSONObject, JSONArra
         }
     }
 
+    @Override
+    public boolean isPrimitiveNull(Object value) {
+        return value == null;
+    }
+
 }

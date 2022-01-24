@@ -6,9 +6,8 @@ package org.jsfr.json.compiler;
 
 path: syntaxMode? '$' relativePath* EOF;
 syntaxMode: 'lax' | 'strict';
-relativePath: searchChild|search|childNode|array|childrenNode|anyChild|any;
+relativePath: searchChild|childNode|array|childrenNode|anyChild|any;
 searchChild: '..' (KEY | QUOTED_STRING) array?;
-search: '..' ;
 anyChild: '.*' ;
 any: '*' ;
 ANY_INDEX: '[*]' ;
@@ -33,13 +32,15 @@ filterExpr : NegationOperator '(' filterExpr ')'
            | filterMatchRegex
            | filterEqualBool
            | filterNEqualBool
+           | filterEqualNull
+           | filterNEqualNull
            | filterGtNum
            | filterGeNum
            | filterLtNum
            | filterLeNum
            | filterExist
            ;
-filterExist:  '@' relativePath*;
+filterExist:  'exists' '(' '@' relativePath* ')';
 filterGtNum:  '@' relativePath* '>' NUM;
 filterGeNum:  '@' relativePath* '>=' NUM;
 filterLtNum:  '@' relativePath* '<' NUM;
@@ -50,6 +51,8 @@ filterEqualBool: '@' relativePath* '==' BOOL;
 filterNEqualBool: '@' relativePath* NE BOOL;
 filterEqualStr: '@' relativePath* '==' QUOTED_STRING;
 filterNEqualStr: '@' relativePath* NE QUOTED_STRING;
+filterEqualNull: '@' relativePath* '==' NULL;
+filterNEqualNull: '@' relativePath* NE NULL;
 filterMatchRegex: '@' relativePath* 'like_regex' QUOTED_STRING;
 //exprArrayIdx: '@.length-' NUM;
 NegationOperator: '!';
@@ -62,6 +65,7 @@ NUM
     ;
 QUOTED_STRING : ('"' ( ~('"'|'\\') | ('\\' .) )* '"');
 BOOL: 'true'|'false';
+NULL: 'null';
 NE: '<>'|'!=';
 KEY :  (ESC | ~(["\\] | '.' | '*' | '[' | ']' | '(' | ')' | ',' | ':'| '=' | '@' | '?' | '&' | '|' | '>' | '<' | '\'' | '!' | [ \t\n\r]))+  ;
 

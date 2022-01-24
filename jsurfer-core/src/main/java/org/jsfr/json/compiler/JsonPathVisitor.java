@@ -37,12 +37,6 @@ public interface JsonPathVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSearchChild(JsonPathParser.SearchChildContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JsonPathParser#search}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSearch(JsonPathParser.SearchContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link JsonPathParser#anyChild}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -162,6 +156,18 @@ public interface JsonPathVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFilterNEqualStr(JsonPathParser.FilterNEqualStrContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JsonPathParser#filterEqualNull}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFilterEqualNull(JsonPathParser.FilterEqualNullContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JsonPathParser#filterNEqualNull}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFilterNEqualNull(JsonPathParser.FilterNEqualNullContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JsonPathParser#filterMatchRegex}.
 	 * @param ctx the parse tree
