@@ -28,10 +28,12 @@ import org.jsfr.json.PrimitiveHolder;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.provider.JsonProvider;
 
+import java.io.Serializable;
+
 /**
  * Created by Leo on 2017/4/4.
  */
-public interface JsonPathFilter {
+public interface JsonPathFilter extends Serializable {
 
     /**
      * Returns whether json position satisfies the filter.
