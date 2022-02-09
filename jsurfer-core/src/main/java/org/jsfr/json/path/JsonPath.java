@@ -28,6 +28,7 @@ import org.jsfr.json.exception.JsonPathCompilerException;
 import org.jsfr.json.filter.JsonPathFilter;
 import org.jsfr.json.resolver.DocumentResolver;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -35,7 +36,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class JsonPath implements Iterable<PathOperator> {
+public class JsonPath implements Iterable<PathOperator>, Serializable {
 
     private static final int JSON_PATH_INITIAL_CAPACITY = 20;
 

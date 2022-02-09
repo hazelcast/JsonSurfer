@@ -27,7 +27,9 @@ package org.jsfr.json.path;
 import org.jsfr.json.resolver.DocumentResolver;
 import org.jsfr.json.resolver.Resolvable;
 
-public abstract class PathOperator implements Resolvable {
+import java.io.Serializable;
+
+public abstract class PathOperator implements Resolvable, Serializable {
 
     @SuppressWarnings("checkstyle:JavadocVariable")
     public enum Type {
