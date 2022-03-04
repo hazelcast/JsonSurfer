@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class FilterVerifierDispatcher extends ContentDispatcher {
 
-    private Map<SurfingConfiguration.Binding, JsonFilterVerifier> verifiers = new HashMap<>();
+    private final Map<SurfingConfiguration.Binding, JsonFilterVerifier> verifiers = new HashMap<>();
 
     public void addVerifier(SurfingConfiguration.Binding binding, JsonFilterVerifier verifier) {
         this.addReceiver(verifier);

@@ -1,0 +1,92 @@
+{
+  "userRecords": [
+    {
+      "_id": "620e2633b38e7324cabf6d04",
+      "index": 0,
+      "guid": "cd78f42f-591c-4a12-9a06-7d30a17869d5",
+      "isActive": false,
+      "balance": "$1,376.00",
+      "age": 40,
+      "eyeColor": "blue",
+      "name": "Viola Rojas",
+      "gender": "female",
+      "company": "GEEKKO",
+      "email": "violarojas@geekko.com",
+      "phone": "+1 (943) 505-3484",
+      "address": "550 Belvidere Street, Vienna, South Dakota, 8767",
+      "about": "Cupidatat in ut deserunt consequat ipsum nisi incididunt dolore. Reprehenderit anim exercitation voluptate id. Veniam reprehenderit cillum velit occaecat irure ullamco id excepteur adipisicing velit ex ad enim quis. Ipsum eu in deserunt nostrud exercitation aute elit elit officia nulla consectetur pariatur incididunt sit. Incididunt eiusmod aute sit incididunt anim qui nulla quis. Esse excepteur labore in laborum aliqua.\r\n",
+      "registered": "2015-09-03T11:36:59 -02:00",
+      "latitude": -87.427608,
+      "longitude": -7.667973,
+      "tags": [
+        "mollit",
+        "amet",
+        "consequat",
+        "sint",
+        "proident",
+        "voluptate",
+        "laborum"
+      ],
+      "friends": [
+        {
+          "id": 0,
+          "name": "Schroeder Navarro"
+        },
+        {
+          "id": 1,
+          "name": "Cox Carrillo"
+        },
+        {
+          "id": 2,
+          "name": "Carver Erickson"
+        }
+      ],
+      "greeting": "Hello, Viola Rojas! You have 4 unread messages.",
+      "favoriteFruit": "strawberry"
+    },
+    {
+      "_id": "620e263303ec215f5c7c64de",
+      "index": 1,
+      "guid": "6a5f94c8-95ec-4999-99b6-68e457703ea3",
+      "isActive": false,
+      "balance": "$1,630.25",
+      "age": 37,
+      "eyeColor": "black",
+      "name": "Ochoa Sargent",
+      "gender": "male",
+      "company": "QUALITEX",
+      "email": "ochoasargent@qualitex.com",
+      "phone": "+1 (846) 489-2751",
+      "address": "410 Paerdegat Avenue, Clara, Maryland, 4368",
+      "about": "Fugiat anim cupidatat consequat adipisicing cillum et non. Consectetur voluptate mollit quis aliqua sunt ullamco cillum adipisicing. Velit ex Lorem irure labore dolore. Qui sunt officia aliqua mollit qui sunt ullamco. Elit pariatur consectetur anim officia ad cillum deserunt.\r\n",
+      "registered": "2019-07-28T10:41:43 -02:00",
+      "latitude": 72.149158,
+      "longitude": 12.621864,
+      "tags": [
+        "quis",
+        "qui",
+        "aliquip",
+        "consectetur",
+        "pariatur",
+        "occaecat",
+        "voluptate"
+      ],
+      "friends": [
+        {
+          "id": 0,
+          "name": "Christina West"
+        },
+        {
+          "id": 1,
+          "name": "Eve Andrews"
+        },
+        {
+          "id": 2,
+          "name": "Silva Mathews"
+        }
+      ],
+      "greeting": "Hello, Ochoa Sargent! You have 6 unread messages.",
+      "favoriteFruit": "strawberry"
+    }
+  ]
+}

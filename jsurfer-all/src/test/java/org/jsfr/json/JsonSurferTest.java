@@ -1181,6 +1181,24 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
     }
 
     @Test
+    public void testNestedArraysAndFilters() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("sample7.json"));
+        JsonPath path = JsonPathCompiler.compile("$.userRecords[*]?(@.eyeColor==\"blue\")");
+
+        //when
+        O providerObject = this.provider.createObject();
+        ValueBox<? extends Collection<?>> box1 = collector.collectAll(path, providerObject.getClass());
+        collector.exec();
+
+        //then
+        Collection<?> value = box1.get();
+        assertEquals(1, value.size());
+        assertEquals(this.provider.primitive("cd78f42f-591c-4a12-9a06-7d30a17869d5"),
+            resolveObject(value.iterator().next(), "guid"));
+    }
+
+    @Test
     public void testNestedArraysSecondLevelIndex() throws IOException {
         //given
         Collector collector = surfer.collector(read("nested_array.json"));

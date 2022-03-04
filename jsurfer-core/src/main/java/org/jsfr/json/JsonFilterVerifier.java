@@ -120,7 +120,7 @@ public class JsonFilterVerifier implements JsonSaxHandler {
         if (!this.verified && this.jsonPathFilter.apply(this.currentPosition, primitiveHolder, this.config.getJsonProvider())) {
             this.verified = true;
         }
-        if (this.currentPosition.isInsideArray()) {
+        if (this.stackDepth == 0 && this.currentPosition.isInsideArray()) {
             if (this.verified) {
                 this.invokeBuffer();
             }

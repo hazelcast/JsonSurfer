@@ -29,7 +29,7 @@ import java.util.LinkedList;
 
 class ContentDispatcher implements JsonSaxHandler {
 
-    private LinkedList<JsonSaxHandler> receiver = new LinkedList<JsonSaxHandler>();
+    private final LinkedList<JsonSaxHandler> receiver = new LinkedList<JsonSaxHandler>();
 
     public boolean isEmpty() {
         return this.receiver.isEmpty();
@@ -154,9 +154,5 @@ class ContentDispatcher implements JsonSaxHandler {
     public void addReceiver(JsonSaxHandler contentHandler) {
         receiver.addFirst(contentHandler);
     }
-
-//    public JsonSaxHandler getLastReceiver() {
-//        return this.receiver.isEmpty() ? null : this.receiver.getFirst();
-//    }
 
 }

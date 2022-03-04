@@ -35,8 +35,10 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import static org.jsfr.json.compiler.JsonPathCompiler.compile;
@@ -103,6 +105,26 @@ public class SurfingConfiguration {
 
         JsonPathListener[] getListeners() {
             return listeners;
+        }
+
+        LinkedList<JsonPathListener> sinkInto(LinkedList<JsonPathListener> listeners,
+            JsonFilterVerifier verifier) {
+            LinkedList<JsonPathListener> listenersToAdd = listeners == null ? new LinkedList<>() : listeners;
+            JsonPathListener[] bindingListeners = this.listeners;
+            for (JsonPathListener listener : bindingListeners) {
+                if (verifier != null) {
+                    listenersToAdd.add(verifier.addListener(listener));
+                } else {
+                    listenersToAdd.add(listener);
+                }
+            }
+            return listenersToAdd;
+        }
+
+        LinkedList<JsonPathListener> sinkInto(LinkedList<JsonPathListener> listeners) {
+            LinkedList<JsonPathListener> listenersToAdd = listeners == null ? new LinkedList<>() : listeners;
+            Collections.addAll(listenersToAdd, this.listeners);
+            return listenersToAdd;
         }
 
     }
