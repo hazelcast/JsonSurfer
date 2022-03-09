@@ -1479,6 +1479,29 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         assertEquals(1, box1.get().size());
     }
 
+    @Test
+    public void testChildrenOperator() throws IOException {
+        //given
+        Collector collector = surfer.collector(read("sample.json"));
+        JsonPath path1 = JsonPathCompiler.compile(
+            "$.store[\"book\"]");
+        JsonPath path2 = JsonPathCompiler.compile(
+            "$.store[*][\"book\"]");
+        JsonPath path3 = JsonPathCompiler.compile(
+            "$.store[0].book[0][\"category\",\"author\"]");
+
+        //when
+        ValueBox<Collection<Object>> box1 = collector.collectAll(path1, Object.class);
+        ValueBox<Collection<Object>> box2 = collector.collectAll(path2, Object.class);
+        ValueBox<Collection<Object>> box3 = collector.collectAll(path3, Object.class);
+        collector.exec();
+
+        //then
+        assertEquals(4, box1.get().size());
+        assertEquals(4, box2.get().size());
+        assertEquals(asList("reference", "Nigel Rees"), box3.get());
+    }
+
     private Object json(String key, String value) {
         O object = this.provider.createObject();
         this.provider.put(object, key, this.provider.primitive(value));
