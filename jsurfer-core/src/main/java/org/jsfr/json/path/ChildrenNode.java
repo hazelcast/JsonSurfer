@@ -31,7 +31,7 @@ import java.util.HashSet;
  */
 public class ChildrenNode extends PathOperator {
 
-    private HashSet<String> children;
+    private final HashSet<String> children;
 
     public ChildrenNode(HashSet<String> children) {
         this.children = children;
@@ -39,8 +39,7 @@ public class ChildrenNode extends PathOperator {
 
     @Override
     public boolean match(PathOperator pathOperator) {
-        return super.match(pathOperator)
-            && pathOperator instanceof ChildNode && children.contains(((ChildNode) pathOperator).getKey());
+        return pathOperator instanceof ChildNode && children.contains(((ChildNode) pathOperator).getKey());
     }
 
     @Override
