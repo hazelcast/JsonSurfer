@@ -22,6 +22,7 @@ COLON : ':';
 childNode: '.' (KEY | QUOTED_STRING) array?;
 array: (index | indexes | ANY_INDEX) filter?;
 childrenNode: '[' QUOTED_STRING ( ',' QUOTED_STRING )* ']' ;
+
 filterExpr : NegationOperator '(' filterExpr ')'
            | filterExpr AndOperator filterExpr
            | filterExpr OrOperator filterExpr
@@ -39,6 +40,8 @@ filterExpr : NegationOperator '(' filterExpr ')'
            | filterLtNum
            | filterLeNum
            | filterExist
+           | filterEqualType
+           | filterNEqualType
            ;
 filterExist:  'exists' '(' '@' relativePath* ')';
 filterGtNum:  '@' relativePath* '>' NUM;
@@ -54,6 +57,11 @@ filterNEqualStr: '@' relativePath* NE QUOTED_STRING;
 filterEqualNull: '@' relativePath* '==' NULL;
 filterNEqualNull: '@' relativePath* NE NULL;
 filterMatchRegex: '@' relativePath* 'like_regex' QUOTED_STRING;
+filterEqualType: '@' relativePath* itemMethod '==' QUOTED_STRING;
+filterNEqualType: '@' relativePath* itemMethod NE QUOTED_STRING;
+
+itemMethod: '.' KEY '()' ;
+
 //exprArrayIdx: '@.length-' NUM;
 NegationOperator: '!';
 AndOperator: '&&';

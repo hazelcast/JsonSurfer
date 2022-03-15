@@ -55,4 +55,10 @@ public interface JsonProvider<O, A, P> extends DocumentResolver<O, A> {
     <T> T cast(P value, Class<T> tClass);
 
     boolean isPrimitiveNull(Object value);
+
+    boolean isPrimitiveNumber(Object value);
+
+    boolean isPrimitiveBoolean(Object value);
+
+    boolean isPrimitiveString(Object value);
 }

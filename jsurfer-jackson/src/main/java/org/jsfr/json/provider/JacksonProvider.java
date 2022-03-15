@@ -140,4 +140,31 @@ public class JacksonProvider implements JsonProvider<ObjectNode, ArrayNode, Json
         return value instanceof NullNode;
     }
 
+    @Override
+    public boolean isPrimitiveNumber(Object value) {
+        boolean isPrimitive = value instanceof JsonNode;
+        if (!isPrimitive) {
+            return false;
+        }
+        return ((JsonNode) value).isNumber();
+    }
+
+    @Override
+    public boolean isPrimitiveBoolean(Object value) {
+        boolean isPrimitive = value instanceof JsonNode;
+        if (!isPrimitive) {
+            return false;
+        }
+        return ((JsonNode) value).isBoolean();
+    }
+
+    @Override
+    public boolean isPrimitiveString(Object value) {
+        boolean isPrimitive = value instanceof JsonNode;
+        if (!isPrimitive) {
+            return false;
+        }
+        return ((JsonNode) value).isTextual();
+    }
+
 }

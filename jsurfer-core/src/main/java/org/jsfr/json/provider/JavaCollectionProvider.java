@@ -117,4 +117,19 @@ public final class JavaCollectionProvider implements JsonProvider<Map<String, Ob
         return value == null;
     }
 
+    @Override
+    public boolean isPrimitiveNumber(Object value) {
+        return value instanceof Number;
+    }
+
+    @Override
+    public boolean isPrimitiveBoolean(Object value) {
+        return value instanceof Boolean;
+    }
+
+    @Override
+    public boolean isPrimitiveString(Object value) {
+        return value instanceof String;
+    }
+
 }

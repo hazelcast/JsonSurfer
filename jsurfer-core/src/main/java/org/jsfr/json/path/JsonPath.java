@@ -337,4 +337,13 @@ public class JsonPath implements Iterable<PathOperator>, Serializable {
         return sb.toString();
     }
 
+    public boolean isInsideArray() {
+        PathOperator last = peek();
+        return last instanceof ArrayIndex || last instanceof FilterRoot;
+    }
+
+    public boolean isInsideObject() {
+        return !isInsideArray();
+    }
+
 }

@@ -117,4 +117,19 @@ public class JacksonJrProvider implements JsonProvider<Map<Object, Object>, List
         return value == null;
     }
 
+    @Override
+    public boolean isPrimitiveNumber(Object value) {
+        return value instanceof Number;
+    }
+
+    @Override
+    public boolean isPrimitiveBoolean(Object value) {
+        return value instanceof Boolean;
+    }
+
+    @Override
+    public boolean isPrimitiveString(Object value) {
+        return value instanceof String;
+    }
+
 }

@@ -25,6 +25,7 @@
 package org.jsfr.json.compiler;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -46,10 +47,12 @@ import org.jsfr.json.filter.EqualityBoolPredicate;
 import org.jsfr.json.filter.EqualityNullPredicate;
 import org.jsfr.json.filter.EqualityNumPredicate;
 import org.jsfr.json.filter.EqualityStrPredicate;
+import org.jsfr.json.filter.EqualityTypePredicate;
 import org.jsfr.json.filter.ExistencePredicate;
 import org.jsfr.json.filter.FilterBuilder;
 import org.jsfr.json.filter.GreaterOrEqualThanNumPredicate;
 import org.jsfr.json.filter.GreaterThanNumPredicate;
+import org.jsfr.json.filter.ItemMethod;
 import org.jsfr.json.filter.JsonPathFilter;
 import org.jsfr.json.filter.LessOrEqualThanNumPredicate;
 import org.jsfr.json.filter.LessThanNumPredicate;
@@ -58,6 +61,8 @@ import org.jsfr.json.filter.NotEqualityBoolPredicate;
 import org.jsfr.json.filter.NotEqualityNullPredicate;
 import org.jsfr.json.filter.NotEqualityNumPredicate;
 import org.jsfr.json.filter.NotEqualityStrPredicate;
+import org.jsfr.json.filter.NotEqualityTypePredicate;
+import org.jsfr.json.filter.Type;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.path.SyntaxMode;
 
@@ -314,6 +319,37 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         return rst;
     }
 
+    @Override
+    public Void visitFilterEqualType(JsonPathParser.FilterEqualTypeContext ctx) {
+        filterPathBuilder = createFilterPathBuilder();
+        Void rst = super.visitFilterEqualType(ctx);
+        ItemMethod itemMethod = getItemMethod(ctx.itemMethod());
+        if (itemMethod == ItemMethod.TYPE) {
+            Type type = getType(ctx.QUOTED_STRING());
+            filterBuilder.append(new EqualityTypePredicate(filterPathBuilder.build(), type));
+        } else {
+            throw new InputMismatchException("Unsupported item method: " + itemMethod);
+        }
+        filterPathBuilder = null;
+        return rst;
+    }
+
+    @Override
+    public Void visitFilterNEqualType(JsonPathParser.FilterNEqualTypeContext ctx) {
+        filterPathBuilder = createFilterPathBuilder();
+        Void rst = super.visitFilterNEqualType(ctx);
+        ItemMethod itemMethod = getItemMethod(ctx.itemMethod());
+        if (itemMethod == ItemMethod.TYPE) {
+            Type type = getType(ctx.QUOTED_STRING());
+            filterBuilder.append(new NotEqualityTypePredicate(filterPathBuilder.build(), type));
+        } else {
+            throw new InputMismatchException("Unsupported item method: " + itemMethod);
+        }
+
+        filterPathBuilder = null;
+        return rst;
+    }
+
     static String unescapeString(String quotedString) {
         assert quotedString.startsWith("\"") && quotedString.endsWith("\"");
         StringBuilder res = new StringBuilder(quotedString.length() - 2);
@@ -445,6 +481,27 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
 
     private static void arrayWildcard(String key, JsonPathFilter filter, JsonPath.Builder builder) {
         builder.arrayWildcard(key, filter);
+    }
+
+    private static ItemMethod getItemMethod(JsonPathParser.ItemMethodContext ctx) {
+        String methodName = ctx.KEY().getText();
+        ItemMethod itemMethod = ItemMethod.from(methodName);
+        if (itemMethod == null) {
+            throw new InputMismatchException(String.format("Invalid item method %s. Supported: %s", methodName,
+                Arrays.toString(ItemMethod.values())));
+        }
+        return itemMethod;
+    }
+
+    private static Type getType(TerminalNode quoteString) {
+        String typeName = unescapeString(quoteString.getText());
+        Type type = Type.from(typeName);
+        if (type == null) {
+            throw new InputMismatchException(
+                String.format("Invalid type %s. Supported: %s", typeName, Arrays.toString(
+                    Type.values())));
+        }
+        return type;
     }
 
     public static JsonPath[] compile(String... paths) {

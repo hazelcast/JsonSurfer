@@ -96,6 +96,9 @@ public class JsonFilterVerifier implements JsonSaxHandler {
     @Override
     public boolean startArray() {
         this.stackDepth++;
+        if (!this.verified && this.jsonPathFilter.apply(this.currentPosition, null, this.config.getJsonProvider())) {
+            this.verified = true;
+        }
         return true;
     }
 
@@ -117,14 +120,22 @@ public class JsonFilterVerifier implements JsonSaxHandler {
 
     @Override
     public boolean primitive(PrimitiveHolder primitiveHolder) {
-        if (!this.verified && this.jsonPathFilter.apply(this.currentPosition, primitiveHolder, this.config.getJsonProvider())) {
-            this.verified = true;
+        if (this.verified) {
+            return true;
         }
-        if (this.stackDepth == 0 && this.currentPosition.isInsideArray()) {
-            if (this.verified) {
+        if (this.currentPosition.isInsideArray()) {
+            if (this.stackDepth != 0) {
+                return true;
+            }
+            if (this.jsonPathFilter.apply(this.currentPosition, primitiveHolder, this.config.getJsonProvider())) {
                 this.invokeBuffer();
+                this.verified = true;
             }
             return false;
+        } else {
+            if (this.jsonPathFilter.apply(this.currentPosition, primitiveHolder, this.config.getJsonProvider())) {
+                this.verified = true;
+            }
         }
         return true;
     }
