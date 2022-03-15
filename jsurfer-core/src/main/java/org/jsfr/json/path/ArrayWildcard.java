@@ -34,7 +34,10 @@ public class ArrayWildcard extends FilterableChildNode {
 
     @Override
     public boolean match(PathOperator pathOperator) {
-        return super.match(pathOperator);
+        if (!super.match(pathOperator)) {
+            return false;
+        }
+        return pathOperator instanceof ArrayIndex;
     }
 
     @Override

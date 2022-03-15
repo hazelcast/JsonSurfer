@@ -59,9 +59,8 @@ public class ArrayIndex extends FilterableChildNode {
         }
         if (pathOperator instanceof ArrayIndex) {
             return arrayIndex == ((ArrayIndex) pathOperator).arrayIndex;
-        } else {
-            return super.match(pathOperator);
         }
+        return false;
     }
 
     @Override

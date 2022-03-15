@@ -94,7 +94,7 @@ public class JsonPathTest {
         JsonPath position = compile("$.book.store.book.store.book[1].volumes[1].title");
         assertTrue(path1.matchWithDeepScan(position));
         assertTrue(path2.matchWithDeepScan(position));
-        assertTrue(path3.matchWithDeepScan(position));
+        assertFalse(path3.matchWithDeepScan(position));
         assertFalse(path4.matchWithDeepScan(position));
     }
 
@@ -112,7 +112,7 @@ public class JsonPathTest {
     }
 
     @Test
-    public void shallMatchObjectAsArrayElement() {
+    public void shallNotMatchObjectAsArrayElement() {
         //given
         JsonPath position = compile("$.book.store.title");
         JsonPath path = compile("$.book[0].store.title");
@@ -121,11 +121,11 @@ public class JsonPathTest {
         boolean matched = path.match(position);
 
         //then
-        assertTrue(matched);
+        assertFalse(matched);
     }
 
     @Test
-    public void shallMatchObjectAsArrayWildcard() {
+    public void shallNotMatchObjectAsArrayWildcard() {
         //given
         JsonPath position = compile("$.book.store.title");
         JsonPath path = compile("$.book[*].store.title");
@@ -134,13 +134,13 @@ public class JsonPathTest {
         boolean matched = path.match(position);
 
         //then
-        assertTrue(matched);
+        assertFalse(matched);
     }
 
     @Test
     public void laxIsSupportedSyntaxMode() {
         //given
-        JsonPath position = compile("$.book.store.title");
+        JsonPath position = compile("$.book[0].store.title");
 
         //when
         JsonPath path1 = compile("lax $.book[*].store.title");

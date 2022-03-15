@@ -1486,9 +1486,9 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         JsonPath path1 = JsonPathCompiler.compile(
             "$.store[\"book\"]");
         JsonPath path2 = JsonPathCompiler.compile(
-            "$.store[*][\"book\"]");
+            "$.store[\"book\"]");
         JsonPath path3 = JsonPathCompiler.compile(
-            "$.store[0].book[0][\"category\",\"author\"]");
+            "$.store.book[0][\"category\",\"author\"]");
 
         //when
         ValueBox<Collection<Object>> box1 = collector.collectAll(path1, Object.class);
