@@ -39,8 +39,9 @@ import java.util.Map;
 
 /**
  * Receives JSON reading events from input data JSON parser, matches and delegates those events to filters
- * verifier (if there filters registered in JSON path) and content dispatcher that does value collection.
- * SurfingContext is not thread-safe
+ * verifier (if there are filters registered in JSON path) and to content dispatcher that does value collection.
+ *
+ * SurfingContext is not thread-safe.
  */
 public class SurfingContext implements ParsingContext, JsonSaxHandler {
 
@@ -69,7 +70,7 @@ public class SurfingContext implements ParsingContext, JsonSaxHandler {
 
         if (config.hasFilter()) {
 
-            // skip matching if "skipOverlappedPath" is enable
+            // skip matching if "skipOverlappedPath" is enabled
             if (config.isSkipOverlappedPath() && dispatcher.size() > 1) {
                 return;
             }
@@ -88,7 +89,7 @@ public class SurfingContext implements ParsingContext, JsonSaxHandler {
             }
 
         } else {
-            // skip matching if "skipOverlappedPath" is enable
+            // skip matching if "skipOverlappedPath" is enabled
             if (config.isSkipOverlappedPath() && !dispatcher.isEmpty()) {
                 return;
             }

@@ -18,7 +18,7 @@ public class FilterableChildNode extends ChildNode {
 
     @Override
     public boolean match(PathOperator pathOperator) {
-        //filters are bind and checked separately
+        //filters are bound and checked separately
         return super.match(pathOperator);
     }
 

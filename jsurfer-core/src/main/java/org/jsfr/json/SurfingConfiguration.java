@@ -107,8 +107,7 @@ public class SurfingConfiguration {
             return listeners;
         }
 
-        LinkedList<JsonPathListener> sinkInto(LinkedList<JsonPathListener> listeners,
-            JsonFilterVerifier verifier) {
+        LinkedList<JsonPathListener> sinkInto(LinkedList<JsonPathListener> listeners, JsonFilterVerifier verifier) {
             LinkedList<JsonPathListener> listenersToAdd = listeners == null ? new LinkedList<>() : listeners;
             JsonPathListener[] bindingListeners = this.listeners;
             for (JsonPathListener listener : bindingListeners) {
