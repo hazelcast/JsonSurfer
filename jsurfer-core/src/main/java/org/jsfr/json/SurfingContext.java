@@ -36,6 +36,7 @@ import org.jsfr.json.path.PathOperator.Type;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Receives JSON reading events from input data JSON parser, matches and delegates those events to filters
@@ -132,11 +133,26 @@ public class SurfingContext implements ParsingContext, JsonSaxHandler {
                 if (primitiveHolder != null) {
                     dispatchPrimitiveWithFilter(binding.getListeners(), primitiveHolder.getValue(), binding.dependency);
                 } else {
-                    return binding.sinkInto(listeners, this.filterVerifierDispatcher.getVerifier(binding.dependency));
+                    JsonFilterVerifier verifier = this.filterVerifierDispatcher.getVerifier(binding.dependency);
+                    return mergeCollections(listeners, binding.listeners, verifier != null ? verifier::addListener : Function.identity());
                 }
             }
         }
         return listeners;
+    }
+
+    /**
+     * Adds elements from `srcColl` into `targetColl`, transforming them using
+     * the `srcMapping`. If `targetColl` is null, creates a new collection.
+     */
+    private static <T> LinkedList<T> mergeCollections(LinkedList<T> targetColl, T[] srcColl, Function<T, T> srcMapping) {
+        if (targetColl == null) {
+            targetColl = new LinkedList<>();
+        }
+        for (T element : srcColl) {
+            targetColl.add(srcMapping.apply(element));
+        }
+        return targetColl;
     }
 
     private LinkedList<JsonPathListener> doMatching(Binding binding, PrimitiveHolder primitiveHolder,
@@ -147,16 +163,13 @@ public class SurfingContext implements ParsingContext, JsonSaxHandler {
             if (primitiveHolder != null) {
                 dispatchPrimitive(binding.getListeners(), primitiveHolder.getValue());
             } else {
-                return binding.sinkInto(listeners);
+                return mergeCollections(listeners, binding.listeners, Function.identity());
             }
         }
         return listeners;
     }
 
     private void dispatchPrimitiveWithFilter(JsonPathListener[] listeners, Object primitive, Binding dependency) {
-
-
-//        JsonFilterVerifier filterVerifier = (JsonFilterVerifier) this.filterVerifierDispatcher.getLastReceiver();
         if (dependency != null) {
             JsonFilterVerifier filterVerifier = this.filterVerifierDispatcher.getVerifier(dependency);
             for (JsonPathListener listener : listeners) {
