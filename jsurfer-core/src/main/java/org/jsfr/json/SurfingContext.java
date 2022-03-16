@@ -134,7 +134,8 @@ public class SurfingContext implements ParsingContext, JsonSaxHandler {
                     dispatchPrimitiveWithFilter(binding.getListeners(), primitiveHolder.getValue(), binding.dependency);
                 } else {
                     JsonFilterVerifier verifier = this.filterVerifierDispatcher.getVerifier(binding.dependency);
-                    return mergeCollections(listeners, binding.listeners, verifier != null ? verifier::addListener : Function.identity());
+                    return mergeCollections(listeners, binding.listeners,
+                            verifier != null ? verifier::addListener : Function.identity());
                 }
             }
         }
