@@ -33,29 +33,33 @@ import org.jsfr.json.path.ChildNode;
 import org.jsfr.json.path.PathOperator;
 import org.jsfr.json.path.PathOperator.Type;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * SurfingContext is not thread-safe
+ * Receives JSON reading events from input data JSON parser, matches and delegates those events to filters
+ * verifier (if there are filters registered in JSON path) and to content dispatcher that does value collection.
+ *
+ * SurfingContext is not thread-safe.
  */
 public class SurfingContext implements ParsingContext, JsonSaxHandler {
 
     private boolean stopped;
     private boolean paused;
     private JsonPosition currentPosition;
-    private final ContentDispatcher dispatcher = new ContentDispatcher();
-    private FilterVerifierDispatcher filterVerifierDispatcher;
-    private final SurfingConfiguration config;
     private Map<String, Object> transientMap;
+    private final ContentDispatcher dispatcher = new ContentDispatcher();
+    private final FilterVerifierDispatcher filterVerifierDispatcher;
+    private final SurfingConfiguration config;
 
     SurfingContext(SurfingConfiguration config) {
         this.config = config;
         if (config.hasFilter()) {
             this.filterVerifierDispatcher = new FilterVerifierDispatcher();
             this.dispatcher.addReceiver(this.filterVerifierDispatcher);
+        } else {
+            this.filterVerifierDispatcher = null;
         }
     }
 
@@ -66,7 +70,7 @@ public class SurfingContext implements ParsingContext, JsonSaxHandler {
 
         if (config.hasFilter()) {
 
-            // skip matching if "skipOverlappedPath" is enable
+            // skip matching if "skipOverlappedPath" is enabled
             if (config.isSkipOverlappedPath() && dispatcher.size() > 1) {
                 return;
             }
@@ -85,7 +89,7 @@ public class SurfingContext implements ParsingContext, JsonSaxHandler {
             }
 
         } else {
-            // skip matching if "skipOverlappedPath" is enable
+            // skip matching if "skipOverlappedPath" is enabled
             if (config.isSkipOverlappedPath() && !dispatcher.isEmpty()) {
                 return;
             }
@@ -107,8 +111,7 @@ public class SurfingContext implements ParsingContext, JsonSaxHandler {
         }
 
         if (listeners != null) {
-            JsonCollector collector = new JsonCollector(listeners.size() == 1
-                ? Collections.singleton(listeners.getFirst()) : listeners, this, config);
+            JsonCollector collector = new JsonCollector(listeners, this, config);
             dispatcher.addReceiver(collector);
         }
 
@@ -129,7 +132,7 @@ public class SurfingContext implements ParsingContext, JsonSaxHandler {
                 if (primitiveHolder != null) {
                     dispatchPrimitiveWithFilter(binding.getListeners(), primitiveHolder.getValue(), binding.dependency);
                 } else {
-                    return this.addListeners(binding, listeners, this.filterVerifierDispatcher.getVerifier(binding.dependency));
+                    return binding.sinkInto(listeners, this.filterVerifierDispatcher.getVerifier(binding.dependency));
                 }
             }
         }
@@ -144,31 +147,10 @@ public class SurfingContext implements ParsingContext, JsonSaxHandler {
             if (primitiveHolder != null) {
                 dispatchPrimitive(binding.getListeners(), primitiveHolder.getValue());
             } else {
-                return this.addListeners(binding, listeners);
+                return binding.sinkInto(listeners);
             }
         }
         return listeners;
-    }
-
-    private LinkedList<JsonPathListener> addListeners(Binding binding, LinkedList<JsonPathListener> listeners,
-        JsonFilterVerifier verifier) {
-        LinkedList<JsonPathListener> listenersToAdd = listeners == null ? new LinkedList<>() : listeners;
-        JsonPathListener[] bindingListeners = binding.getListeners();
-        for (JsonPathListener listener : bindingListeners) {
-            if (verifier != null) {
-                listenersToAdd.add(verifier.addListener(listener));
-            } else {
-                listenersToAdd.add(listener);
-            }
-        }
-//        Collections.addAll(listenersToAdd, binding.getListeners());
-        return listenersToAdd;
-    }
-
-    private LinkedList<JsonPathListener> addListeners(Binding binding, LinkedList<JsonPathListener> listeners) {
-        LinkedList<JsonPathListener> listenersToAdd = listeners == null ? new LinkedList<JsonPathListener>() : listeners;
-        Collections.addAll(listenersToAdd, binding.getListeners());
-        return listenersToAdd;
     }
 
     private void dispatchPrimitiveWithFilter(JsonPathListener[] listeners, Object primitive, Binding dependency) {
@@ -350,7 +332,7 @@ public class SurfingContext implements ParsingContext, JsonSaxHandler {
     @Override
     public void save(String key, Object value) {
         if (this.transientMap == null) {
-            this.transientMap = new HashMap<String, Object>();
+            this.transientMap = new HashMap<>();
         }
         this.transientMap.put(key, value);
     }
@@ -362,6 +344,7 @@ public class SurfingContext implements ParsingContext, JsonSaxHandler {
 
     @Override
     public <T> T cast(Object object, Class<T> tClass) {
+        //noinspection unchecked
         return (T) this.config.getJsonProvider().cast(object, tClass);
     }
 

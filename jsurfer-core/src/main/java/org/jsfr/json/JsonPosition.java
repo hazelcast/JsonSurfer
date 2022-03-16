@@ -66,7 +66,7 @@ class JsonPosition extends JsonPath {
 
     boolean isInsideArray() {
         PathOperator last = peek();
-        return last instanceof ArrayIndex;
+        return last.getType() == PathOperator.Type.ARRAY;
     }
 
     private void popArray(PathOperator node) {
