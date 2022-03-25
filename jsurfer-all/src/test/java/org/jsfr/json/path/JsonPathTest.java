@@ -35,12 +35,14 @@ import org.junit.Test;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.List;
 
 import static org.jsfr.json.TestUtils.readClasspathResource;
 import static org.jsfr.json.compiler.JsonPathCompiler.compile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -243,4 +245,22 @@ public class JsonPathTest {
         assertFalse(path3.match(compile("$.book[3]")));
         assertTrue(path3.match(compile("$.book[1]")));
     }
+    @Test
+    public void testItemMethodIsCaseSensitive() {
+        //given
+        String invalidPath = "$.book[*]?(@.Type() == \"null\")";
+        String validPath = "$.book[*]?(@.type() == \"null\")";
+
+        //when
+        JsonPath valid = compile(validPath);
+        InputMismatchException e = assertThrows(
+            InputMismatchException.class,
+            () -> compile(invalidPath)
+        );
+
+        //then
+        assertNotNull(valid);
+        assertEquals("Invalid item method Type. Supported: [type]", e.getMessage());
+    }
+
 }

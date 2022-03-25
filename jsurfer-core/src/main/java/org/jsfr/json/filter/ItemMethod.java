@@ -1,5 +1,8 @@
 package org.jsfr.json.filter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A method that can be called on path element inside filter expressions.
  */
@@ -19,15 +22,16 @@ public enum ItemMethod {
      */
     TYPE;
 
+    private static final Map<String, ItemMethod> NAME_TO_METHOD_MAPPING = new HashMap<>();
 
+    static {
+        for (ItemMethod method : values()) {
+            NAME_TO_METHOD_MAPPING.put(method.toString(), method);
+        }
+    }
 
     public static ItemMethod from(String value) {
-        for (ItemMethod rename : values()) {
-            if (rename.toString().equalsIgnoreCase(value)) {
-                return rename;
-            }
-        }
-        return null;
+        return NAME_TO_METHOD_MAPPING.get(value);
     }
 
     @Override

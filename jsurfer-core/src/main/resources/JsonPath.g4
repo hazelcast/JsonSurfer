@@ -40,8 +40,8 @@ filterExpr : NegationOperator '(' filterExpr ')'
            | filterLtNum
            | filterLeNum
            | filterExist
-           | filterEqualType
-           | filterNEqualType
+           | filterItemMethodEqual
+           | filterItemMethodNEqual
            ;
 filterExist:  'exists' '(' '@' relativePath* ')';
 filterGtNum:  '@' relativePath* '>' NUM;
@@ -57,8 +57,8 @@ filterNEqualStr: '@' relativePath* NE QUOTED_STRING;
 filterEqualNull: '@' relativePath* '==' NULL;
 filterNEqualNull: '@' relativePath* NE NULL;
 filterMatchRegex: '@' relativePath* 'like_regex' QUOTED_STRING;
-filterEqualType: '@' relativePath* itemMethod '==' QUOTED_STRING;
-filterNEqualType: '@' relativePath* itemMethod NE QUOTED_STRING;
+filterItemMethodEqual: '@' relativePath* itemMethod '==' QUOTED_STRING;
+filterItemMethodNEqual: '@' relativePath* itemMethod NE QUOTED_STRING;
 
 itemMethod: '.' KEY '()' ;
 

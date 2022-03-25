@@ -1,5 +1,8 @@
 package org.jsfr.json.filter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jsfr.json.provider.JsonProvider;
 
 /**
@@ -7,7 +10,7 @@ import org.jsfr.json.provider.JsonProvider;
  */
 public enum Type {
     /**
-     *
+     * Represents JSON null literal.
      */
     NULL {
         @Override
@@ -16,7 +19,7 @@ public enum Type {
         }
     },
     /**
-     *
+     * Represents JSON `number` primitive type.
      */
     NUMBER {
         @Override
@@ -25,7 +28,7 @@ public enum Type {
         }
     },
     /**
-     *
+     * Represents JSON `string` primitive type.
      */
     STRING {
         @Override
@@ -34,7 +37,7 @@ public enum Type {
         }
     },
     /**
-     *
+     * Represents JSON `boolean` primitive type.
      */
     BOOLEAN {
         @Override
@@ -43,16 +46,24 @@ public enum Type {
         }
     },
     /**
-     *
+     * Represents JSON `array` structured type.
      */
     ARRAY,
     /**
-     *
+     * Represents JSON `object` structured type.
      */
     OBJECT;
 
+    private static final Map<String, Type> NAME_TO_TYPE_MAPPING = new HashMap<>();
+
+    static {
+        for (Type item : values()) {
+            NAME_TO_TYPE_MAPPING.put(item.toString(), item);
+        }
+    }
+
     public boolean isInstanceOf(Object obj, JsonProvider<?, ?, ?> provider) {
-        return false;
+        throw new UnsupportedOperationException("should not be called");
     }
 
     @Override
@@ -61,11 +72,6 @@ public enum Type {
     }
 
     public static Type from(String value) {
-        for (Type type : values()) {
-            if (type.toString().equalsIgnoreCase(value)) {
-                return type;
-            }
-        }
-        return null;
+        return NAME_TO_TYPE_MAPPING.get(value);
     }
 }

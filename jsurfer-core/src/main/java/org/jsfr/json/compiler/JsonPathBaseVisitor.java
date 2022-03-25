@@ -208,14 +208,14 @@ public class JsonPathBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFilterEqualType(JsonPathParser.FilterEqualTypeContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFilterItemMethodEqual(JsonPathParser.FilterItemMethodEqualContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFilterNEqualType(JsonPathParser.FilterNEqualTypeContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFilterItemMethodNEqual(JsonPathParser.FilterItemMethodNEqualContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

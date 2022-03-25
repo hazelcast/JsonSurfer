@@ -102,8 +102,8 @@ filterNEqualStr
 filterEqualNull
 filterNEqualNull
 filterMatchRegex
-filterEqualType
-filterNEqualType
+filterItemMethodEqual
+filterItemMethodNEqual
 itemMethod
 
 

@@ -32,7 +32,7 @@ public class JsonPathParser extends Parser {
 		RULE_filterLeNum = 17, RULE_filterEqualNum = 18, RULE_filterNEqualNum = 19, 
 		RULE_filterEqualBool = 20, RULE_filterNEqualBool = 21, RULE_filterEqualStr = 22, 
 		RULE_filterNEqualStr = 23, RULE_filterEqualNull = 24, RULE_filterNEqualNull = 25, 
-		RULE_filterMatchRegex = 26, RULE_filterEqualType = 27, RULE_filterNEqualType = 28, 
+		RULE_filterMatchRegex = 26, RULE_filterItemMethodEqual = 27, RULE_filterItemMethodNEqual = 28, 
 		RULE_itemMethod = 29;
 	private static String[] makeRuleNames() {
 		return new String[] {
@@ -41,7 +41,8 @@ public class JsonPathParser extends Parser {
 			"filterExist", "filterGtNum", "filterGeNum", "filterLtNum", "filterLeNum", 
 			"filterEqualNum", "filterNEqualNum", "filterEqualBool", "filterNEqualBool", 
 			"filterEqualStr", "filterNEqualStr", "filterEqualNull", "filterNEqualNull", 
-			"filterMatchRegex", "filterEqualType", "filterNEqualType", "itemMethod"
+			"filterMatchRegex", "filterItemMethodEqual", "filterItemMethodNEqual", 
+			"itemMethod"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -883,11 +884,11 @@ public class JsonPathParser extends Parser {
 		public FilterExistContext filterExist() {
 			return getRuleContext(FilterExistContext.class,0);
 		}
-		public FilterEqualTypeContext filterEqualType() {
-			return getRuleContext(FilterEqualTypeContext.class,0);
+		public FilterItemMethodEqualContext filterItemMethodEqual() {
+			return getRuleContext(FilterItemMethodEqualContext.class,0);
 		}
-		public FilterNEqualTypeContext filterNEqualType() {
-			return getRuleContext(FilterNEqualTypeContext.class,0);
+		public FilterItemMethodNEqualContext filterItemMethodNEqual() {
+			return getRuleContext(FilterItemMethodNEqualContext.class,0);
 		}
 		public TerminalNode AndOperator() { return getToken(JsonPathParser.AndOperator, 0); }
 		public TerminalNode OrOperator() { return getToken(JsonPathParser.OrOperator, 0); }
@@ -1019,13 +1020,13 @@ public class JsonPathParser extends Parser {
 			case 16:
 				{
 				setState(165);
-				filterEqualType();
+				filterItemMethodEqual();
 				}
 				break;
 			case 17:
 				{
 				setState(166);
-				filterNEqualType();
+				filterItemMethodNEqual();
 				}
 				break;
 			}
@@ -1916,7 +1917,7 @@ public class JsonPathParser extends Parser {
 		return _localctx;
 	}
 
-	public static class FilterEqualTypeContext extends ParserRuleContext {
+	public static class FilterItemMethodEqualContext extends ParserRuleContext {
 		public ItemMethodContext itemMethod() {
 			return getRuleContext(ItemMethodContext.class,0);
 		}
@@ -1927,20 +1928,20 @@ public class JsonPathParser extends Parser {
 		public RelativePathContext relativePath(int i) {
 			return getRuleContext(RelativePathContext.class,i);
 		}
-		public FilterEqualTypeContext(ParserRuleContext parent, int invokingState) {
+		public FilterItemMethodEqualContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_filterEqualType; }
+		@Override public int getRuleIndex() { return RULE_filterItemMethodEqual; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JsonPathVisitor ) return ((JsonPathVisitor<? extends T>)visitor).visitFilterEqualType(this);
+			if ( visitor instanceof JsonPathVisitor ) return ((JsonPathVisitor<? extends T>)visitor).visitFilterItemMethodEqual(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final FilterEqualTypeContext filterEqualType() throws RecognitionException {
-		FilterEqualTypeContext _localctx = new FilterEqualTypeContext(_ctx, getState());
-		enterRule(_localctx, 54, RULE_filterEqualType);
+	public final FilterItemMethodEqualContext filterItemMethodEqual() throws RecognitionException {
+		FilterItemMethodEqualContext _localctx = new FilterItemMethodEqualContext(_ctx, getState());
+		enterRule(_localctx, 54, RULE_filterItemMethodEqual);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
@@ -1982,7 +1983,7 @@ public class JsonPathParser extends Parser {
 		return _localctx;
 	}
 
-	public static class FilterNEqualTypeContext extends ParserRuleContext {
+	public static class FilterItemMethodNEqualContext extends ParserRuleContext {
 		public ItemMethodContext itemMethod() {
 			return getRuleContext(ItemMethodContext.class,0);
 		}
@@ -1994,20 +1995,20 @@ public class JsonPathParser extends Parser {
 		public RelativePathContext relativePath(int i) {
 			return getRuleContext(RelativePathContext.class,i);
 		}
-		public FilterNEqualTypeContext(ParserRuleContext parent, int invokingState) {
+		public FilterItemMethodNEqualContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_filterNEqualType; }
+		@Override public int getRuleIndex() { return RULE_filterItemMethodNEqual; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JsonPathVisitor ) return ((JsonPathVisitor<? extends T>)visitor).visitFilterNEqualType(this);
+			if ( visitor instanceof JsonPathVisitor ) return ((JsonPathVisitor<? extends T>)visitor).visitFilterItemMethodNEqual(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final FilterNEqualTypeContext filterNEqualType() throws RecognitionException {
-		FilterNEqualTypeContext _localctx = new FilterNEqualTypeContext(_ctx, getState());
-		enterRule(_localctx, 56, RULE_filterNEqualType);
+	public final FilterItemMethodNEqualContext filterItemMethodNEqual() throws RecognitionException {
+		FilterItemMethodNEqualContext _localctx = new FilterItemMethodNEqualContext(_ctx, getState());
+		enterRule(_localctx, 56, RULE_filterItemMethodNEqual);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);

@@ -666,6 +666,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         verify(booleanElement).onValue(eq(provider.primitive(true)), any(ParsingContext.class));
         verify(nullElement).onValue(eq(provider.primitiveNull()), any(ParsingContext.class));
         verify(objectElement).onValue(eq(object), any(ParsingContext.class));
+        verify(arrayElement).onValue(eq(innerArray), any(ParsingContext.class));
 
     }
 
@@ -1602,6 +1603,42 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         //then
         assertEquals(2, stringVal.get().size());
         assertEquals(0, notStringVal.get().size());
+    }
+
+    @Test
+    public void testFilterPrimitiveEqualByTypeNonExistingTypes() throws Exception {
+        // given
+        Collector collector = surfer.collector(read("array.json"));
+
+        // when
+        ValueBox<Collection<Object>> valuesNonExistingType =
+            collector.collectAll("$[*]?(@.type() == \"non-existing-type\")", Object.class);
+        ValueBox<Collection<Object>> valuesTypeCaseSensitive =
+            collector.collectAll("$[*]?(@.type() == \"String\")", Object.class);
+
+        collector.exec();
+
+        //then
+        assertEquals(0, valuesNonExistingType.get().size());
+        assertEquals(0, valuesTypeCaseSensitive.get().size());
+    }
+
+    @Test
+    public void testFilterPrimitiveNotEqualByTypeNonExistingTypes() throws Exception {
+        // given
+        Collector collector = surfer.collector(read("array.json"));
+
+        // when
+        ValueBox<Collection<Object>> valuesNonExistingType =
+            collector.collectAll("$[*]?(@.type() <> \"non-existing-type\")", Object.class);
+        ValueBox<Collection<Object>> valuesTypeCaseSensitive =
+            collector.collectAll("$[*]?(@.type() <> \"String\")", Object.class);
+
+        collector.exec();
+
+        //then
+        assertEquals(6, valuesNonExistingType.get().size());
+        assertEquals(6, valuesTypeCaseSensitive.get().size());
     }
 
     private Object json(String key, String value) {
