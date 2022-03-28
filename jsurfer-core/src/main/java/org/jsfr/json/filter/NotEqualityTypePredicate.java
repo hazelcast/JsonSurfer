@@ -14,24 +14,39 @@ public class NotEqualityTypePredicate extends BasicJsonPathFilter {
     }
 
     @Override
-    public boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
+    public boolean applyOnPrimitive(JsonPath jsonPosition, PrimitiveHolder primitiveHolder,
+        JsonProvider<?, ?, ?> jsonProvider) {
         if (!this.getRelativePath().matchFilterPath(jsonPosition)) {
             return false;
         }
-        switch (type) {
-            case ARRAY:
-                return primitiveHolder != null || jsonPosition.isInsideObject();
-            case OBJECT:
-                return primitiveHolder != null || jsonPosition.isInsideArray();
-            default:
-                if (primitiveHolder == null) {
-                    JsonPath parent = jsonPosition.derivePath(jsonPosition.pathDepth() - 1);
-                    return this.getRelativePath().isInsideArray() == parent.isInsideArray();
-                } else {
-                   return  (this.getRelativePath().isInsideArray() == jsonPosition.isInsideArray())
-                        && !this.type.isInstanceOf(primitiveHolder.getValue(), jsonProvider);
-                }
+        return this.type == Type.OBJECT || this.type == Type.ARRAY || (
+            (this.getRelativePath().isInsideArray() == jsonPosition.isInsideArray())
+                && !this.type.isInstanceOf(
+                primitiveHolder.getValue(), jsonProvider));
+    }
+
+    @Override
+    public boolean applyOnObject(JsonPath jsonPosition, JsonProvider<?, ?, ?> jsonProvider) {
+        if (this.type == Type.OBJECT) {
+            return false;
         }
+        if (!this.getRelativePath().matchFilterPath(jsonPosition)) {
+            return false;
+        }
+        JsonPath parent = jsonPosition.derivePath(jsonPosition.pathDepth() - 1);
+        return this.getRelativePath().isInsideArray() == parent.isInsideArray();
+    }
+
+    @Override
+    public boolean applyOnArray(JsonPath jsonPosition, Integer length, JsonProvider<?, ?, ?> jsonProvider) {
+        if (this.type == Type.ARRAY) {
+            return false;
+        }
+        if (!this.getRelativePath().matchFilterPath(jsonPosition)) {
+            return false;
+        }
+        JsonPath parent = jsonPosition.derivePath(jsonPosition.pathDepth() - 1);
+        return this.getRelativePath().isInsideArray() == parent.isInsideArray();
     }
 
 }

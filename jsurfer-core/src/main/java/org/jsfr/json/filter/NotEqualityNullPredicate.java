@@ -26,15 +26,15 @@ import org.jsfr.json.PrimitiveHolder;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.provider.JsonProvider;
 
-public class NotEqualityNullPredicate extends BasicJsonPathFilter {
+public class NotEqualityNullPredicate extends BasicPrimitiveFilter {
 
     public NotEqualityNullPredicate(JsonPath relativePath) {
         super(relativePath);
     }
 
     @Override
-    public boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
-        if (primitiveHolder != null && this.getRelativePath().matchFilterPath(jsonPosition)) {
+    public boolean applyOnPrimitive(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider<?, ?, ?> jsonProvider) {
+        if (this.getRelativePath().matchFilterPath(jsonPosition)) {
             Object candidate = primitiveHolder.getValue();
             return !jsonProvider.isPrimitiveNull(candidate);
         } else {

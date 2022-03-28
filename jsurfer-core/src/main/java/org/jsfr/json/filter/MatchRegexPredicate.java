@@ -33,7 +33,7 @@ import org.jsfr.json.provider.JsonProvider;
 /**
  * Created by Leo on 2017/4/4.
  */
-public class MatchRegexPredicate extends BasicJsonPathFilter {
+public class MatchRegexPredicate extends BasicPrimitiveFilter {
 
     private final Pattern regex;
 
@@ -42,9 +42,10 @@ public class MatchRegexPredicate extends BasicJsonPathFilter {
         this.regex = regex;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
-        if (primitiveHolder != null && this.getRelativePath().matchFilterPath(jsonPosition)) {
+    public boolean applyOnPrimitive(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
+        if (this.getRelativePath().matchFilterPath(jsonPosition)) {
             Object candidate = primitiveHolder.getValue();
             String string = (String) jsonProvider.cast(candidate, String.class);
             if (string == null) {

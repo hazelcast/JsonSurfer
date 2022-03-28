@@ -34,9 +34,30 @@ import org.jsfr.json.provider.JsonProvider;
 public class OrPredicate extends AggregatePredicate {
 
     @Override
-    public boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
+    public boolean applyOnPrimitive(JsonPath jsonPosition, PrimitiveHolder primitiveHolder,
+        JsonProvider<?, ?, ?> jsonProvider) {
         for (JsonPathFilter filter : this.getFilters()) {
-            if (filter.apply(jsonPosition, primitiveHolder, jsonProvider)) {
+            if (filter.applyOnPrimitive(jsonPosition, primitiveHolder, jsonProvider)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean applyOnObject(JsonPath jsonPosition, JsonProvider<?, ?, ?> jsonProvider) {
+        for (JsonPathFilter filter : this.getFilters()) {
+            if (filter.applyOnObject(jsonPosition, jsonProvider)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean applyOnArray(JsonPath jsonPosition, Integer length, JsonProvider<?, ?, ?> jsonProvider) {
+        for (JsonPathFilter filter : this.getFilters()) {
+            if (filter.applyOnArray(jsonPosition, length, jsonProvider)) {
                 return true;
             }
         }

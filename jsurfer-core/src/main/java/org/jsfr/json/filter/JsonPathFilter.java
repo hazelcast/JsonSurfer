@@ -38,6 +38,10 @@ public interface JsonPathFilter extends Serializable {
     /**
      * Returns whether json position satisfies the filter.
      */
-    boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider);
+    boolean applyOnPrimitive(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider<?, ?, ?> jsonProvider);
+
+    boolean applyOnObject(JsonPath jsonPosition, JsonProvider<?, ?, ?> jsonProvider);
+
+    boolean applyOnArray(JsonPath jsonPosition, Integer length, JsonProvider<?, ?, ?> jsonProvider);
 
 }

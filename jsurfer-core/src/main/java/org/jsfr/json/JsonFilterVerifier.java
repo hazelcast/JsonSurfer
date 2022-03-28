@@ -24,10 +24,10 @@
 
 package org.jsfr.json;
 
-import org.jsfr.json.filter.JsonPathFilter;
-
 import java.util.ArrayList;
 import java.util.Collection;
+
+import org.jsfr.json.filter.JsonPathFilter;
 
 public class JsonFilterVerifier implements JsonSaxHandler {
 
@@ -38,6 +38,8 @@ public class JsonFilterVerifier implements JsonSaxHandler {
     private final JsonPosition currentPosition;
     private boolean verified;
     private int stackDepth;
+
+    private int arrayLength;
 
     public JsonFilterVerifier(JsonPosition currentPosition, SurfingConfiguration config,
         JsonPathFilter jsonPathFilter, JsonFilterVerifier dependency) {
@@ -82,7 +84,8 @@ public class JsonFilterVerifier implements JsonSaxHandler {
 
     @Override
     public boolean startObjectEntry(String key) {
-        if (!this.verified && this.jsonPathFilter.apply(this.currentPosition, null, this.config.getJsonProvider())) {
+        if (!this.verified && this.jsonPathFilter.applyOnObject(this.currentPosition,
+            this.config.getJsonProvider())) {
             this.verified = true;
         }
         return true;
@@ -90,13 +93,15 @@ public class JsonFilterVerifier implements JsonSaxHandler {
 
     @Override
     public boolean endObject() {
+        this.stackDepth--;
         return this.endObjectOrArray();
     }
 
     @Override
     public boolean startArray() {
         this.stackDepth++;
-        if (!this.verified && this.jsonPathFilter.apply(this.currentPosition, null, this.config.getJsonProvider())) {
+        if (!this.verified && this.jsonPathFilter.applyOnArray(this.currentPosition, null,
+            this.config.getJsonProvider())) {
             this.verified = true;
         }
         return true;
@@ -104,11 +109,16 @@ public class JsonFilterVerifier implements JsonSaxHandler {
 
     @Override
     public boolean endArray() {
+        this.stackDepth--;
+        if (!this.verified && this.stackDepth == 0 && this.jsonPathFilter.applyOnArray(this.currentPosition,
+            this.arrayLength, this.config.getJsonProvider())) {
+            this.verified = true;
+        }
         return this.endObjectOrArray();
     }
 
     private boolean endObjectOrArray() {
-        this.stackDepth--;
+
         if (this.stackDepth == 0) {
             if (this.verified) {
                 this.invokeBuffer();
@@ -120,6 +130,9 @@ public class JsonFilterVerifier implements JsonSaxHandler {
 
     @Override
     public boolean primitive(PrimitiveHolder primitiveHolder) {
+        if (this.stackDepth == 0) {
+            this.arrayLength++;
+        }
         if (this.verified) {
             return true;
         }
@@ -127,13 +140,15 @@ public class JsonFilterVerifier implements JsonSaxHandler {
             if (this.stackDepth != 0) {
                 return true;
             }
-            if (this.jsonPathFilter.apply(this.currentPosition, primitiveHolder, this.config.getJsonProvider())) {
+            if (this.jsonPathFilter.applyOnPrimitive(this.currentPosition, primitiveHolder,
+                this.config.getJsonProvider())) {
                 this.invokeBuffer();
                 this.verified = true;
             }
             return false;
         } else {
-            if (this.jsonPathFilter.apply(this.currentPosition, primitiveHolder, this.config.getJsonProvider())) {
+            if (this.jsonPathFilter.applyOnPrimitive(this.currentPosition, primitiveHolder,
+                this.config.getJsonProvider())) {
                 this.verified = true;
             }
         }

@@ -14,20 +14,26 @@ public class EqualityTypePredicate extends BasicJsonPathFilter {
     }
 
     @Override
-    public boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
+    public boolean applyOnPrimitive(JsonPath jsonPosition, PrimitiveHolder primitiveHolder,
+        JsonProvider<?, ?, ?> jsonProvider) {
+        if (this.type == Type.OBJECT || this.type == Type.ARRAY) {
+            return false;
+        }
         if (!this.getRelativePath().matchFilterPath(jsonPosition)) {
             return false;
         }
-        switch (type) {
-            case ARRAY:
-                return primitiveHolder == null && jsonPosition.isInsideArray();
-            case OBJECT:
-                return primitiveHolder == null && jsonPosition.isInsideObject();
-            default:
-                return primitiveHolder != null
-                    && (this.getRelativePath().isInsideArray() == jsonPosition.isInsideArray())
-                    && this.type.isInstanceOf(primitiveHolder.getValue(), jsonProvider);
-        }
+        return (this.getRelativePath().isInsideArray() == jsonPosition.isInsideArray())
+            && this.type.isInstanceOf(primitiveHolder.getValue(), jsonProvider);
+    }
+
+    @Override
+    public boolean applyOnObject(JsonPath jsonPosition, JsonProvider<?, ?, ?> jsonProvider) {
+        return this.type == Type.OBJECT && this.getRelativePath().matchFilterPath(jsonPosition);
+    }
+
+    @Override
+    public boolean applyOnArray(JsonPath jsonPosition, Integer length, JsonProvider<?, ?, ?> jsonProvider) {
+        return this.type == Type.ARRAY && this.getRelativePath().matchFilterPath(jsonPosition);
     }
 
 }

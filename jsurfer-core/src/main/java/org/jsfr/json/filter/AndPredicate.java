@@ -38,11 +38,35 @@ public class AndPredicate extends AggregatePredicate {
     // AndPredicate becomes stateful
 
     @Override
-    public boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
+    public boolean applyOnPrimitive(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider<?, ?, ?> jsonProvider) {
         Iterator<JsonPathFilter> itr = this.getFilters().iterator();
         while (itr.hasNext()) {
             JsonPathFilter filter = itr.next();
-            if (filter.apply(jsonPosition, primitiveHolder, jsonProvider)) {
+            if (filter.applyOnPrimitive(jsonPosition, primitiveHolder, jsonProvider)) {
+                itr.remove();
+            }
+        }
+        return this.getFilters().isEmpty();
+    }
+
+    @Override
+    public boolean applyOnObject(JsonPath jsonPosition, JsonProvider<?, ?, ?> jsonProvider) {
+        Iterator<JsonPathFilter> itr = this.getFilters().iterator();
+        while (itr.hasNext()) {
+            JsonPathFilter filter = itr.next();
+            if (filter.applyOnObject(jsonPosition, jsonProvider)) {
+                itr.remove();
+            }
+        }
+        return this.getFilters().isEmpty();
+    }
+
+    @Override
+    public boolean applyOnArray(JsonPath jsonPosition, Integer length, JsonProvider<?, ?, ?> jsonProvider) {
+        Iterator<JsonPathFilter> itr = this.getFilters().iterator();
+        while (itr.hasNext()) {
+            JsonPathFilter filter = itr.next();
+            if (filter.applyOnArray(jsonPosition, length, jsonProvider)) {
                 itr.remove();
             }
         }

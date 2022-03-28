@@ -31,11 +31,6 @@ import org.jsfr.json.provider.JsonProvider;
 public class CloneableJsonPathFilter implements JsonPathFilter, Cloneable {
 
     @Override
-    public boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
-        throw new UnsupportedOperationException("You should implement this method");
-    }
-
-    @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
@@ -48,6 +43,22 @@ public class CloneableJsonPathFilter implements JsonPathFilter, Cloneable {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean applyOnPrimitive(JsonPath jsonPosition, PrimitiveHolder primitiveHolder,
+        JsonProvider<?, ?, ?> jsonProvider) {
+        throw new UnsupportedOperationException("You should implement this method");
+    }
+
+    @Override
+    public boolean applyOnObject(JsonPath jsonPosition, JsonProvider<?, ?, ?> jsonProvider) {
+        throw new UnsupportedOperationException("You should implement this method");
+    }
+
+    @Override
+    public boolean applyOnArray(JsonPath jsonPosition, Integer length, JsonProvider<?, ?, ?> jsonProvider) {
+        throw new UnsupportedOperationException("You should implement this method");
     }
 
 }

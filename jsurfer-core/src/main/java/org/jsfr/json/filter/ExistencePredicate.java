@@ -38,7 +38,22 @@ public class ExistencePredicate extends BasicJsonPathFilter {
     }
 
     @Override
-    public boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
+    public boolean applyOnPrimitive(JsonPath jsonPosition, PrimitiveHolder primitiveHolder,
+        JsonProvider<?, ?, ?> jsonProvider) {
+        return this.apply(jsonPosition);
+    }
+
+    @Override
+    public boolean applyOnObject(JsonPath jsonPosition, JsonProvider<?, ?, ?> jsonProvider) {
+        return this.apply(jsonPosition);
+    }
+
+    @Override
+    public boolean applyOnArray(JsonPath jsonPosition, Integer length, JsonProvider<?, ?, ?> jsonProvider) {
+        return this.apply(jsonPosition);
+    }
+
+    private boolean apply(JsonPath jsonPosition) {
         return this.getRelativePath().matchFilterPath(jsonPosition);
     }
 

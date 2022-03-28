@@ -30,7 +30,7 @@ import org.jsfr.json.provider.JsonProvider;
 
 import java.util.Objects;
 
-public class NotEqualityBoolPredicate extends BasicJsonPathFilter {
+public class NotEqualityBoolPredicate extends BasicPrimitiveFilter {
 
     private final boolean value;
 
@@ -40,10 +40,9 @@ public class NotEqualityBoolPredicate extends BasicJsonPathFilter {
     }
 
     @Override
-    public boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
-        if (primitiveHolder != null && this.getRelativePath().matchFilterPath(jsonPosition)) {
-            Object candidate = primitiveHolder.getValue();
-            return !Objects.equals(candidate, jsonProvider.primitive(value));
+    public boolean applyOnPrimitive(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider<?, ?, ?> jsonProvider) {
+        if (this.getRelativePath().matchFilterPath(jsonPosition)) {
+            return !Objects.equals(primitiveHolder.getValue(), jsonProvider.primitive(value));
         } else {
             return false;
         }

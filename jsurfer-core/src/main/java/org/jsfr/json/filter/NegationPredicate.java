@@ -31,8 +31,18 @@ import org.jsfr.json.provider.JsonProvider;
 public class NegationPredicate extends AggregatePredicate {
 
     @Override
-    public boolean apply(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider jsonProvider) {
-        return !this.getFilters().get(0).apply(jsonPosition, primitiveHolder, jsonProvider);
+    public boolean applyOnPrimitive(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider<?, ?, ?> jsonProvider) {
+        return !this.getFilters().get(0).applyOnPrimitive(jsonPosition, primitiveHolder, jsonProvider);
+    }
+
+    @Override
+    public boolean applyOnObject(JsonPath jsonPosition, JsonProvider<?, ?, ?> jsonProvider) {
+        return !this.getFilters().get(0).applyOnObject(jsonPosition, jsonProvider);
+    }
+
+    @Override
+    public boolean applyOnArray(JsonPath jsonPosition, Integer length, JsonProvider<?, ?, ?> jsonProvider) {
+        return !this.getFilters().get(0).applyOnArray(jsonPosition, length, jsonProvider);
     }
 
 }
