@@ -27,8 +27,8 @@ package org.jsfr.json;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -47,6 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
@@ -635,6 +636,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         JsonPathListener booleanElement = mock(JsonPathListener.class);
         JsonPathListener nullElement = mock(JsonPathListener.class);
         JsonPathListener objectElement = mock(JsonPathListener.class);
+        JsonPathListener arrayElement = mock(JsonPathListener.class);
 
         surfer.configBuilder().bind("$", wholeArray)
             .bind("$[0]", stringElement)
@@ -642,22 +644,29 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
             .bind("$[2]", booleanElement)
             .bind("$[3]", nullElement)
             .bind("$[4]", objectElement)
+            .bind("$[5]", arrayElement)
             .buildAndSurf(read("array.json"));
 
         O object = provider.createObject();
         provider.put(object, "key", provider.primitive("value"));
+        A innerArray = provider.createArray();
         A array = provider.createArray();
+        provider.add(innerArray, provider.primitive(0.0));
+        provider.add(innerArray, provider.primitive(1.0));
+        provider.add(innerArray, provider.primitive(2.0));
         provider.add(array, provider.primitive("abc"));
         provider.add(array, provider.primitive(8.88));
         provider.add(array, provider.primitive(true));
         provider.add(array, provider.primitiveNull());
         provider.add(array, object);
+        provider.add(array, innerArray);
         verify(wholeArray).onValue(eq(array), any(ParsingContext.class));
         verify(stringElement).onValue(eq(provider.primitive("abc")), any(ParsingContext.class));
         verify(numberElement).onValue(eq(provider.primitive(8.88)), any(ParsingContext.class));
         verify(booleanElement).onValue(eq(provider.primitive(true)), any(ParsingContext.class));
         verify(nullElement).onValue(eq(provider.primitiveNull()), any(ParsingContext.class));
         verify(objectElement).onValue(eq(object), any(ParsingContext.class));
+        verify(arrayElement).onValue(eq(innerArray), any(ParsingContext.class));
 
     }
 
@@ -1140,7 +1149,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         collector.exec();
 
         //then
-        assertEquals(Collections.singletonList("0123-4567-8888"), many.get());
+        assertEquals(singletonList("0123-4567-8888"), many.get());
     }
 
     @Test
@@ -1154,7 +1163,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         collector.exec();
 
         //then
-        assertEquals(5, box.get().size());
+        assertEquals(6, box.get().size());
     }
 
     @Test
@@ -1395,7 +1404,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
 
         //then
         assertTrue(box1.get().isEmpty());
-        assertEquals(Collections.singletonList("Foo"), box2.get());
+        assertEquals(singletonList("Foo"), box2.get());
     }
 
     @Test
@@ -1416,7 +1425,7 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         collector.exec();
 
         //then
-        assertEquals(Collections.singletonList("Foo"), box1.get());
+        assertEquals(singletonList("Foo"), box1.get());
         assertEquals(asList("Foo", "foo"), box2.get());
         assertEquals(asList("Foo", "foo", "foo1"), box3.get());
     }
@@ -1518,6 +1527,118 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         assertEquals(4, box1.get().size());
         assertEquals(4, box2.get().size());
         assertEquals(asList("reference", "Nigel Rees"), box3.get());
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Test
+    public void testFilterPrimitiveEqualByType() throws Exception {
+        // given
+        Collector collector = surfer.collector(read("array.json"));
+
+        // when
+        ValueBox<Collection<Boolean>> boolVal =
+            collector.collectAll("$[*]?(@.type() == \"boolean\")", Boolean.class);
+        ValueBox<Collection<String>> stringVal =
+            collector.collectAll("$[*]?(@.type() == \"string\")", String.class);
+        ValueBox<Collection<Double>> decimalVal =
+            collector.collectAll("$[*]?(@.type() == \"number\")", Double.class);
+        ValueBox<Collection<Object>> nullVal = collector.collectAll("$[*]?(@.type() == \"null\")", Object.class);
+        ValueBox<Collection<Object>> objectVal =
+            collector.collectAll("$[*]?(@.type() == \"object\")", Object.class);
+        ValueBox<Collection<Collection>> arrayVal =
+            collector.collectAll("$[*]?(@.type() == \"array\")", Collection.class);
+        collector.exec();
+
+        //then
+        assertEquals(singletonList(Boolean.TRUE), boolVal.get());
+        assertEquals(singletonList("abc"), stringVal.get());
+        assertEquals(singletonList(8.88d), decimalVal.get());
+        assertEquals(singletonList(null), nullVal.get());
+        assertEquals(singletonList(json("key", "value")), objectVal.get());
+        assertEquals(new ArrayList<>(singletonList(asList(0.0, 1.0, 2.0))), arrayVal.get());
+    }
+
+    @Test
+    public void testFilterPrimitiveNotEqualByType() throws Exception {
+        // given
+        Collector collector = surfer.collector(read("array.json"));
+
+        // when
+        ValueBox<Collection<Object>> boolVal =
+            collector.collectAll("$[*]?(@.type() <> \"boolean\")", Object.class);
+        ValueBox<Collection<Object>> stringVal =
+            collector.collectAll("$[*]?(@.type() <> \"string\")", Object.class);
+        ValueBox<Collection<Object>> decimalVal =
+            collector.collectAll("$[*]?(@.type() <> \"number\")", Object.class);
+        ValueBox<Collection<Object>> nullVal = collector.collectAll("$[*]?(@.type() <> \"null\")", Object.class);
+        ValueBox<Collection<Object>> objectVal =
+            collector.collectAll("$[*]?(@.type() <> \"object\")", Object.class);
+        ValueBox<Collection<Object>> arrayVal =
+            collector.collectAll("$[*]?(@.type() <> \"array\")", Object.class);
+        collector.exec();
+
+        //then
+        assertThat(boolVal.get(), hasItems("abc", 8.88d, null, json("key", "value"), asList(0.0, 1.0, 2.0)));
+        assertThat(stringVal.get(), hasItems(8.88d, Boolean.TRUE, null, json("key", "value"), asList(0.0, 1.0, 2.0)));
+        assertThat(decimalVal.get(), hasItems("abc", Boolean.TRUE, null, json("key", "value"), asList(0.0, 1.0, 2.0)));
+        assertThat(nullVal.get(), hasItems("abc", 8.88d, Boolean.TRUE, json("key", "value"), asList(0.0, 1.0, 2.0)));
+        assertThat(objectVal.get(), hasItems("abc", 8.88d, Boolean.TRUE, null, asList(0.0, 1.0, 2.0)));
+        assertThat(arrayVal.get(), hasItems("abc", 8.88d, Boolean.TRUE, null, json("key", "value")));
+    }
+
+    @Test
+    public void testFilterPrimitiveEqualByTypeForNonRootRelativePath() throws Exception {
+        // given
+        Collector collector = surfer.collector(read("sample4.json"));
+
+        // when
+        ValueBox<Collection<Object>> stringVal =
+            collector.collectAll("$[*]?(@.number.type() == \"string\")", Object.class);
+
+        ValueBox<Collection<Object>> notStringVal =
+            collector.collectAll("$[*]?(@.number.type() <> \"string\")", Object.class);
+
+        collector.exec();
+
+        //then
+        assertEquals(2, stringVal.get().size());
+        assertEquals(0, notStringVal.get().size());
+    }
+
+    @Test
+    public void testFilterPrimitiveEqualByTypeNonExistingTypes() throws Exception {
+        // given
+        Collector collector = surfer.collector(read("array.json"));
+
+        // when
+        ValueBox<Collection<Object>> valuesNonExistingType =
+            collector.collectAll("$[*]?(@.type() == \"non-existing-type\")", Object.class);
+        ValueBox<Collection<Object>> valuesTypeCaseSensitive =
+            collector.collectAll("$[*]?(@.type() == \"String\")", Object.class);
+
+        collector.exec();
+
+        //then
+        assertEquals(0, valuesNonExistingType.get().size());
+        assertEquals(0, valuesTypeCaseSensitive.get().size());
+    }
+
+    @Test
+    public void testFilterPrimitiveNotEqualByTypeNonExistingTypes() throws Exception {
+        // given
+        Collector collector = surfer.collector(read("array.json"));
+
+        // when
+        ValueBox<Collection<Object>> valuesNonExistingType =
+            collector.collectAll("$[*]?(@.type() <> \"non-existing-type\")", Object.class);
+        ValueBox<Collection<Object>> valuesTypeCaseSensitive =
+            collector.collectAll("$[*]?(@.type() <> \"String\")", Object.class);
+
+        collector.exec();
+
+        //then
+        assertEquals(6, valuesNonExistingType.get().size());
+        assertEquals(6, valuesTypeCaseSensitive.get().size());
     }
 
     private Object json(String key, String value) {

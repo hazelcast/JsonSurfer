@@ -25,6 +25,7 @@
 package org.jsfr.json.compiler;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -42,14 +43,17 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jsfr.json.compiler.JsonPathParser.RelativePathContext;
 import org.jsfr.json.exception.JsonPathCompilerException;
+import org.jsfr.json.filter.ConstantPredicate;
 import org.jsfr.json.filter.EqualityBoolPredicate;
 import org.jsfr.json.filter.EqualityNullPredicate;
 import org.jsfr.json.filter.EqualityNumPredicate;
 import org.jsfr.json.filter.EqualityStrPredicate;
+import org.jsfr.json.filter.EqualityTypePredicate;
 import org.jsfr.json.filter.ExistencePredicate;
 import org.jsfr.json.filter.FilterBuilder;
 import org.jsfr.json.filter.GreaterOrEqualThanNumPredicate;
 import org.jsfr.json.filter.GreaterThanNumPredicate;
+import org.jsfr.json.filter.ItemMethod;
 import org.jsfr.json.filter.JsonPathFilter;
 import org.jsfr.json.filter.LessOrEqualThanNumPredicate;
 import org.jsfr.json.filter.LessThanNumPredicate;
@@ -58,6 +62,8 @@ import org.jsfr.json.filter.NotEqualityBoolPredicate;
 import org.jsfr.json.filter.NotEqualityNullPredicate;
 import org.jsfr.json.filter.NotEqualityNumPredicate;
 import org.jsfr.json.filter.NotEqualityStrPredicate;
+import org.jsfr.json.filter.NotEqualityTypePredicate;
+import org.jsfr.json.filter.Type;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.path.SyntaxMode;
 
@@ -314,6 +320,44 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         return rst;
     }
 
+    @Override
+    public Void visitFilterItemMethodEqual(JsonPathParser.FilterItemMethodEqualContext ctx) {
+        filterPathBuilder = createFilterPathBuilder();
+        Void rst = super.visitFilterItemMethodEqual(ctx);
+        ItemMethod itemMethod = getItemMethod(ctx.itemMethod());
+        if (itemMethod == ItemMethod.TYPE) {
+            Type type = getType(ctx.QUOTED_STRING());
+            if (type == null) {
+                filterBuilder.append(new ConstantPredicate(filterPathBuilder.build(), false));
+            } else {
+                filterBuilder.append(new EqualityTypePredicate(filterPathBuilder.build(), type));
+            }
+        } else {
+            throw new InputMismatchException("Unsupported item method: " + itemMethod);
+        }
+        filterPathBuilder = null;
+        return rst;
+    }
+
+    @Override
+    public Void visitFilterItemMethodNEqual(JsonPathParser.FilterItemMethodNEqualContext ctx) {
+        filterPathBuilder = createFilterPathBuilder();
+        Void rst = super.visitFilterItemMethodNEqual(ctx);
+        ItemMethod itemMethod = getItemMethod(ctx.itemMethod());
+        if (itemMethod == ItemMethod.TYPE) {
+            Type type = getType(ctx.QUOTED_STRING());
+            if (type == null) {
+                filterBuilder.append(new ConstantPredicate(filterPathBuilder.build(), true));
+            } else {
+                filterBuilder.append(new NotEqualityTypePredicate(filterPathBuilder.build(), type));
+            }
+        } else {
+            throw new InputMismatchException("Unsupported item method: " + itemMethod);
+        }
+        filterPathBuilder = null;
+        return rst;
+    }
+
     static String unescapeString(String quotedString) {
         assert quotedString.startsWith("\"") && quotedString.endsWith("\"");
         StringBuilder res = new StringBuilder(quotedString.length() - 2);
@@ -445,6 +489,21 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
 
     private static void arrayWildcard(String key, JsonPathFilter filter, JsonPath.Builder builder) {
         builder.arrayWildcard(key, filter);
+    }
+
+    private static ItemMethod getItemMethod(JsonPathParser.ItemMethodContext ctx) {
+        String methodName = ctx.KEY().getText();
+        ItemMethod itemMethod = ItemMethod.from(methodName);
+        if (itemMethod == null) {
+            throw new InputMismatchException(String.format("Invalid item method %s. Supported: %s", methodName,
+                Arrays.toString(ItemMethod.values())));
+        }
+        return itemMethod;
+    }
+
+    private static Type getType(TerminalNode quoteString) {
+        String typeName = unescapeString(quoteString.getText());
+        return Type.from(typeName);
     }
 
     public static JsonPath[] compile(String... paths) {

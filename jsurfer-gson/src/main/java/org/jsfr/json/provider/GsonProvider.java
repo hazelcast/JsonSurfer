@@ -140,4 +140,30 @@ public class GsonProvider implements JsonProvider<JsonObject, JsonArray, JsonEle
         return value instanceof JsonNull;
     }
 
+    @Override
+    public boolean isPrimitiveNumber(Object value) {
+        boolean isPrimitive = value instanceof JsonPrimitive;
+        if (!isPrimitive) {
+            return false;
+        }
+        return ((JsonPrimitive) value).isNumber();
+    }
+
+    @Override
+    public boolean isPrimitiveBoolean(Object value) {
+        boolean isPrimitive = value instanceof JsonPrimitive;
+        if (!isPrimitive) {
+            return false;
+        }
+        return ((JsonPrimitive) value).isBoolean();
+    }
+
+    @Override
+    public boolean isPrimitiveString(Object value) {
+        boolean isPrimitive = value instanceof JsonPrimitive;
+        if (!isPrimitive) {
+            return false;
+        }
+        return ((JsonPrimitive) value).isString();
+    }
 }

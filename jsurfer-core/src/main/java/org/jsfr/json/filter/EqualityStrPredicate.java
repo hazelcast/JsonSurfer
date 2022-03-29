@@ -35,7 +35,7 @@ import java.util.Objects;
  */
 public class EqualityStrPredicate extends BasicJsonPathFilter {
 
-    private String value;
+    private final String value;
 
     public EqualityStrPredicate(JsonPath relativePath, String value) {
         super(relativePath);

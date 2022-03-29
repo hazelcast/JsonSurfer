@@ -174,4 +174,22 @@ public interface JsonPathVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFilterMatchRegex(JsonPathParser.FilterMatchRegexContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JsonPathParser#filterItemMethodEqual}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFilterItemMethodEqual(JsonPathParser.FilterItemMethodEqualContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JsonPathParser#filterItemMethodNEqual}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFilterItemMethodNEqual(JsonPathParser.FilterItemMethodNEqualContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JsonPathParser#itemMethod}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitItemMethod(JsonPathParser.ItemMethodContext ctx);
 }
