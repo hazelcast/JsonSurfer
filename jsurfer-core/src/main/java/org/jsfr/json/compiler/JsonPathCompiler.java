@@ -63,6 +63,7 @@ import org.jsfr.json.filter.NotEqualityNullPredicate;
 import org.jsfr.json.filter.NotEqualityNumPredicate;
 import org.jsfr.json.filter.NotEqualityStrPredicate;
 import org.jsfr.json.filter.NotEqualityTypePredicate;
+import org.jsfr.json.filter.ReversedIndexPredicate;
 import org.jsfr.json.filter.Type;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.path.SyntaxMode;
@@ -448,6 +449,9 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
             arrayIndexes(key, jsonPathFilter, pathBuilder, ctx.indexes());
         } else if (ctx.ANY_INDEX() != null) {
             arrayWildcard(key, jsonPathFilter, pathBuilder);
+        } else if (ctx.reversedIndex() != null) {
+            jsonPathFilter = merge(jsonPathFilter, reversedIndexFilter(ctx.reversedIndex()));
+            arrayWildcard(key, jsonPathFilter, pathBuilder);
         }
     }
 
@@ -499,6 +503,20 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
                 Arrays.toString(ItemMethod.values())));
         }
         return itemMethod;
+    }
+
+    private static JsonPathFilter reversedIndexFilter(JsonPathParser.ReversedIndexContext reversedIndexContext) {
+        return new ReversedIndexPredicate(JsonPath.Builder.startFilterPath().build(), 0);
+    }
+
+    private static JsonPathFilter merge(JsonPathFilter filter1, JsonPathFilter filter2) {
+        if (filter1 == null) {
+            return filter2;
+        }
+        if (filter2 == null) {
+            return filter1;
+        }
+        return new FilterBuilder().startAndPredicate().append(filter1).append(filter2).endAndPredicate().build();
     }
 
     private static Type getType(TerminalNode quoteString) {

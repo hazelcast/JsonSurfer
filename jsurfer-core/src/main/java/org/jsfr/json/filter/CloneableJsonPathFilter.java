@@ -57,7 +57,8 @@ public class CloneableJsonPathFilter implements JsonPathFilter, Cloneable {
     }
 
     @Override
-    public boolean applyOnArray(JsonPath jsonPosition, Integer length, JsonProvider<?, ?, ?> jsonProvider) {
+    public boolean applyOnArray(JsonPath jsonPosition, Integer targetIndex, Integer length,
+        JsonProvider<?, ?, ?> jsonProvider) {
         throw new UnsupportedOperationException("You should implement this method");
     }
 

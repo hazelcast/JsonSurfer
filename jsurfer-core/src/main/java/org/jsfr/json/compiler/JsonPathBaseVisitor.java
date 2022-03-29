@@ -68,6 +68,13 @@ public class JsonPathBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitReversedIndex(JsonPathParser.ReversedIndexContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitIndexes(JsonPathParser.IndexesContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

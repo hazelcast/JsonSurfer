@@ -38,7 +38,8 @@ public class NotEqualityTypePredicate extends BasicJsonPathFilter {
     }
 
     @Override
-    public boolean applyOnArray(JsonPath jsonPosition, Integer length, JsonProvider<?, ?, ?> jsonProvider) {
+    public boolean applyOnArray(JsonPath jsonPosition, Integer targetIndex, Integer length,
+        JsonProvider<?, ?, ?> jsonProvider) {
         if (this.type == Type.ARRAY) {
             return false;
         }

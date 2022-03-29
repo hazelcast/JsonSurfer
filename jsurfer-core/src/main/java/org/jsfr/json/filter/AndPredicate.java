@@ -62,11 +62,12 @@ public class AndPredicate extends AggregatePredicate {
     }
 
     @Override
-    public boolean applyOnArray(JsonPath jsonPosition, Integer length, JsonProvider<?, ?, ?> jsonProvider) {
+    public boolean applyOnArray(JsonPath jsonPosition, Integer targetIndex, Integer length,
+        JsonProvider<?, ?, ?> jsonProvider) {
         Iterator<JsonPathFilter> itr = this.getFilters().iterator();
         while (itr.hasNext()) {
             JsonPathFilter filter = itr.next();
-            if (filter.applyOnArray(jsonPosition, length, jsonProvider)) {
+            if (filter.applyOnArray(jsonPosition, null, length, jsonProvider)) {
                 itr.remove();
             }
         }

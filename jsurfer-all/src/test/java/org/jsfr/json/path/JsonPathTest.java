@@ -24,19 +24,22 @@
 
 package org.jsfr.json.path;
 
-import com.google.gson.Gson;
-import org.jsfr.json.Book;
-import org.jsfr.json.exception.JsonPathCompilerException;
-import org.jsfr.json.exception.JsonSurfingException;
-import org.jsfr.json.provider.JavaCollectionProvider;
-import org.jsfr.json.resolver.PoJoResolver;
-import org.junit.Test;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
+
+import com.google.gson.Gson;
+import org.jsfr.json.Book;
+import org.jsfr.json.exception.JsonPathCompilerException;
+import org.jsfr.json.exception.JsonSurfingException;
+import org.jsfr.json.filter.AndPredicate;
+import org.jsfr.json.filter.JsonPathFilter;
+import org.jsfr.json.filter.ReversedIndexPredicate;
+import org.jsfr.json.provider.JavaCollectionProvider;
+import org.jsfr.json.resolver.PoJoResolver;
+import org.junit.Test;
 
 import static org.jsfr.json.TestUtils.readClasspathResource;
 import static org.jsfr.json.compiler.JsonPathCompiler.compile;
@@ -261,6 +264,43 @@ public class JsonPathTest {
         //then
         assertNotNull(valid);
         assertEquals("Invalid item method Type. Supported: [type]", e.getMessage());
+    }
+
+    @Test
+    public void testLastIndexCompiledToFilter() {
+        //given
+        String path = "$.book[last]";
+
+        //when
+        JsonPath compiled = compile(path);
+
+        //then
+        PathOperator lastOperator = compiled.peek();
+        assertTrue(lastOperator instanceof FilterableChildNode);
+        JsonPathFilter filter = ((FilterableChildNode) lastOperator).getJsonPathFilter();
+        assertTrue(filter instanceof ReversedIndexPredicate);
+        ReversedIndexPredicate predicate = (ReversedIndexPredicate) filter;
+        assertEquals(predicate.getIndex(), 0);
+    }
+
+    @Test
+    public void testLastIndexMergedWithExistingFilters() {
+        //given
+        String path = "$.book[last]?(@.year == 2016)";
+
+        //when
+        JsonPath compiled = compile(path);
+
+        //then
+        PathOperator lastOperator = compiled.peek();
+        assertTrue(lastOperator instanceof FilterableChildNode);
+        JsonPathFilter filter = ((FilterableChildNode) lastOperator).getJsonPathFilter();
+        assertTrue(filter instanceof AndPredicate);
+        AndPredicate andPredicate = (AndPredicate) filter;
+        assertEquals(andPredicate.getFilters().size(), 2);
+        assertTrue(andPredicate.getFilters().get(1) instanceof ReversedIndexPredicate);
+        ReversedIndexPredicate predicate = (ReversedIndexPredicate) andPredicate.getFilters().get(1);
+        assertEquals(predicate.getIndex(), 0);
     }
 
 }

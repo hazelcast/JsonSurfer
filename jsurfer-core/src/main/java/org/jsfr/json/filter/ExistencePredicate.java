@@ -49,7 +49,8 @@ public class ExistencePredicate extends BasicJsonPathFilter {
     }
 
     @Override
-    public boolean applyOnArray(JsonPath jsonPosition, Integer length, JsonProvider<?, ?, ?> jsonProvider) {
+    public boolean applyOnArray(JsonPath jsonPosition, Integer targetIndex, Integer length,
+        JsonProvider<?, ?, ?> jsonProvider) {
         return this.apply(jsonPosition);
     }
 

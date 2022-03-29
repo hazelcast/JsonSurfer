@@ -55,6 +55,12 @@ public interface JsonPathVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIndex(JsonPathParser.IndexContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link JsonPathParser#reversedIndex}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReversedIndex(JsonPathParser.ReversedIndexContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link JsonPathParser#indexes}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

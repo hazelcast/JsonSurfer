@@ -28,22 +28,37 @@ import org.jsfr.json.PrimitiveHolder;
 import org.jsfr.json.path.JsonPath;
 import org.jsfr.json.provider.JsonProvider;
 
-public class NegationPredicate extends AggregatePredicate {
+public class ReversedIndexPredicate extends BasicJsonPathFilter {
+
+    private final int index;
+
+    public ReversedIndexPredicate(JsonPath relativePath, int index) {
+        super(relativePath);
+        this.index = index;
+    }
 
     @Override
-    public boolean applyOnPrimitive(JsonPath jsonPosition, PrimitiveHolder primitiveHolder, JsonProvider<?, ?, ?> jsonProvider) {
-        return !this.getFilters().get(0).applyOnPrimitive(jsonPosition, primitiveHolder, jsonProvider);
+    public boolean applyOnPrimitive(JsonPath jsonPosition, PrimitiveHolder primitiveHolder,
+        JsonProvider<?, ?, ?> jsonProvider) {
+        return false;
     }
 
     @Override
     public boolean applyOnObject(JsonPath jsonPosition, JsonProvider<?, ?, ?> jsonProvider) {
-        return !this.getFilters().get(0).applyOnObject(jsonPosition, jsonProvider);
+        return false;
     }
 
     @Override
     public boolean applyOnArray(JsonPath jsonPosition, Integer targetIndex, Integer length,
         JsonProvider<?, ?, ?> jsonProvider) {
-        return !this.getFilters().get(0).applyOnArray(jsonPosition, null, length, jsonProvider);
+        if (targetIndex != null && length != null) {
+            return length - this.index == targetIndex;
+        }
+        return false;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
 }

@@ -55,9 +55,10 @@ public class OrPredicate extends AggregatePredicate {
     }
 
     @Override
-    public boolean applyOnArray(JsonPath jsonPosition, Integer length, JsonProvider<?, ?, ?> jsonProvider) {
+    public boolean applyOnArray(JsonPath jsonPosition, Integer targetIndex, Integer length,
+        JsonProvider<?, ?, ?> jsonProvider) {
         for (JsonPathFilter filter : this.getFilters()) {
-            if (filter.applyOnArray(jsonPosition, length, jsonProvider)) {
+            if (filter.applyOnArray(jsonPosition, null, length, jsonProvider)) {
                 return true;
             }
         }

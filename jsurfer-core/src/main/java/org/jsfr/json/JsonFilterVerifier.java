@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.jsfr.json.filter.JsonPathFilter;
+import org.jsfr.json.path.ArrayIndex;
 
 public class JsonFilterVerifier implements JsonSaxHandler {
 
@@ -36,6 +37,7 @@ public class JsonFilterVerifier implements JsonSaxHandler {
     private final Collection<BufferedListener> bufferedListeners;
     private final JsonFilterVerifier dependency;
     private final JsonPosition currentPosition;
+    private final Integer currentArrayIndex;
     private boolean verified;
     private int stackDepth;
 
@@ -48,6 +50,11 @@ public class JsonFilterVerifier implements JsonSaxHandler {
         this.jsonPathFilter = jsonPathFilter;
         this.dependency = dependency;
         this.bufferedListeners = new ArrayList<>();
+        if (currentPosition.isInsideArray()) {
+           this.currentArrayIndex =  ((ArrayIndex) currentPosition.peek()).getArrayIndex();
+        } else {
+           this.currentArrayIndex = null;
+        }
     }
 
     public JsonPathListener addListener(JsonPathListener listener) {
@@ -100,8 +107,8 @@ public class JsonFilterVerifier implements JsonSaxHandler {
     @Override
     public boolean startArray() {
         this.stackDepth++;
-        if (!this.verified && this.jsonPathFilter.applyOnArray(this.currentPosition, null,
-            this.config.getJsonProvider())) {
+        if (!this.verified && this.jsonPathFilter.applyOnArray(this.currentPosition, this.currentArrayIndex,
+            null, this.config.getJsonProvider())) {
             this.verified = true;
         }
         return true;
@@ -111,7 +118,7 @@ public class JsonFilterVerifier implements JsonSaxHandler {
     public boolean endArray() {
         this.stackDepth--;
         if (!this.verified && this.stackDepth == 0 && this.jsonPathFilter.applyOnArray(this.currentPosition,
-            this.arrayLength, this.config.getJsonProvider())) {
+            this.currentArrayIndex, this.arrayLength, this.config.getJsonProvider())) {
             this.verified = true;
         }
         return this.endObjectOrArray();

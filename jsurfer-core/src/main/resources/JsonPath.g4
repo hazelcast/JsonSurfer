@@ -12,6 +12,7 @@ anyChild: '.*' ;
 any: '*' ;
 ANY_INDEX: '[*]' ;
 index: ('[' NUM ']') | ('.' NUM);
+reversedIndex: '[' LAST ']';
 indexes: OPEN_SQ_BRACKET NUM (TO NUM)? ( COMMA NUM (TO NUM)? ) * CLOSE_SQ_BRACKET ;
 OPEN_SQ_BRACKET: '[';
 CLOSE_SQ_BRACKET: ']';
@@ -20,7 +21,7 @@ COMMA: ',';
 filter: '?(' filterExpr ')';
 COLON : ':';
 childNode: '.' (KEY | QUOTED_STRING) array?;
-array: (index | indexes | ANY_INDEX) filter?;
+array: (index | indexes | reversedIndex | ANY_INDEX) filter?;
 childrenNode: '[' QUOTED_STRING ( ',' QUOTED_STRING )* ']' ;
 
 filterExpr : NegationOperator '(' filterExpr ')'
@@ -71,6 +72,7 @@ NUM
     |   '-'? INT EXP             // 1e10 -3e4
     |   '-'? INT                 // -3, 45
     ;
+LAST: 'last';
 QUOTED_STRING : ('"' ( ~('"'|'\\') | ('\\' .) )* '"');
 BOOL: 'true'|'false';
 NULL: 'null';
