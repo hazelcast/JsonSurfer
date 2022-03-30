@@ -32,6 +32,8 @@ import org.jsfr.json.path.ArrayIndex;
 
 public class JsonFilterVerifier implements JsonSaxHandler {
 
+    private static final int INITIAL_DEPTH = 0;
+
     private final SurfingConfiguration config;
     private final JsonPathFilter jsonPathFilter;
     private final Collection<BufferedListener> bufferedListeners;
@@ -101,7 +103,7 @@ public class JsonFilterVerifier implements JsonSaxHandler {
     @Override
     public boolean endObject() {
         this.stackDepth--;
-        return this.endObjectOrArray();
+        return this.checkIfCompleted();
     }
 
     @Override
@@ -117,47 +119,36 @@ public class JsonFilterVerifier implements JsonSaxHandler {
     @Override
     public boolean endArray() {
         this.stackDepth--;
-        if (!this.verified && this.stackDepth == 0 && this.jsonPathFilter.applyOnArray(this.currentPosition,
+        if (!this.verified && this.stackDepth == INITIAL_DEPTH && this.jsonPathFilter.applyOnArray(this.currentPosition,
             this.currentArrayIndex, this.arrayLength, this.config.getJsonProvider())) {
             this.verified = true;
         }
-        return this.endObjectOrArray();
-    }
-
-    private boolean endObjectOrArray() {
-
-        if (this.stackDepth == 0) {
-            if (this.verified) {
-                this.invokeBuffer();
-            }
-            return false;
-        }
-        return true;
+        return this.checkIfCompleted();
     }
 
     @Override
     public boolean primitive(PrimitiveHolder primitiveHolder) {
-        if (this.stackDepth == 0) {
+        if (this.stackDepth == INITIAL_DEPTH) {
             this.arrayLength++;
         }
         if (this.verified) {
             return true;
         }
-        if (this.currentPosition.isInsideArray()) {
-            if (this.stackDepth != 0) {
-                return true;
-            }
-            if (this.jsonPathFilter.applyOnPrimitive(this.currentPosition, primitiveHolder,
-                this.config.getJsonProvider())) {
+        if (this.stackDepth != INITIAL_DEPTH && this.currentPosition.isInsideArray()) {
+            return true;
+        }
+        if (this.jsonPathFilter.applyOnPrimitive(this.currentPosition, primitiveHolder, this.config.getJsonProvider())) {
+            this.verified = true;
+        }
+        return this.checkIfCompleted();
+    }
+
+    private boolean checkIfCompleted() {
+        if (this.stackDepth == INITIAL_DEPTH) {
+            if (this.verified) {
                 this.invokeBuffer();
-                this.verified = true;
             }
             return false;
-        } else {
-            if (this.jsonPathFilter.applyOnPrimitive(this.currentPosition, primitiveHolder,
-                this.config.getJsonProvider())) {
-                this.verified = true;
-            }
         }
         return true;
     }
