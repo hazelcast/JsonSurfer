@@ -48,6 +48,10 @@ class JsonPosition extends JsonPath {
     }
 
     void updateObjectEntry(String key) {
+        PathOperator last = peek();
+        if (last.getType() == PathOperator.Type.ROOT) {
+            stepIntoObject();
+        }
         ((ChildNode) peek()).setKey(key);
     }
 
@@ -61,7 +65,8 @@ class JsonPosition extends JsonPath {
     }
 
     void stepOutArray() {
-        popArray(peek());
+        //popArray(peek());
+        pop();
     }
 
     private void popArray(PathOperator node) {
