@@ -52,7 +52,7 @@ public class ReversedIndexPredicate extends BasicJsonPathFilter {
     public boolean applyOnArray(JsonPath jsonPosition, Integer targetIndex, Integer length,
         JsonProvider<?, ?, ?> jsonProvider) {
         if (targetIndex != null && length != null) {
-            return length - this.index == targetIndex;
+            return length - 1 - this.index == targetIndex;
         }
         return false;
     }

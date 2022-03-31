@@ -505,8 +505,12 @@ public class JsonPathCompiler extends JsonPathBaseVisitor<Void> {
         return itemMethod;
     }
 
-    private static JsonPathFilter reversedIndexFilter(JsonPathParser.ReversedIndexContext reversedIndexContext) {
-        return new ReversedIndexPredicate(JsonPath.Builder.startFilterPath().build(), 0);
+    private static JsonPathFilter reversedIndexFilter(JsonPathParser.ReversedIndexContext ctx) {
+        int index = 0;
+        if (ctx.NUM() != null) {
+            index = Integer.parseInt(ctx.NUM().getText());
+        }
+        return new ReversedIndexPredicate(JsonPath.Builder.startFilterPath().build(), index);
     }
 
     private static JsonPathFilter merge(JsonPathFilter filter1, JsonPathFilter filter2) {

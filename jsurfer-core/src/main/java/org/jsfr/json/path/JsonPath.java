@@ -338,7 +338,11 @@ public class JsonPath implements Iterable<PathOperator>, Serializable {
     }
 
     public boolean isInsideArray() {
-        PathOperator last = peek();
+        return isInsideArray(0);
+    }
+
+    public boolean isInsideArray(int depth) {
+        PathOperator last = operators[size - (depth + 1)];
         return last instanceof ArrayIndex || last instanceof FilterRoot;
     }
 

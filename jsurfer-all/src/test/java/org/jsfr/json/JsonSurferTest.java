@@ -1641,6 +1641,39 @@ public abstract class JsonSurferTest<O extends P, A extends P, P> {
         assertEquals(6, valuesTypeCaseSensitive.get().size());
     }
 
+    @Test
+    public void testGetLastElementOfArray() throws Exception {
+        // given
+        Collector collector = surfer.collector(read("array.json"));
+
+        // when
+        ValueBox<Collection<Object>> last =
+            collector.collectAll("$[last]", Object.class);
+
+        collector.exec();
+
+        //then
+        assertEquals(1, last.get().size());
+        assertEquals(new ArrayList<>(singletonList(asList(0.0, 1.0, 2.0))), last.get());
+    }
+
+    @Test
+    public void testGetLastMinusElementOfArray() throws Exception {
+        // given
+        Collector collector = surfer.collector(read("array.json"));
+
+        // when
+        ValueBox<Collection<Object>> last =
+            collector.collectAll("$[last - 3]", Object.class);
+
+        collector.exec();
+
+        //then
+        assertEquals(1, last.get().size());
+        assertEquals(new ArrayList<>(singletonList(Boolean.TRUE)), last.get());
+    }
+
+
     private Object json(String key, String value) {
         O object = this.provider.createObject();
         this.provider.put(object, key, this.provider.primitive(value));

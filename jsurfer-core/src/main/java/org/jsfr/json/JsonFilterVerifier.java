@@ -26,9 +26,13 @@ package org.jsfr.json;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 import org.jsfr.json.filter.JsonPathFilter;
 import org.jsfr.json.path.ArrayIndex;
+import org.jsfr.json.path.ChildNode;
+import org.jsfr.json.path.JsonPath;
+import org.jsfr.json.path.PathOperator;
 
 public class JsonFilterVerifier implements JsonSaxHandler {
 
@@ -43,7 +47,7 @@ public class JsonFilterVerifier implements JsonSaxHandler {
     private boolean verified;
     private int stackDepth;
 
-    private int arrayLength;
+    private Integer arrayElementVisited = -1;
 
     public JsonFilterVerifier(JsonPosition currentPosition, SurfingConfiguration config,
         JsonPathFilter jsonPathFilter, JsonFilterVerifier dependency) {
@@ -93,9 +97,16 @@ public class JsonFilterVerifier implements JsonSaxHandler {
 
     @Override
     public boolean startObjectEntry(String key) {
+        if (this.arrayElementVisited != -1
+            && !Objects.equals(getIndexInDepth(this.currentPosition, stackDepth), this.arrayElementVisited)) {
+            return true;
+        }
         if (!this.verified && this.jsonPathFilter.applyOnObject(this.currentPosition,
             this.config.getJsonProvider())) {
             this.verified = true;
+        }
+        if (this.currentPosition.isInsideArray(this.stackDepth)) {
+            this.arrayElementVisited = getIndexInDepth(this.currentPosition, this.stackDepth);
         }
         return true;
     }
@@ -103,35 +114,49 @@ public class JsonFilterVerifier implements JsonSaxHandler {
     @Override
     public boolean endObject() {
         this.stackDepth--;
-        return this.checkIfCompleted();
+        return this.endObjectOrArray();
     }
 
     @Override
     public boolean startArray() {
-        this.stackDepth++;
+        if (isKeylessArray(currentPosition)) {
+            this.stackDepth++;
+        }
+        if (this.arrayElementVisited != -1
+            && !Objects.equals(getIndexInDepth(this.currentPosition, stackDepth), this.arrayElementVisited)) {
+            return true;
+        }
         if (!this.verified && this.jsonPathFilter.applyOnArray(this.currentPosition, this.currentArrayIndex,
             null, this.config.getJsonProvider())) {
             this.verified = true;
+        }
+        if (this.currentPosition.isInsideArray(this.stackDepth)) {
+            this.arrayElementVisited = getIndexInDepth(this.currentPosition, this.stackDepth);
         }
         return true;
     }
 
     @Override
     public boolean endArray() {
-        this.stackDepth--;
-        if (!this.verified && this.stackDepth == INITIAL_DEPTH && this.jsonPathFilter.applyOnArray(this.currentPosition,
-            this.currentArrayIndex, this.arrayLength, this.config.getJsonProvider())) {
+        JsonPath arrayPosition = this.currentPosition.derivePath(this.currentPosition.pathDepth() + 1);
+        if (!this.verified && this.jsonPathFilter.applyOnArray(
+            arrayPosition,
+            this.currentArrayIndex, getLength(arrayPosition, this.stackDepth), this.config.getJsonProvider())) {
             this.verified = true;
         }
-        return this.checkIfCompleted();
+        if (isKeylessArray(arrayPosition)) {
+            this.stackDepth--;
+        }
+        return this.endObjectOrArray();
     }
 
     @Override
     public boolean primitive(PrimitiveHolder primitiveHolder) {
-        if (this.stackDepth == INITIAL_DEPTH) {
-            this.arrayLength++;
-        }
         if (this.verified) {
+            return true;
+        }
+        if (this.arrayElementVisited != -1
+            && !Objects.equals(getIndexInDepth(this.currentPosition, stackDepth), this.arrayElementVisited)) {
             return true;
         }
         if (this.stackDepth != INITIAL_DEPTH && this.currentPosition.isInsideArray()) {
@@ -140,11 +165,14 @@ public class JsonFilterVerifier implements JsonSaxHandler {
         if (this.jsonPathFilter.applyOnPrimitive(this.currentPosition, primitiveHolder, this.config.getJsonProvider())) {
             this.verified = true;
         }
-        return this.checkIfCompleted();
+        if (this.currentPosition.isInsideArray(this.stackDepth)) {
+            this.arrayElementVisited = getIndexInDepth(this.currentPosition, this.stackDepth);
+        }
+        return true;
     }
 
-    private boolean checkIfCompleted() {
-        if (this.stackDepth == INITIAL_DEPTH) {
+    private boolean endObjectOrArray() {
+        if (this.stackDepth == INITIAL_DEPTH - 1) {
             if (this.verified) {
                 this.invokeBuffer();
             }
@@ -153,4 +181,34 @@ public class JsonFilterVerifier implements JsonSaxHandler {
         return true;
     }
 
+    private static Integer getLength(JsonPath currentPosition, int depth) {
+        Integer indexInDepth = getIndexInDepth(currentPosition, depth);
+        if (indexInDepth != null) {
+            return indexInDepth + 1;
+        }
+        return null;
+    }
+
+    private static Integer getIndexInDepth(JsonPath currentPosition, int depth) {
+        int pathDepth = currentPosition.pathDepth();
+        if (pathDepth <= depth) {
+            return null;
+        }
+        PathOperator operator = currentPosition.get(pathDepth - 1 - depth);
+        if (operator instanceof ArrayIndex) {
+             return ((ArrayIndex) operator).getArrayIndex();
+        }
+        return null;
+    }
+
+    private static boolean isKeylessArray(JsonPath currentPosition) {
+        PathOperator last = currentPosition.peek();
+        if (last.getType() == PathOperator.Type.ROOT) {
+            return true;
+        }
+        if (last.getType() == PathOperator.Type.ARRAY || last.getType() == PathOperator.Type.OBJECT) {
+            return ((ChildNode) last).getKey() == null;
+        }
+        throw new IllegalStateException("only array or root expected here");
+    }
 }

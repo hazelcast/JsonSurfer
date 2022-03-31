@@ -12,7 +12,7 @@ anyChild: '.*' ;
 any: '*' ;
 ANY_INDEX: '[*]' ;
 index: ('[' NUM ']') | ('.' NUM);
-reversedIndex: '[' LAST ']';
+reversedIndex: '[' LAST ('-' NUM)?']';
 indexes: OPEN_SQ_BRACKET NUM (TO NUM)? ( COMMA NUM (TO NUM)? ) * CLOSE_SQ_BRACKET ;
 OPEN_SQ_BRACKET: '[';
 CLOSE_SQ_BRACKET: ']';
