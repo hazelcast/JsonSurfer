@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Read Java Config
-        run: cat ${{ github.workspace }}/hazelcast/.github/java-config.env >> $GITHUB_ENV
+        run: cat ${{ github.workspace }}/.github/java-config.env >> $GITHUB_ENV
       - uses: actions/checkout@v3
       - name: Set up Apache Maven Central
         uses: actions/setup-java@v3
