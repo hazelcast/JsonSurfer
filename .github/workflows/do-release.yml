@@ -19,10 +19,10 @@ jobs:
   do-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Read Java Config
-        run: cat ${{ github.workspace }}/.github/java-config.env >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Read Java Config
+        run: cat ${{ github.workspace }}/.github/java-config.env >> $GITHUB_ENV
       - name: Set up Java and credentials
         uses: actions/setup-java@v3
         with:
