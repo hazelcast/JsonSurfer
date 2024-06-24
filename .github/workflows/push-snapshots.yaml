@@ -15,11 +15,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Read Java Config
+        run: cat ${{ github.workspace }}/.github/java-config.env >> $GITHUB_ENV
       - name: Set up Apache Maven Central
         uses: actions/setup-java@v3
         with:
-          java-version: 8
-          distribution: 'adopt'
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
           server-id: ossrh
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
