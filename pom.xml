@@ -149,7 +149,7 @@
                                 <configuration>
                                     <rules>
                                         <requireJavaVersion>
-                                            <version>[1.8,1.9)</version>
+                                            <version>17</version>
                                         </requireJavaVersion>
                                     </rules>
                                 </configuration>
@@ -168,8 +168,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <release>17</release>
                 </configuration>
             </plugin>
             <plugin>
