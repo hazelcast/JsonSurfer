@@ -29,10 +29,11 @@
 
     <developers>
         <developer>
-            <id>galibey</id>
-            <name>Alexander Galibey</name>
-            <email>alexander.galibey@hazelcast.com</email>
-            <organization>Hazelcast</organization>
+            <id>hazelcast-team</id>
+            <name>Hazelcast team</name>
+            <email>info@hazelcast.com</email>
+            <organization>Hazelcast, Inc.</organization>
+            <organizationUrl>https://hazelcast.com</organizationUrl>
         </developer>
     </developers>
 
