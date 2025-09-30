@@ -10,6 +10,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <name>jsurfer-core</name>
     <artifactId>jsurfer-core</artifactId>
 
     <properties>

@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>jsurfer-fastjson</name>
     <artifactId>jsurfer-fastjson</artifactId>
 
     <profiles>

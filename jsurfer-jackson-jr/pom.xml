@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>jsurfer-jackson-jr</name>
     <artifactId>jsurfer-jackson-jr</artifactId>
 
     <profiles>
