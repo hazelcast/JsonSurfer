@@ -31,11 +31,12 @@ jobs:
 
       - name: Publish to Apache Maven Central
         run: |
-          PROJECT_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+          PROJECT_VERSION=$(mvn --quiet -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
           if [[ "$PROJECT_VERSION" == *-SNAPSHOT ]]; then
-            mvn --batch-mode -Prelease deploy
+            mvn --activate-profiles release deploy
           fi
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_OSS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_OSS_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          MAVEN_ARGS: --batch-mode --no-transfer-progress
