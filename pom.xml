@@ -233,7 +233,6 @@
     </build>
 
     <modules>
-        <!--<module>jsurfer-benchmark</module>-->
         <module>jsurfer-core</module>
         <module>jsurfer-gson</module>
         <module>jsurfer-jackson</module>
@@ -275,5 +274,14 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>benchmarks</id>
+            <modules>
+                <module>jsurfer-benchmark</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>
