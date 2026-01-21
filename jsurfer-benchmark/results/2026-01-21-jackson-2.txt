@@ -1,0 +1,39 @@
+Benchmark                                                  Mode  Cnt       Score       Error  Units
+BenchmarkCollectObject.benchmarkFastJsonWithJsonSurfer    thrpt   10  232956,911 ± 22294,891  ops/s
+BenchmarkCollectObject.benchmarkGsonWithJsonSurfer        thrpt   10  201375,295 ±  6074,849  ops/s
+BenchmarkCollectObject.benchmarkJacksonWithJsonSurfer     thrpt   10  227503,058 ±  4060,924  ops/s
+BenchmarkCollectObject.benchmarkJsonSimpleWithJsonSurfer  thrpt   10  134295,659 ±  1087,648  ops/s
+
+
+Benchmark                                                       Mode  Cnt        Score       Error  Units
+BenchmarkCollectSingleValue.benchmarkFastjson                  thrpt   10   455436,939 ±  7400,109  ops/s
+BenchmarkCollectSingleValue.benchmarkFastjsonWithJsonSurfer    thrpt   10  2261364,087 ± 41955,243  ops/s
+BenchmarkCollectSingleValue.benchmarkGson                      thrpt   10   457253,727 ±  7314,851  ops/s
+BenchmarkCollectSingleValue.benchmarkGsonWithJsonSurfer        thrpt   10  2410151,620 ± 38698,382  ops/s
+BenchmarkCollectSingleValue.benchmarkJackson                   thrpt   10   470297,644 ± 12341,993  ops/s
+BenchmarkCollectSingleValue.benchmarkJacksonWithJsonSurfer     thrpt   10  2424916,396 ± 36453,587  ops/s
+BenchmarkCollectSingleValue.benchmarkJsonSimpleWithJsonSurfer  thrpt   10   611772,312 ±  5535,161  ops/s
+
+Benchmark                                                                        (jsonPath)   Mode  Cnt   Score   Error  Units
+BenchmarkParseLargeJson.benchmarkFastJsonWithJsonSurfer      $.builders.*.properties.branch  thrpt   10  47,143 ± 1,242  ops/s
+BenchmarkParseLargeJson.benchmarkFastJsonWithJsonSurfer       $.builders..properties.branch  thrpt   10  46,573 ± 0,511  ops/s
+BenchmarkParseLargeJson.benchmarkGsonWithJsonSurfer          $.builders.*.properties.branch  thrpt   10  61,744 ± 3,357  ops/s
+BenchmarkParseLargeJson.benchmarkGsonWithJsonSurfer           $.builders..properties.branch  thrpt   10  61,054 ± 0,946  ops/s
+BenchmarkParseLargeJson.benchmarkJacksonWithJsonSurfer       $.builders.*.properties.branch  thrpt   10  36,355 ± 0,746  ops/s
+BenchmarkParseLargeJson.benchmarkJacksonWithJsonSurfer        $.builders..properties.branch  thrpt   10  38,634 ± 0,725  ops/s
+BenchmarkParseLargeJson.benchmarkJsonSimpleWithJsonSurfer    $.builders.*.properties.branch  thrpt   10  14,708 ± 0,384  ops/s
+BenchmarkParseLargeJson.benchmarkJsonSimpleWithJsonSurfer     $.builders..properties.branch  thrpt   10  14,104 ± 0,270  ops/s
+BenchmarkParseLargeJsonWithoutStreaming.benchmarkRawGson                                N/A  thrpt   10  38,977 ± 0,954  ops/s
+BenchmarkParseLargeJsonWithoutStreaming.benchmarkRawJackson                             N/A  thrpt   10  32,636 ± 1,314  ops/s
+
+Benchmark                                                     Mode  Cnt   Score   Error  Units
+BenchmarkParseLargeJsonWithoutStreaming.benchmarkRawGson     thrpt   10  36,513 ± 0,762  ops/s
+BenchmarkParseLargeJsonWithoutStreaming.benchmarkRawJackson  thrpt   10  32,403 ± 1,034  ops/s
+
+Benchmark                                        Mode  Cnt     Score    Error  Units
+BenchmarkParseLongText.benchmarkFastJsonSurfer  thrpt   10  2245,500 ± 39,945  ops/s
+BenchmarkParseLongText.benchmarkGson            thrpt   10  2512,318 ± 49,443  ops/s
+BenchmarkParseLongText.benchmarkGsonSurfer      thrpt   10  4182,459 ± 52,904  ops/s
+BenchmarkParseLongText.benchmarkJackson         thrpt   10   891,137 ± 21,230  ops/s
+BenchmarkParseLongText.benchmarkJacksonSurfer   thrpt   10  3522,307 ± 56,192  ops/s
+BenchmarkParseLongText.benchmarkSimpleSurfer    thrpt   10   461,643 ±  5,335  ops/s

@@ -67,6 +67,12 @@
 
     <profiles>
         <profile>
+            <id>benchmarks</id>
+            <modules>
+                <module>jsurfer-benchmark</module>
+            </modules>
+        </profile>
+        <profile>
             <id>release</id>
             <build>
                 <plugins>
@@ -274,14 +280,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>benchmarks</id>
-            <modules>
-                <module>jsurfer-benchmark</module>
-            </modules>
-        </profile>
-    </profiles>
 
 </project>
