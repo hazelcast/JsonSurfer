@@ -7,6 +7,9 @@
         <groupId>com.hazelcast.jsurfer</groupId>
         <version>0.13-SNAPSHOT</version>
     </parent>
+    <properties>
+        <jmh.version>1.13</jmh.version>
+    </properties>
 
     <modelVersion>4.0.0</modelVersion>
     <name>jsurfer-benchmark</name>
@@ -16,12 +19,12 @@
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-generator-annprocess</artifactId>
-            <version>1.13</version>
+            <version>${jmh-version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-core</artifactId>
-            <version>1.13</version>
+            <version>${jmh-version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.biboudis</groupId>
@@ -36,7 +39,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.25</version>
+            <version>${logback.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
