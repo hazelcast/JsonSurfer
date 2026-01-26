@@ -17,7 +17,7 @@
         <jackson.version>2.20.0</jackson.version>
         <gson.version>2.13.2</gson.version>
         <fastjson.version>1.2.79</fastjson.version>
-        <logback.version>1.5.25</logback.version>
+        <logback.version>1.5.26</logback.version>
         <cobertura.maven.plugin.version>2.7</cobertura.maven.plugin.version>
         <maven.checkstyle.plugin.version>3.6.0</maven.checkstyle.plugin.version>
         <central.publishing.maven..plugin.version>0.10.0</central.publishing.maven..plugin.version>
