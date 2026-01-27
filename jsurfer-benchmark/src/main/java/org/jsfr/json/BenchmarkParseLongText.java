@@ -24,7 +24,7 @@
 
 package org.jsfr.json;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -72,7 +72,7 @@ public class BenchmarkParseLongText {
     public void setup() throws Exception {
         gsonSurfer = JsonSurferGson.INSTANCE;
         jacksonSurfer = JsonSurferJackson.INSTANCE;
-        jacksonJrSurfer = JsonSurferJacksonJr.INSTANCE;
+        jacksonJrSurfer = JsonSurferJacksonCore.INSTANCE;
         simpleSurfer = JsonSurferJsonSimple.INSTANCE;
         fastjsonSurfer = JsonSurferFastJson.INSTANCE;
         collectOneListener = new CollectOneListener(true);

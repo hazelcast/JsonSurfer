@@ -14,7 +14,8 @@
     <properties>
         <main.basedir>${maven.multiModuleProjectDirectory}</main.basedir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jackson.version>2.20.0</jackson.version>
+        <jackson.version>3.0.3</jackson.version>
+        <jackson.annotation.version>2.20</jackson.annotation.version>
         <gson.version>2.13.2</gson.version>
         <fastjson.version>1.2.79</fastjson.version>
         <logback.version>1.5.25</logback.version>
@@ -173,6 +174,9 @@
                 <version>${maven.compiler.plugin.version}</version>
                 <configuration>
                     <release>17</release>
+                    <compilerArgs>
+                        <arg>-proc:full</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -190,7 +194,6 @@
                 <configuration>
                     <configLocation>checkstyle/checkstyle.xml</configLocation>
                     <suppressionsLocation>checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
-                    <enableRSS>false</enableRSS>
                     <linkXRef>false</linkXRef>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
@@ -243,7 +246,7 @@
         <module>jsurfer-core</module>
         <module>jsurfer-gson</module>
         <module>jsurfer-jackson</module>
-        <module>jsurfer-jackson-jr</module>
+        <module>jsurfer-jackson-core</module>
         <module>jsurfer-jsonsimple</module>
         <module>jsurfer-fastjson</module>
         <module>jsurfer-all</module>

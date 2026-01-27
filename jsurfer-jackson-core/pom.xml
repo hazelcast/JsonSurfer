@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>jsurfer-jackson-jr</name>
-    <artifactId>jsurfer-jackson-jr</artifactId>
+    <artifactId>jsurfer-jackson-core</artifactId>
 
     <profiles>
         <profile>
@@ -61,8 +61,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.jr</groupId>
-            <artifactId>jackson-jr-objects</artifactId>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
             <version>${jackson.version}</version>
         </dependency>
     </dependencies>

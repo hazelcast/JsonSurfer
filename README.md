@@ -70,27 +70,33 @@ Jackson, FastJson and JsonSimple. Choose one and add to your POM.
 ```xml
 
 <dependency>
-    <groupId>com.hazelcast.jsurfer</groupId>
-    <artifactId>jsurfer-gson</artifactId>
-    <version>0.10</version>
+    <groupId>com.hazelcast.jsurfer</groupId>
+    <artifactId>jsurfer-gson</artifactId>
+    <version>0.13</version>
 </dependency>
 
 <dependency>
-    <groupId>com.hazelcast.jsurfer</groupId>
-    <artifactId>jsurfer-jackson</artifactId>
-    <version>0.10</version>
+    <groupId>com.hazelcast.jsurfer</groupId>
+    <artifactId>jsurfer-jackson</artifactId>
+    <version>0.13</version>
 </dependency>
 
 <dependency>
-    <groupId>com.hazelcast.jsurfer</groupId>
-    <artifactId>jsurfer-fastjson</artifactId>
-    <version>0.10</version>
+    <groupId>com.hazelcast.jsurfer</groupId>
+    <artifactId>jsurfer-jackson-core/artifactId>
+    <version>0.13</version>
 </dependency>
 
 <dependency>
-    <groupId>com.hazelcast.jsurfer</groupId>
-    <artifactId>jsurfer-jsonsimple</artifactId>
-    <version>0.10</version>
+    <groupId>com.hazelcast.jsurfer</groupId>
+    <artifactId>jsurfer-fastjson</artifactId>
+    <version>0.13</version>
+</dependency>
+
+<dependency>
+    <groupId>com.hazelcast.jsurfer</groupId>
+    <artifactId>jsurfer-jsonsimple</artifactId>
+    <version>0.13</version>
 </dependency>
 
 ```
@@ -119,16 +125,24 @@ or
 ```java
         JsonSurfer surfer = JsonSurferJackson.INSTANCE;
 ```
-3. JsonSimple
+3. Pure Jackson Core (without Databind/Jr.)
 ```java
-        // use json-simple parser and json-simple provider to deserialize json into json-simple model i.e.org.json.simple.JSONObject or org.json.simple.JSONArray
+        JsonSurfer surfer = new JsonSurfer(JacksonCoreParser.INSTANCE, JacksonCoreProvider.INSTANCE);
+```
+or
+```java
+        JsonSurfer surfer = JsonSurferJacksonCore.INSTANCE;
+```
+4. JsonSimple
+```java
+        // use json-simple parser and json-simple provider to deserialize json into json-simple model i.e.org.json.simple.JSONObject or org.json.simple.JSONArray
         JsonSurfer surfer = new JsonSurfer(JsonSimpleParser.INSTANCE, JsonSimpleProvider.INSTANCE);
 ```
 or
 ```java
         JsonSurfer surfer = JsonSurferJsonSimple.INSTANCE;
 ```
-4. Fastjson
+5. Fastjson
 ```java
         JsonSurfer surfer = new JsonSurfer(FastJsonParser.INSTANCE, FastJsonProvider.INSTANCE);
 ```
@@ -218,12 +232,12 @@ which prints "Leo".
 which prints "bar".
 * If you want to **process POJO with full JsonPath feature**, you can convert the POJO into binary format and then surfer on it.
 #### Binaray format (Jackson only)
-By importing [Jackson binary format backend](https://github.com/FasterXML/jackson-dataformats-binary), JsonSurfer is capable to surfer with multiple binary object representation formats such as Avro, CBOR, Protobuf(A known bug to be fixed in Jackson 2.9.6), Smile and Ion.
+By importing [Jackson binary format backend](https://github.com/FasterXML/jackson-dataformats-binary), JsonSurfer is capable to surfer with multiple binary object representation formats such as Avro, CBOR, Protobuf, Smile and Ion.
 
 For example, if you want to surfer with CBOR data, firstly, CBOR format backend need to be imported as dependency.
 ```
     <dependency>
-        <groupId>com.fasterxml.jackson.dataformat</groupId>
+        <groupId>tools.jackson.dataformat</groupId>
         <artifactId>jackson-dataformat-cbor</artifactId>
         <version>${jackson.version}</version>
     </dependency>
@@ -601,15 +615,16 @@ Output
 ```
 ### Benchmark
 
-* JsonSurfer is fast !!! The benchmark is powered by [JMH](http://openjdk.java.net/projects/code-tools/jmh/)
+* JsonSurfer is fast! The benchmark is powered by [JMH](http://openjdk.java.net/projects/code-tools/jmh/)
 
 ```
-Benchmark                                                       Mode  Cnt       Score       Error  Units
-BenchmarkCollectSingleValue.benchmarkFastjson                  thrpt   10  139772.275      8854.369  ops/s
-BenchmarkCollectSingleValue.benchmarkFastjsonWithJsonSurfer    thrpt   10  699176.961      23396.619  ops/s
-BenchmarkCollectSingleValue.benchmarkGson                      thrpt   10  139394.358      6019.764  ops/s
-BenchmarkCollectSingleValue.benchmarkGsonWithJsonSurfer        thrpt   10  632155.657      15484.499  ops/s
-BenchmarkCollectSingleValue.benchmarkJackson                   thrpt   10  160545.079      7006.525  ops/s
-BenchmarkCollectSingleValue.benchmarkJacksonWithJsonSurfer     thrpt   10  451870.586      13132.576  ops/s
-BenchmarkCollectSingleValue.benchmarkJsonSimpleWithJsonSurfer  thrpt   10  155094.948      4457.502  ops/s
+Benchmark                                                       Mode  Cnt        Score        Error  Units
+BenchmarkCollectSingleValue.benchmarkFastjson                  thrpt   10   461533,522 ±   3138,761  ops/s
+BenchmarkCollectSingleValue.benchmarkFastjsonWithJsonSurfer    thrpt   10  2323381,698 ±  25253,207  ops/s
+BenchmarkCollectSingleValue.benchmarkGson                      thrpt   10   435068,541 ±   4415,979  ops/s
+BenchmarkCollectSingleValue.benchmarkGsonWithJsonSurfer        thrpt   10  2172312,737 ±  24966,221  ops/s
+BenchmarkCollectSingleValue.benchmarkJackson                   thrpt   10   501679,509 ±   4735,419  ops/s
+BenchmarkCollectSingleValue.benchmarkJacksonJrWithJsonSurfer   thrpt   10  2195377,704 ± 118209,621  ops/s
+BenchmarkCollectSingleValue.benchmarkJacksonWithJsonSurfer     thrpt   10  2275083,444 ±  37874,782  ops/s
+BenchmarkCollectSingleValue.benchmarkJsonSimpleWithJsonSurfer  thrpt   10   608842,243 ±  10324,116  ops/s
 ```

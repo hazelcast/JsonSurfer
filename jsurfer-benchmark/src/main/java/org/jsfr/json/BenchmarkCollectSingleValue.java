@@ -26,8 +26,8 @@ package org.jsfr.json;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -47,7 +47,6 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
@@ -78,7 +77,7 @@ public class BenchmarkCollectSingleValue {
         om = new ObjectMapper();
         gsonSurfer = JsonSurferGson.INSTANCE;
         jacksonSurfer = JsonSurferJackson.INSTANCE;
-        jacksonJrSurfer = JsonSurferJacksonJr.INSTANCE;
+        jacksonJrSurfer = JsonSurferJacksonCore.INSTANCE;
         simpleSurfer = JsonSurferJsonSimple.INSTANCE;
         fastjsonSurfer = JsonSurferFastJson.INSTANCE;
         collectOneListener = new CollectOneListener(true);
@@ -150,9 +149,9 @@ public class BenchmarkCollectSingleValue {
     }
 
     @Benchmark
-    public Object benchmarkJackson() throws IOException {
+    public Object benchmarkJackson() {
         JsonNode jsonNode = om.readTree(json);
-        Iterator<JsonNode> books = jsonNode.get("store").get("book").elements();
+        Iterator<JsonNode> books = jsonNode.get("store").get("book").iterator();
         String value = books.next().get("author").asText();
         LOGGER.trace("The author of the first book: {}", value);
         return value;
