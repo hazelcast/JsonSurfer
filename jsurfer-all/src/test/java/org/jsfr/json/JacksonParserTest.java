@@ -120,7 +120,7 @@ public class JacksonParserTest extends JsonSurferTest<ObjectNode, ArrayNode, Jso
                 + " {\"name\": \"emails\", \"type\": {\"type\": \"array\", \"items\": \"string\"}},\n"
                 + " {\"name\": \"boss\", \"type\": [\"Employee\",\"null\"]}\n"
                 + "]}";
-        Schema raw = new Schema.Parser().setValidate(true).parse(schemaJson);
+        Schema raw = new Schema.Parser().parse(schemaJson);
         final AvroSchema schema = new AvroSchema(raw);
 
         Employee empl = new Employee();
